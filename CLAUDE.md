@@ -16,6 +16,9 @@ UI는 모바일 우선 반응형 웹으로 제작한다.
 
 - 코딩 규칙 및 금지 사항: `docs/coding-guidelines.md`
 - 작업 결정 기록: `docs/context-notes.md`
+- 작업 체크리스트: `docs/checklist.md`
+
+`coding-guidelines.md`를 제외한 `docs/` 문서는 git에서 제외된 로컬 문서다.
 
 ---
 
@@ -33,24 +36,24 @@ UI는 모바일 우선 반응형 웹으로 제작한다.
 - State: Zustand
 - Testing: Vitest (유틸 함수 단위 테스트만), 컴포넌트/E2E 테스트 없음 (의도적 결정)
 
-### Backend
+### 데이터 저장소
 
-- Supabase (PostgreSQL) — 크롤러가 수집한 교회 데이터 저장 + 사용자 제보 저장용 DB로 사용
-- ORM 없음 — Supabase JS 클라이언트 직접 사용
-- API Route 없음 — Server Component에서 직접 조회. 제보 등록은 Server Action으로 처리(예정)
+- **DB 없음.** 교회 데이터는 `data/churches.json` 하나에 담고 앱이 직접 읽는다. 약 3천 건 규모라 DB가 필요 없고, 상세 페이지는 `generateStaticParams`로 전부 SSG로 굽는다. 결정 배경은 `docs/context-notes.md` 참고.
+- 데이터 생성·갱신은 크롤러(`scripts/`)가 오프라인 배치로만 수행하고, 결과 JSON을 커밋한다. 배포는 커밋에 따라 Vercel이 자동 처리한다.
+- API Route 없음 — Server Component에서 JSON을 직접 읽는다.
+- Supabase를 다시 검토할 조건(데이터 수만 건 초과, 재배포 없는 갱신, PostGIS·전문 검색 필요)은 `docs/context-notes.md`에 정리돼 있다.
 
 #### 인증 (Auth)
 
-- 일반 조회에는 로그인 불필요. 전체 공개 조회 사이트이며, 교회 데이터 자체는 크롤러(`scripts/`)로만 생성·갱신한다.
-- **확정: 사용자 제보(교회 정보 오탈자·변경사항 신고) 기능 추가 예정.** 제보 작성 자체에 로그인이 필요한지(스팸 방지용)는 **[미결정]** — 로그인 없이 폼만 열어둘지, 최소한의 인증(예: 이메일 Magic Link)을 둘지 정해야 함.
-- 제보 검토·반영을 위한 관리자 화면이 필요할 수 있음 — **[미결정]**
+- 로그인 기능 없음. 전체 공개 조회 사이트다.
+- 앱 안에 DB 쓰기 경로가 없으므로 RLS·권한 정책도 없다.
 
-#### 접근 제어 (RLS 정책)
+#### 사용자 제보
 
-- 교회 데이터 읽기: 비로그인 포함 누구나 허용
-- 교회 데이터 쓰기/수정/삭제: 클라이언트에서 불가. 크롤러가 `service_role` 키로만 수행
-- 제보(`reports` 테이블, 가칭) 쓰기: 공개 허용 예정(구체적 정책은 인증 방식 확정 후 결정) — insert만 허용, select/update/delete는 관리자(service_role)만
-- 제보 읽기: 일반 사용자 불가(본인이 쓴 것도 다시 조회할 필요 없음), 관리자만
+- **확정: GitHub Issues로 받는다.** Server Action에서 Issues API로 이슈를 생성한다. [미구현]
+- 관리자 화면을 따로 만들지 않는다. GitHub Issues가 검토 화면이고, 반영은 `data/churches.json` 수정 커밋으로 한다.
+- 로그인 불필요. 스팸이 실제로 문제가 되면 그때 Turnstile을 붙인다.
+- 환경변수 `GITHUB_TOKEN`, `GITHUB_REPO` 사용 (`.env.example` 참고).
 
 ---
 
@@ -60,19 +63,21 @@ UI는 모바일 우선 반응형 웹으로 제작한다.
 - 배포: Vercel (main 브랜치 push 시 자동 배포)
 - 환경변수: Vercel Dashboard에서 관리
 - 별도 CI/CD 파이프라인 없음
-- GitHub Actions: Supabase keep-alive 용도로만 사용 (7일 비활성 시 일시 중지 방지)
+- GitHub Actions: 현재 사용하지 않음. 크롤링 정기 실행이 필요해지면 그때 도입한다 — **[미결정]**
 
 ---
 
 ## 주요 명령어
 
 ```bash
-npm run dev        # 개발 서버
-npm test           # Vitest 단위 테스트
-npm run build      # 프로덕션 빌드
-npm run db:types    # Supabase DB → TypeScript 타입 자동 생성
-npm run crawl:kosin # [WIP] 고신 교회 데이터 수집 (scripts/collect-kosin.ts)
+npm run dev    # 개발 서버
+npm test       # Vitest 단위 테스트
+npm run lint   # ESLint
+npm run build  # 프로덕션 빌드
 ```
+
+- `npm test`에는 아직 `--passWithNoTests`가 붙어 있다. 첫 유틸 테스트가 생기면 제거한다.
+- `npm run crawl:kosin`은 `scripts/collect-kosin.ts`가 생기는 시점에 `node scripts/collect-kosin.ts`로 추가한다. Node 24가 `.ts`를 네이티브 실행하므로 tsx 같은 실행기가 필요 없다.
 
 ---
 
@@ -85,16 +90,19 @@ npm run crawl:kosin # [WIP] 고신 교회 데이터 수집 (scripts/collect-kosi
 │   │   ├── ui/            # shadcn/ui 기본 컴포넌트
 │   │   └── shared/        # 프로젝트 공통 컴포넌트
 │   ├── features/          # 기능별 모듈
-│   │   ├── churches/      # 교회 검색·조회 (컴포넌트, 훅, 데이터 조회 함께 관리)
-│   │   └── reports/       # 교회 정보 제보 (폼, Server Action) — [WIP] 인증 방식 미결정
-│   ├── lib/               # 유틸리티 (supabase 클라이언트 등)
+│   │   ├── churches/      # [WIP] 교회 검색·조회 (컴포넌트, 훅, 데이터 조회 함께 관리)
+│   │   └── reports/       # [WIP] 교회 정보 제보 (폼, Server Action → GitHub Issues)
+│   ├── lib/               # 유틸리티 (cn() 등)
 │   ├── hooks/             # 커스텀 React Hooks
 │   └── types/             # 전역 TypeScript 타입
 ├── scripts/               # [WIP] 크롤러 — 오프라인 배치 실행, 앱 런타임과 분리
 │   └── collect-kosin.ts   #        고신 교회 데이터 수집
-└── data/                  # [WIP] 크롤링 결과물(JSON) — 앱/시드가 읽는 소스
-    └── churches.json
+└── data/                  # [WIP] 크롤링 결과물 — 앱이 직접 읽는 유일한 데이터 소스
+    ├── churches.json      #        커밋 대상
+    └── raw/               #        내려받은 원본(KML 등), git 제외
 ```
+
+`src/components/ui/`는 shadcn/ui가 관리하는 영역이므로 직접 수정하지 않는다. `[WIP]` 표시된 디렉토리는 아직 생성 전이다.
 
 ---
 
@@ -149,7 +157,7 @@ npm run crawl:kosin # [WIP] 고신 교회 데이터 수집 (scripts/collect-kosi
 ### 성격
 
 - 크롤러는 **오프라인 배치 작업**이다. 앱의 요청 처리 경로(Server Component 조회)나 빌드 경로에 넣지 않고 `scripts/`에서 수동/스케줄로 실행해 데이터를 생성한다.
-- 크롤링 전용 의존성(`fast-xml-parser`, 추후 Playwright 등)은 **앱 런타임 번들에 포함하지 않는다.** 앱은 완성된 결과물(JSON 또는 Supabase 테이블)만 소비한다.
+- 크롤링 전용 의존성(`fast-xml-parser`, 추후 Playwright 등)은 **devDependency로만 둔다.** 앱 런타임 번들에 들어가면 안 되고, 앱은 완성된 결과물 `data/churches.json`만 소비한다.
 
 ### 수집 범위
 
@@ -167,10 +175,11 @@ npm run crawl:kosin # [WIP] 고신 교회 데이터 수집 (scripts/collect-kosi
 - **이후 — 합신 등:** 정적 디렉토리는 `fetch` + 파서, JS 렌더링·무한스크롤 소스는 Playwright(예정).
 - 파싱·정규화 함수는 유틸 성격이므로 Vitest 단위 테스트 대상으로 적합 (기존 테스트 정책과 일관).
 
-### 저장 (미결정)
+### 저장 (확정)
 
-- 초기: `data/churches.json`으로 커밋해 앱이 직접 읽음 (데이터 ~3천 건, 갱신 드묾 → JSON으로 충분).
-- 이후: Supabase `churches` 테이블로 시드할 수 있음. 이 경우 아래 "Supabase Data API GRANT 정책"에 따라 신규 테이블 GRANT/RLS 구문을 함께 실행해야 함.
+- `data/churches.json`으로 커밋해 앱이 직접 읽는다. DB는 쓰지 않는다.
+- 내려받은 원본(KML 등)은 `data/raw/`에 두고 git에서 제외한다.
+- `Church` 타입과 JSON 스키마는 아직 미확정 — 고신 KML 파싱 결과를 보고 정한다.
 
 ### 준수 사항
 
@@ -180,29 +189,10 @@ npm run crawl:kosin # [WIP] 고신 교회 데이터 수집 (scripts/collect-kosi
 
 ### 미결정 사항
 
-- 저장소: 정적 JSON vs Supabase 테이블
+- `Church` 타입과 `data/churches.json` 스키마 (좌표·SNS 필드 포함 여부)
 - 갱신 주기 및 스케줄 자동화(GitHub Actions) 여부
 - 합동·백석·대신 포함 여부
 - 디렉토리 UI를 둘 위치 (예: `features/churches`)
-- 사용자 제보 기능의 인증 방식(로그인 없이 폼만 vs Magic Link 등) 및 관리자 검토 화면 필요 여부 — `features/reports` 참조
-
----
-
-## Supabase Data API GRANT 정책 (2026년 변경 사항)
-
-2026년 10월 30일부터 기존 프로젝트 포함 전체에 적용. `public` 스키마에 새로 만드는 테이블은 명시적 GRANT 없이는 supabase-js 클라이언트로 접근 불가.
-
-- **기존 테이블**: 영향 없음 (grant 이미 부여됨)
-- **새 테이블 추가 시**: 테이블 생성 SQL에 아래 GRANT 구문을 반드시 함께 실행 (예: `churches` 테이블)
-
-```sql
-grant select on public.새테이블 to anon;
-grant select, insert, update, delete on public.새테이블 to authenticated;
-grant select, insert, update, delete on public.새테이블 to service_role;
-alter table public.새테이블 enable row level security;
-```
-
-에러 발생 시 PostgREST가 `42501` 에러와 함께 필요한 GRANT 구문을 안내함.
 
 ---
 
@@ -210,8 +200,8 @@ alter table public.새테이블 enable row level security;
 
 ### 자동 처리 (추가 작업 불필요)
 
-- **교회 상세 페이지**: `generateMetadata`가 DB에서 동적으로 title/description/OG/canonical 생성
-- **sitemap.xml**: `src/app/sitemap.ts`가 DB 조회해서 자동 생성 — 크롤러로 새로 추가된 교회도 자동 포함
+- **교회 상세 페이지**: `generateMetadata`가 `data/churches.json`을 읽어 title/description/OG/canonical 생성
+- **sitemap.xml**: `src/app/sitemap.ts`가 `data/churches.json`을 읽어 자동 생성 — 크롤러로 새로 추가된 교회도 자동 포함
 - **JSON-LD (Organization·WebSite)**: `src/app/layout.tsx`에서 전역 적용
 - **JSON-LD (BreadcrumbList)**: about/vision 등 핵심 정적 페이지에 적용
 - **[미결정]** 교회 상세 페이지의 구조화 데이터 스키마(`LocalBusiness`/`Church`/`Place` 중 선택) — 확정되는 대로 `src/lib/json-ld.ts`에 헬퍼 추가
@@ -219,7 +209,7 @@ alter table public.새테이블 enable row level security;
 ### 새 페이지/교단(교회 그룹) 추가 시에만 수동 작업 필요
 
 1. **새 정적 페이지** (`page.tsx` 신규 생성) → 파일 상단에 `export const metadata: Metadata = { title, description, openGraph }` 추가
-2. **새 교단 데이터 추가** (예: 합신 크롤러 결과 반영) → `src/app/sitemap.ts`가 DB 조회 기반이라면 별도 작업 불필요. 정적 라우트를 교단별로 나눈다면 `STATIC_ROUTES`에 경로 추가
+2. **새 교단 데이터 추가** (예: 합신 크롤러 결과 반영) → `src/app/sitemap.ts`가 `data/churches.json` 기반이므로 별도 작업 불필요. 정적 라우트를 교단별로 나눈다면 `STATIC_ROUTES`에 경로 추가
 3. **새 동적 라우트** (`[id]/page.tsx` 신규 생성) → `generateMetadata` + 해당 JSON-LD 헬퍼 추가 (`src/lib/json-ld.ts`)
 4. **새 핵심 정적 페이지(about/vision류)** → `src/lib/json-ld.ts`의 `breadcrumbJsonLd()`로 BreadcrumbList 적용
 

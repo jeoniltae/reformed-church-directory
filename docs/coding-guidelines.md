@@ -3,10 +3,10 @@
 ## 하지 말아야 할 것
 
 - `any` 타입 사용 금지
-- `useEffect`로 데이터 페칭 금지 → Server Component 또는 React Query 사용
+- `useEffect`로 데이터 페칭 금지 → Server Component에서 직접 조회 (React Query/SWR 사용 안 함)
 - `default export` 금지 → Named export 사용
 - API Route 신규 생성 금지 → Server Action 사용
-- Google Sheets 클라이언트를 컴포넌트 내부에서 직접 생성 금지 → `lib/sheets.ts`에서 import
+- `data/churches.json`을 컴포넌트에서 직접 읽기 금지 → `features/churches`의 조회 함수를 통해서만 접근
 - 인라인 스타일 금지 → Tailwind 클래스 사용
 - `console.log` 커밋 금지
 - 요청 범위 밖의 기존 파일 수정 금지 — 지침은 신규 파일 또는 직접 수정 요청된 파일에만 적용

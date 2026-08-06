@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx vitest *)",
+      "Bash(npx eslint *)",
+      "Bash(npx shadcn *)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git show*)"
+    ],
+    "ask": [
+      "WebFetch(domain:hapshin.org)",
+      "WebFetch(domain:kcm.kr)",
+      "WebFetch(domain:ch114.kr)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.local)",
+      "Edit(./.env.local)",
+      "Edit(./data/raw/**)",
+      "Edit(./src/components/ui/**)",
+      "Bash(rm -rf *)"
+    ]
+  }
+}

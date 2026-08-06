@@ -2,12 +2,14 @@
   "name": "reformed-church-directory",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run",
+    "import:source": "node scripts/import-source.mts"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

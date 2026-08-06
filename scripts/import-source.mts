@@ -13,6 +13,7 @@ import type { Church } from "../src/types/church.ts";
 
 const INPUT = "data/raw/추천교회.CSV";
 const OUTPUT = "data/churches.json";
+const DEAD_LINKS = "data/dead-links.json";
 const HEADER_ROW = 3; // 1-based. 1행 제목, 2행 빈 줄
 const SOURCE = "자체 수집";
 
@@ -72,9 +73,20 @@ const at = (row: string[], column: string): string => {
   return i === -1 ? "" : (row[i] ?? "").trim();
 };
 
+// 생존 확인에서 죽은 것으로 판정된 URL. 원본 CSV를 고치지 않으므로
+// 이 목록이 없으면 다음 변환에서 되살아난다.
+const deadLinks = new Set<string>(
+  (
+    JSON.parse(readFileSync(DEAD_LINKS, "utf8")) as {
+      links: { url: string }[];
+    }
+  ).links.map((l) => l.url),
+);
+
 const warnings: string[] = [];
 const idCount = new Map<string, number>();
 const churches: Church[] = [];
+let droppedLinks = 0;
 
 for (const row of rows) {
   const name = at(row, "교회명");
@@ -106,7 +118,11 @@ for (const row of rows) {
   if (subRegion) church.subRegion = subRegion;
   if (denomination) church.denomination = denomination;
   if (phone) church.phone = normalizePhone(phone);
-  if (homepage) church.homepage = normalizeUrl(homepage);
+  if (homepage) {
+    const url = normalizeUrl(homepage);
+    if (deadLinks.has(url)) droppedLinks++;
+    else church.homepage = url;
+  }
 
   churches.push(church);
 }
@@ -120,6 +136,14 @@ writeFileSync(OUTPUT, JSON.stringify(churches, null, 2) + "\n", "utf8");
 
 console.log(`${churches.length}건 → ${OUTPUT}`);
 console.log(`버린 열: ${dropped.length ? dropped.join(", ") : "없음"}`);
+console.log(
+  `죽은 링크로 비운 homepage: ${droppedLinks}건 (등록 ${deadLinks.size}건, ${DEAD_LINKS})`,
+);
+if (droppedLinks !== deadLinks.size) {
+  warnings.push(
+    `dead-links.json의 URL ${deadLinks.size - droppedLinks}건이 원본과 매칭되지 않았다 — 오타 또는 원본 변경`,
+  );
+}
 if (warnings.length) {
   console.log(`\n확인 필요 ${warnings.length}건`);
   for (const w of warnings) console.log(`  · ${w}`);

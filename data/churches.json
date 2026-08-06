@@ -184,8 +184,7 @@
     "source": "자체 수집",
     "subRegion": "서초구",
     "denomination": "합신",
-    "phone": "02-572-1583",
-    "homepage": "http://www.gnara.or.kr/2009new/main.html"
+    "phone": "02-572-1583"
   },
   {
     "id": "방배본교회-서초구",
@@ -327,8 +326,7 @@
     "source": "자체 수집",
     "subRegion": "종로구",
     "denomination": "고려개혁",
-    "phone": "02-733-5252",
-    "homepage": "http://www.asheep.kr/"
+    "phone": "02-733-5252"
   },
   {
     "id": "열린교회-종로구",
@@ -339,8 +337,7 @@
     "source": "자체 수집",
     "subRegion": "종로구",
     "denomination": "합신",
-    "phone": "010-8993-777",
-    "homepage": "http://www.opench.kr/"
+    "phone": "010-8993-777"
   },
   {
     "id": "동래언약교회-동래구",
@@ -386,8 +383,7 @@
     "source": "자체 수집",
     "subRegion": "해운대구",
     "denomination": "합동",
-    "phone": "051-518-9125",
-    "homepage": "http://www.hwrchurch.or.kr/"
+    "phone": "051-518-9125"
   },
   {
     "id": "성서계명교회-달서구",
@@ -410,8 +406,7 @@
     "source": "자체 수집",
     "subRegion": "수성구",
     "denomination": "대한예수교개혁회",
-    "phone": "053-741-6221",
-    "homepage": "http://www.covenant.kimc.net/"
+    "phone": "053-741-6221"
   },
   {
     "id": "주님뜻이룸교회-남동구",
@@ -480,8 +475,7 @@
     "source": "자체 수집",
     "subRegion": "유성구",
     "denomination": "계신",
-    "phone": "042-522-2005",
-    "homepage": "http://www.tbch.or.kr/"
+    "phone": "042-522-2005"
   },
   {
     "id": "울산언약교회-북구",
@@ -536,8 +530,7 @@
     "source": "자체 수집",
     "subRegion": "고양시",
     "denomination": "합신",
-    "phone": "010-8297-4120",
-    "homepage": "http://blog.daum.net/jkrpe/1329627"
+    "phone": "010-8297-4120"
   },
   {
     "id": "금정제일교회-군포시",
@@ -583,8 +576,7 @@
     "source": "자체 수집",
     "subRegion": "남양주시",
     "denomination": "합신",
-    "phone": "010-7560-3340",
-    "homepage": "http://www.sdgfaith.com/"
+    "phone": "010-7560-3340"
   },
   {
     "id": "온생명교회-남양주시",
@@ -734,8 +726,7 @@
     "source": "자체 수집",
     "subRegion": "용인시",
     "denomination": "PCA",
-    "phone": "031-261-4760",
-    "homepage": "http://heavenville.org/"
+    "phone": "031-261-4760"
   },
   {
     "id": "선실교회-의왕시",
@@ -757,8 +748,7 @@
     "pastor": "장수민",
     "source": "자체 수집",
     "subRegion": "의왕시",
-    "phone": "010-9006-9120",
-    "homepage": "http://jooeon.net"
+    "phone": "010-9006-9120"
   },
   {
     "id": "소식교회-일산시",
@@ -826,8 +816,7 @@
     "source": "자체 수집",
     "subRegion": "김천시",
     "denomination": "합신",
-    "phone": "054-439-1695",
-    "homepage": "http://www.deokilch.com/"
+    "phone": "054-439-1695"
   },
   {
     "id": "실로암교회-영천시",
@@ -908,8 +897,7 @@
     "source": "자체 수집",
     "subRegion": "전주시",
     "denomination": "합동",
-    "phone": "063-222-2272",
-    "homepage": "http://blog.daum.net/tenderspeak/"
+    "phone": "063-222-2272"
   },
   {
     "id": "옥토교회-정읍시",
@@ -1034,7 +1022,6 @@
     "source": "자체 수집",
     "subRegion": "춘천시",
     "denomination": "고신",
-    "phone": "033-262-6752",
-    "homepage": "http://ccsm.or.kr/"
+    "phone": "033-262-6752"
   }
 ]

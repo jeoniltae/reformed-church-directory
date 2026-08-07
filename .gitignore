@@ -57,6 +57,9 @@ Desktop.ini
 # 크롤러가 내려받은 원본 (KML 등) — 가공 결과인 data/churches.json은 커밋한다
 /data/raw/
 
+# 진단 스크립트의 중간 산출물 — 사람이 확인용으로 보는 작업 파일
+/data/reports/
+
 # docs — coding-guidelines.md만 공유하고 나머지(작업 노트·체크리스트·계획)는 로컬에 둔다
 /docs/*
 !/docs/coding-guidelines.md

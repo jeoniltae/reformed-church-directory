@@ -10,7 +10,8 @@
     "lint": "eslint",
     "test": "vitest run",
     "import:source": "node scripts/import-source.mts",
-    "check:homepages": "node scripts/check-homepages.mts"
+    "check:homepages": "node scripts/check-homepages.mts",
+    "normalize:addresses": "node --env-file=.env.local scripts/normalize-addresses.mts"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

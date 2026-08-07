@@ -1,10 +1,43 @@
 // 교회 데이터 정규화 유틸 — 크롤러와 앱이 함께 쓰는 순수 함수 모음
 
-/** 시도 표기를 접미사 없는 형태로 통일한다 (`서울시`·`경기도` → `서울`·`경기`) */
+/**
+ * 시도 정식명과 축약형의 대응표.
+ * 접미사만 떼는 방식으로는 `충청북도` → `충북`을 얻을 수 없어 명시적으로 둔다.
+ * 도로명주소 API가 돌려주는 `siNm`과 보유 데이터의 `region`을 맞추는 데 쓴다.
+ */
+const SIDO: readonly (readonly string[])[] = [
+  ["서울", "서울특별시"],
+  ["부산", "부산광역시"],
+  ["대구", "대구광역시"],
+  ["인천", "인천광역시"],
+  ["광주", "광주광역시"],
+  ["대전", "대전광역시"],
+  ["울산", "울산광역시"],
+  ["세종", "세종특별자치시"],
+  ["경기", "경기도"],
+  ["강원", "강원도", "강원특별자치도"],
+  ["충북", "충청북도"],
+  ["충남", "충청남도"],
+  ["전북", "전라북도", "전북특별자치도"],
+  ["전남", "전라남도"],
+  ["경북", "경상북도"],
+  ["경남", "경상남도"],
+  ["제주", "제주도", "제주특별자치도"],
+];
+
+/** 시도 표기를 축약형으로 통일한다 (`서울특별시`·`충청북도` → `서울`·`충북`) */
 export function normalizeRegion(raw: string): string {
   const v = raw.trim().replace(/\s+/g, "");
   if (!v) return "";
+
+  for (const names of SIDO) {
+    if (names.includes(v)) return names[0];
+  }
+  // `서울시`처럼 표에 없는 축약 변형은 접미사를 떼고 다시 찾는다
   const stripped = v.replace(/(특별자치시|특별자치도|광역시|특별시|시|도)$/, "");
+  for (const names of SIDO) {
+    if (names[0] === stripped) return names[0];
+  }
   return stripped.length >= 2 ? stripped : v;
 }
 
@@ -14,6 +47,27 @@ export function normalizeAddress(raw: string): string {
     .trim()
     .replace(/^\d{3}\s*-?\s*\d{2,3}\s+/, "")
     .replace(/\s+/g, " ");
+}
+
+/**
+ * 도로명주소 검색 API에 넘길 검색어를 만든다.
+ *
+ * 건물명·층·호가 붙으면 검색이 실패한다(실측 28건 중 16건이 이 경우다).
+ * 번지·건물번호까지만 남기고 뒤를 잘라낸다.
+ * **원본 주소를 고치는 것이 아니라 검색어만 다듬는다.**
+ */
+export function toAddressKeyword(raw: string): string {
+  const v = normalizeAddress(raw)
+    .replace(/\([^)]*\)/g, " ") // 괄호 부기 — "(신이문역 1번출구 근처)"
+    .replace(/\?/g, " ") // 원본에 섞인 깨진 문자
+    .replace(/(\d)번지/g, "$1") // "445번지" → "445"
+    .replace(/\s+/g, " ")
+    .trim();
+
+  // 도로명(로·길) 또는 지번(동·리·가)에 이어지는 번호까지만 취한다.
+  // 번호 바로 뒤에 한글이 오면 법정동 이름의 일부다("당산동6가") — 거기서 끊지 않는다.
+  const m = v.match(/^(.*?(?:로|길|동|리|가)\s*\d+(?:-\d+)?)(?![가-힣])/);
+  return (m ? m[1] : v).replace(/\s+/g, " ").trim();
 }
 
 function splitPhone(raw: string): [string, string, string] | null {

@@ -7,9 +7,23 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
+  /* Geist는 라틴 전용이라 한글은 뒤의 OS 기본 폰트로 넘어간다. 웹폰트는 추가하지 않는다 */
+  --font-sans: var(--font-geist-sans), "Pretendard Variable", Pretendard,
+    -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
+
+  /* 한글 x-height를 반영한 타이포 스케일. 같은 인덱스끼리만 짝짓는다 */
+  --text-t2: 0.75rem;
+  --text-t2--line-height: 1rem;
+  --text-t4: 0.875rem;
+  --text-t4--line-height: 1.1875rem;
+  --text-t5: 1rem;
+  --text-t5--line-height: 1.375rem;
+  --text-t6: 1.125rem;
+  --text-t6--line-height: 1.5rem;
+  --text-t8: 1.375rem;
+  --text-t8--line-height: 1.875rem;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -55,7 +69,8 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  /* 브랜드 — 잉크 네이비. 흰 텍스트 대비 10.82:1 (AAA) */
+  --primary: oklch(0.35 0.09 250);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -66,7 +81,8 @@
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  /* 포커스 링 — 흰 배경 대비 4.83:1 (비텍스트 기준 3:1 초과) */
+  --ring: oklch(0.55 0.09 250);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -90,8 +106,9 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  /* 브랜드 — 어두운 텍스트 대비 8.04:1 (AAA). 토글은 없어 현재 비활성 */
+  --primary: oklch(0.73 0.1 250);
+  --primary-foreground: oklch(0.17 0.03 250);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -101,7 +118,7 @@
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --ring: oklch(0.55 0.09 250);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);

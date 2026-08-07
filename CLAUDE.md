@@ -16,7 +16,9 @@ UI는 모바일 우선 반응형 웹으로 제작한다.
 
 - 코딩 규칙 및 금지 사항: `docs/coding-guidelines.md`
 - 작업 결정 기록: `docs/context-notes.md`
-- 작업 체크리스트: `docs/checklist.md`
+- 체크리스트 — 개발환경·데이터 수집: `docs/checklist.md`
+- 체크리스트 — 앱 UI·지도·SEO·배포: `docs/ui-checklist.md`
+- 보유 데이터 필드 조사 결과: `docs/field-inventory.md`
 
 `coding-guidelines.md`를 제외한 `docs/` 문서는 git에서 제외된 로컬 문서다.
 

@@ -10,7 +10,6 @@ const SIDO: readonly (readonly string[])[] = [
   ["부산", "부산광역시"],
   ["대구", "대구광역시"],
   ["인천", "인천광역시"],
-  ["광주", "광주광역시"],
   ["대전", "대전광역시"],
   ["울산", "울산광역시"],
   ["세종", "세종특별자치시"],
@@ -19,7 +18,10 @@ const SIDO: readonly (readonly string[])[] = [
   ["충북", "충청북도"],
   ["충남", "충청남도"],
   ["전북", "전라북도", "전북특별자치도"],
-  ["전남", "전라남도"],
+  // 광주광역시와 전라남도가 통합됐다. 도로명주소 API가 두 지역 모두
+  // `전남광주통합특별시`로 돌려주는 것을 확인하고 통합 명칭을 따르기로 했다.
+  // 축약형 `전남광주`는 이 프로젝트가 정한 것이며 공식 약칭이 아니다.
+  ["전남광주", "전남광주통합특별시", "전남", "전라남도", "광주", "광주광역시"],
   ["경북", "경상북도"],
   ["경남", "경상남도"],
   ["제주", "제주도", "제주특별자치도"],
@@ -33,10 +35,10 @@ export function normalizeRegion(raw: string): string {
   for (const names of SIDO) {
     if (names.includes(v)) return names[0];
   }
-  // `서울시`처럼 표에 없는 축약 변형은 접미사를 떼고 다시 찾는다
+  // `서울시`·`광주시`처럼 표에 없는 축약 변형은 접미사를 떼고 다시 찾는다
   const stripped = v.replace(/(특별자치시|특별자치도|광역시|특별시|시|도)$/, "");
   for (const names of SIDO) {
-    if (names[0] === stripped) return names[0];
+    if (names.includes(stripped)) return names[0];
   }
   return stripped.length >= 2 ? stripped : v;
 }

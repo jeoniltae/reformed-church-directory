@@ -32,7 +32,7 @@ describe("normalizeRegion", () => {
     expect(normalizeRegion("경상북도")).toBe("경북");
     expect(normalizeRegion("경상남도")).toBe("경남");
     expect(normalizeRegion("전라북도")).toBe("전북");
-    expect(normalizeRegion("전라남도")).toBe("전남");
+    // 전라남도는 통합 명칭으로 가므로 아래 "광주·전남은 통합 명칭으로 모인다"에서 다룬다
   });
 
   it("특별자치 개편 표기도 같은 값으로 맞춘다", () => {
@@ -42,9 +42,18 @@ describe("normalizeRegion", () => {
     expect(normalizeRegion("세종특별자치시")).toBe("세종");
   });
 
-  it("보유 데이터의 16개 지역이 모두 자기 자신으로 유지된다", () => {
-    const regions = ["서울","부산","대구","인천","광주","대전","울산","세종",
-      "경기","경북","경남","전북","전남","충남","충북","강원"];
+  it("광주·전남은 통합 명칭으로 모인다", () => {
+    // 도로명주소 API가 두 지역 모두 `전남광주통합특별시`로 돌려주는 것을 확인했다
+    expect(normalizeRegion("전남광주통합특별시")).toBe("전남광주");
+    expect(normalizeRegion("광주")).toBe("전남광주");
+    expect(normalizeRegion("광주광역시")).toBe("전남광주");
+    expect(normalizeRegion("전남")).toBe("전남광주");
+    expect(normalizeRegion("전라남도")).toBe("전남광주");
+  });
+
+  it("통합 대상이 아닌 지역은 자기 자신으로 유지된다", () => {
+    const regions = ["서울","부산","대구","인천","대전","울산","세종",
+      "경기","경북","경남","전북","충남","충북","강원"];
     for (const r of regions) expect(normalizeRegion(r)).toBe(r);
   });
 

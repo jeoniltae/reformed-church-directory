@@ -1,0 +1,2304 @@
+{
+  "note": "도로명주소 검색 API 조회 결과. import-source가 status가 'ok'인 건만 address를 roadAddr로 교체한다. 다중 후보·검색 실패는 1순위가 맞다는 보장이 없어 원본을 유지한다. 좌표 단계는 coordParams를 그대로 쓴다.",
+  "checkedAt": "2026-08-08",
+  "entries": [
+    {
+      "id": "언약교회-강동구",
+      "name": "언약교회",
+      "original": {
+        "address": "서울 강동구 강일동 69",
+        "region": "서울",
+        "subRegion": "강동구"
+      },
+      "totalCount": 0,
+      "status": "notFound",
+      "reason": "검색 결과 없음"
+    },
+    {
+      "id": "갈보리교회-관악구",
+      "name": "갈보리교회",
+      "original": {
+        "address": "서울시 관악구 조원로120",
+        "region": "서울",
+        "subRegion": "관악구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 관악구 조원로 120 (신림동)",
+        "jibunAddr": "서울특별시 관악구 신림동 504-2",
+        "zipNo": "08762",
+        "siNm": "서울특별시",
+        "sggNm": "관악구",
+        "coordParams": {
+          "admCd": "1162010200",
+          "rnMgtSn": "116203120010",
+          "udrtYn": "0",
+          "buldMnnm": "120",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "서울진명교회-관악구",
+      "name": "서울진명교회",
+      "original": {
+        "address": "서울시 관악구 낙성대동 1662-27",
+        "region": "서울",
+        "subRegion": "관악구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 관악구 봉천로 553 (봉천동)",
+        "jibunAddr": "서울특별시 관악구 봉천동 1662-27",
+        "zipNo": "08789",
+        "siNm": "서울특별시",
+        "sggNm": "관악구",
+        "coordParams": {
+          "admCd": "1162010100",
+          "rnMgtSn": "116203005083",
+          "udrtYn": "0",
+          "buldMnnm": "553",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "관악교회-관악구",
+      "name": "관악교회",
+      "original": {
+        "address": "서울시 관악구 대학동 247-2 3층",
+        "region": "서울",
+        "subRegion": "관악구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 관악구 대학길 52 (신림동)",
+        "jibunAddr": "서울특별시 관악구 신림동 247-2",
+        "zipNo": "08819",
+        "siNm": "서울특별시",
+        "sggNm": "관악구",
+        "coordParams": {
+          "admCd": "1162010200",
+          "rnMgtSn": "116204160321",
+          "udrtYn": "0",
+          "buldMnnm": "52",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "한길교회-광진구",
+      "name": "한길교회",
+      "original": {
+        "address": "서울시 광진구 천호대로 132길 8 (구의동)",
+        "region": "서울",
+        "subRegion": "광진구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 광진구 천호대로132길 8 (구의동)",
+        "jibunAddr": "서울특별시 광진구 구의동 75-5",
+        "zipNo": "04992",
+        "siNm": "서울특별시",
+        "sggNm": "광진구",
+        "coordParams": {
+          "admCd": "1121510300",
+          "rnMgtSn": "112154112519",
+          "udrtYn": "0",
+          "buldMnnm": "8",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "바른교회-노원구",
+      "name": "바른교회",
+      "original": {
+        "address": "서울 노원구 덕릉로79길 35 염광아파트 상가",
+        "region": "서울",
+        "subRegion": "노원구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 노원구 덕릉로79길 35 (중계동, 염광아파트 상가)",
+        "jibunAddr": "서울특별시 노원구 중계동 445 염광아파트 상가",
+        "zipNo": "01701",
+        "siNm": "서울특별시",
+        "sggNm": "노원구",
+        "coordParams": {
+          "admCd": "1135010600",
+          "rnMgtSn": "113504130153",
+          "udrtYn": "0",
+          "buldMnnm": "35",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "새롬교회-노원구",
+      "name": "새롬교회",
+      "original": {
+        "address": "서울시 노원구 섬밭로 152, 공릉아파트 2단지 상가 203호",
+        "region": "서울",
+        "subRegion": "노원구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 노원구 섬밭로 152 (공릉동)",
+        "jibunAddr": "서울특별시 노원구 공릉동 708 라이프2단지상가",
+        "zipNo": "01851",
+        "siNm": "서울특별시",
+        "sggNm": "노원구",
+        "coordParams": {
+          "admCd": "1135010300",
+          "rnMgtSn": "113503110005",
+          "udrtYn": "0",
+          "buldMnnm": "152",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상",
+      "keywordUsed": "서울시 노원구 섬밭로 152"
+    },
+    {
+      "id": "예림교회-노원구",
+      "name": "예림교회",
+      "original": {
+        "address": "서울특별시 노원구 수락산로 258 호성빌딩",
+        "region": "서울",
+        "subRegion": "노원구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 노원구 수락산로 258 (상계동)",
+        "jibunAddr": "서울특별시 노원구 상계동 1075-1 호성빌딩",
+        "zipNo": "01615",
+        "siNm": "서울특별시",
+        "sggNm": "노원구",
+        "coordParams": {
+          "admCd": "1135010500",
+          "rnMgtSn": "113503110006",
+          "udrtYn": "0",
+          "buldMnnm": "258",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "고은교회-동대문구",
+      "name": "고은교회",
+      "original": {
+        "address": "서울 동대문구 한천로 436",
+        "region": "서울",
+        "subRegion": "동대문구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 동대문구 한천로 436 (이문동)",
+        "jibunAddr": "서울특별시 동대문구 이문동 177-68",
+        "zipNo": "02423",
+        "siNm": "서울특별시",
+        "sggNm": "동대문구",
+        "coordParams": {
+          "admCd": "1123011000",
+          "rnMgtSn": "112303005038",
+          "udrtYn": "0",
+          "buldMnnm": "436",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "영화교회-동작구",
+      "name": "영화교회",
+      "original": {
+        "address": "서울시 동작구 사당3동 708-860",
+        "region": "서울",
+        "subRegion": "동작구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 동작구 사당로17길 69 (사당동)",
+        "jibunAddr": "서울특별시 동작구 사당동 708-860 영화교회",
+        "zipNo": "07003",
+        "siNm": "서울특별시",
+        "sggNm": "동작구",
+        "coordParams": {
+          "admCd": "1159010700",
+          "rnMgtSn": "115904157246",
+          "udrtYn": "0",
+          "buldMnnm": "69",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "세움교회-동작구",
+      "name": "세움교회",
+      "original": {
+        "address": "서울시 동작구 상도2동 454번지",
+        "region": "서울",
+        "subRegion": "동작구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 동작구 등용로 24-5 (상도동)",
+        "jibunAddr": "서울특별시 동작구 상도동 454 세움빌딩",
+        "zipNo": "06937",
+        "siNm": "서울특별시",
+        "sggNm": "동작구",
+        "coordParams": {
+          "admCd": "1159010200",
+          "rnMgtSn": "115903119001",
+          "udrtYn": "0",
+          "buldMnnm": "24",
+          "buldSlno": "5"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "성가교회-마포구",
+      "name": "성가교회",
+      "original": {
+        "address": "서울시 마포구 현석동 220 밤섬현대아파트상가 2층",
+        "region": "서울",
+        "subRegion": "마포구"
+      },
+      "totalCount": 2,
+      "matched": {
+        "roadAddr": "서울특별시 마포구 신수로3길 19 (현석동)",
+        "jibunAddr": "서울특별시 마포구 현석동 220 밤섬현대아파트",
+        "zipNo": "04092",
+        "siNm": "서울특별시",
+        "sggNm": "마포구",
+        "coordParams": {
+          "admCd": "1144011200",
+          "rnMgtSn": "114404139383",
+          "udrtYn": "0",
+          "buldMnnm": "19",
+          "buldSlno": "0"
+        }
+      },
+      "status": "multiple",
+      "reason": "후보 2건 — 어느 것인지 확인 필요",
+      "keywordUsed": "서울시 마포구 현석동 220"
+    },
+    {
+      "id": "서교장로교회-마포구",
+      "name": "서교장로교회",
+      "original": {
+        "address": "서울시 마포구 월드컵북로5길 21, 2층",
+        "region": "서울",
+        "subRegion": "마포구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 마포구 월드컵북로5길 21 (서교동)",
+        "jibunAddr": "서울특별시 마포구 서교동 448-1",
+        "zipNo": "04001",
+        "siNm": "서울특별시",
+        "sggNm": "마포구",
+        "coordParams": {
+          "admCd": "1144012000",
+          "rnMgtSn": "114404139553",
+          "udrtYn": "0",
+          "buldMnnm": "21",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "예수가족교회-마포구",
+      "name": "예수가족교회",
+      "original": {
+        "address": "서울시 마포구 서교동 394-25 동양트레스빌 B1",
+        "region": "서울",
+        "subRegion": "마포구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 마포구 양화로 56 (서교동)",
+        "jibunAddr": "서울특별시 마포구 서교동 394-25 동양한강트레벨",
+        "zipNo": "04045",
+        "siNm": "서울특별시",
+        "sggNm": "마포구",
+        "coordParams": {
+          "admCd": "1144012000",
+          "rnMgtSn": "114403113014",
+          "udrtYn": "0",
+          "buldMnnm": "56",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상",
+      "keywordUsed": "서울시 마포구 서교동 394-25"
+    },
+    {
+      "id": "합정동교회-마포구",
+      "name": "합정동교회",
+      "original": {
+        "address": "서울시 마포구 합정동 364-1",
+        "region": "서울",
+        "subRegion": "마포구"
+      },
+      "totalCount": 2,
+      "matched": {
+        "roadAddr": "서울특별시 마포구 독막로 26 (합정동)",
+        "jibunAddr": "서울특별시 마포구 합정동 364-1 합정동교회",
+        "zipNo": "04072",
+        "siNm": "서울특별시",
+        "sggNm": "마포구",
+        "coordParams": {
+          "admCd": "1144012200",
+          "rnMgtSn": "114403113005",
+          "udrtYn": "0",
+          "buldMnnm": "26",
+          "buldSlno": "0"
+        }
+      },
+      "status": "multiple",
+      "reason": "후보 2건 — 어느 것인지 확인 필요"
+    },
+    {
+      "id": "그의나라교회-서초구",
+      "name": "그의나라교회",
+      "original": {
+        "address": "서울시 서초구 양재동 276-4 선창빌딩6층",
+        "region": "서울",
+        "subRegion": "서초구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 서초구 논현로19길 9 (양재동)",
+        "jibunAddr": "서울특별시 서초구 양재동 276-4 선창빌딩",
+        "zipNo": "06775",
+        "siNm": "서울특별시",
+        "sggNm": "서초구",
+        "coordParams": {
+          "admCd": "1165010200",
+          "rnMgtSn": "116504163095",
+          "udrtYn": "0",
+          "buldMnnm": "9",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상",
+      "keywordUsed": "서울시 서초구 양재동 276-4"
+    },
+    {
+      "id": "방배본교회-서초구",
+      "name": "방배본교회",
+      "original": {
+        "address": "서울특별시 서초구 방배동 463-16",
+        "region": "서울",
+        "subRegion": "서초구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 서초구 방배천로8길 31 (방배동)",
+        "jibunAddr": "서울특별시 서초구 방배동 463-16",
+        "zipNo": "06677",
+        "siNm": "서울특별시",
+        "sggNm": "서초구",
+        "coordParams": {
+          "admCd": "1165010100",
+          "rnMgtSn": "116504163168",
+          "udrtYn": "0",
+          "buldMnnm": "31",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "신반포중앙교회-서초구",
+      "name": "신반포중앙교회",
+      "original": {
+        "address": "서울시 서초구 잠원동 60-3",
+        "region": "서울",
+        "subRegion": "서초구"
+      },
+      "totalCount": 6,
+      "matched": {
+        "roadAddr": "서울특별시 서초구 신반포로 251 (잠원동)",
+        "jibunAddr": "서울특별시 서초구 잠원동 60-3",
+        "zipNo": "06522",
+        "siNm": "서울특별시",
+        "sggNm": "서초구",
+        "coordParams": {
+          "admCd": "1165010600",
+          "rnMgtSn": "116503121017",
+          "udrtYn": "0",
+          "buldMnnm": "251",
+          "buldSlno": "0"
+        }
+      },
+      "status": "multiple",
+      "reason": "후보 6건 — 어느 것인지 확인 필요"
+    },
+    {
+      "id": "바로선개혁교회-성북구",
+      "name": "바로선개혁교회",
+      "original": {
+        "address": "서울시 성북구 정릉4동 401-2번지",
+        "region": "서울",
+        "subRegion": "성북구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 성북구 보국문로 54-1 (정릉동)",
+        "jibunAddr": "서울특별시 성북구 정릉동 401-2 시온쇼핑",
+        "zipNo": "02717",
+        "siNm": "서울특별시",
+        "sggNm": "성북구",
+        "coordParams": {
+          "admCd": "1129013300",
+          "rnMgtSn": "112903107004",
+          "udrtYn": "0",
+          "buldMnnm": "54",
+          "buldSlno": "1"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "가락동부교회-송파구",
+      "name": "가락동부교회",
+      "original": {
+        "address": "서울시 송파구 가락동 42-1",
+        "region": "서울",
+        "subRegion": "송파구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 송파구 오금로34길 46 (가락동)",
+        "jibunAddr": "서울특별시 송파구 가락동 42-1 가락동부교회",
+        "zipNo": "05706",
+        "siNm": "서울특별시",
+        "sggNm": "송파구",
+        "coordParams": {
+          "admCd": "1171010700",
+          "rnMgtSn": "117104169392",
+          "udrtYn": "0",
+          "buldMnnm": "46",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "진리교회-송파구",
+      "name": "진리교회",
+      "original": {
+        "address": "서울시 송파구 문정동 11-13 태광빌딩2층",
+        "region": "서울",
+        "subRegion": "송파구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 송파구 송이로32길 6 (문정동)",
+        "jibunAddr": "서울특별시 송파구 문정동 11-13 태광빌딩",
+        "zipNo": "05796",
+        "siNm": "서울특별시",
+        "sggNm": "송파구",
+        "coordParams": {
+          "admCd": "1171010800",
+          "rnMgtSn": "117104169314",
+          "udrtYn": "0",
+          "buldMnnm": "6",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상",
+      "keywordUsed": "서울시 송파구 문정동 11-13"
+    },
+    {
+      "id": "두레교회-영등포구",
+      "name": "두레교회",
+      "original": {
+        "address": "서울 영등포구 버드나루로14가길 14",
+        "region": "서울",
+        "subRegion": "영등포구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 영등포구 버드나루로14가길 14 (당산동)",
+        "jibunAddr": "서울특별시 영등포구 당산동 121-156",
+        "zipNo": "07230",
+        "siNm": "서울특별시",
+        "sggNm": "영등포구",
+        "coordParams": {
+          "admCd": "1156011700",
+          "rnMgtSn": "115604154413",
+          "udrtYn": "0",
+          "buldMnnm": "14",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "예인교회-영등포구",
+      "name": "예인교회",
+      "original": {
+        "address": "서울시 영등포구 도림로 220 3층(신길동)",
+        "region": "서울",
+        "subRegion": "영등포구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 영등포구 도림로 220 (신길동)",
+        "jibunAddr": "서울특별시 영등포구 신길동 436-26",
+        "zipNo": "07424",
+        "siNm": "서울특별시",
+        "sggNm": "영등포구",
+        "coordParams": {
+          "admCd": "1156013200",
+          "rnMgtSn": "115603116010",
+          "udrtYn": "0",
+          "buldMnnm": "220",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "십자가지기교회-용산구",
+      "name": "십자가지기교회",
+      "original": {
+        "address": "서울시 용산구 한남동 737-37 한남빌딩",
+        "region": "서울",
+        "subRegion": "용산구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 용산구 이태원로 211 (한남동)",
+        "jibunAddr": "서울특별시 용산구 한남동 737-37 한남빌딩",
+        "zipNo": "04349",
+        "siNm": "서울특별시",
+        "sggNm": "용산구",
+        "coordParams": {
+          "admCd": "1117013100",
+          "rnMgtSn": "111703102009",
+          "udrtYn": "0",
+          "buldMnnm": "211",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "샘터교회-은평구",
+      "name": "샘터교회",
+      "original": {
+        "address": "서울 은평구 연서로35길 8",
+        "region": "서울",
+        "subRegion": "은평구"
+      },
+      "totalCount": 15,
+      "matched": {
+        "roadAddr": "서울특별시 은평구 연서로35길 8 (불광동)",
+        "jibunAddr": "서울특별시 은평구 불광동 422-20",
+        "zipNo": "03342",
+        "siNm": "서울특별시",
+        "sggNm": "은평구",
+        "coordParams": {
+          "admCd": "1138010300",
+          "rnMgtSn": "113804133167",
+          "udrtYn": "0",
+          "buldMnnm": "8",
+          "buldSlno": "0"
+        }
+      },
+      "status": "multiple",
+      "reason": "후보 15건 — 어느 것인지 확인 필요"
+    },
+    {
+      "id": "중심교회-은평구",
+      "name": "중심교회",
+      "original": {
+        "address": "서울시은평구 녹번동 98-3",
+        "region": "서울",
+        "subRegion": "은평구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 은평구 녹번로3길 2 (녹번동)",
+        "jibunAddr": "서울특별시 은평구 녹번동 98-3 중심장로교회",
+        "zipNo": "03376",
+        "siNm": "서울특별시",
+        "sggNm": "은평구",
+        "coordParams": {
+          "admCd": "1138010200",
+          "rnMgtSn": "113804133062",
+          "udrtYn": "0",
+          "buldMnnm": "2",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "명륜교회-종로구",
+      "name": "명륜교회",
+      "original": {
+        "address": "서울 종로구 혜화로3길 6 명륜교회",
+        "region": "서울",
+        "subRegion": "종로구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 종로구 혜화로3길 6 (명륜1가)",
+        "jibunAddr": "서울특별시 종로구 명륜1가 46-7 명륜교회",
+        "zipNo": "03068",
+        "siNm": "서울특별시",
+        "sggNm": "종로구",
+        "coordParams": {
+          "admCd": "1111017000",
+          "rnMgtSn": "111104100545",
+          "udrtYn": "0",
+          "buldMnnm": "6",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "양의문교회-종로구",
+      "name": "양의문교회",
+      "original": {
+        "address": "서울시 종로구 사직동 304-43",
+        "region": "서울",
+        "subRegion": "종로구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 종로구 송월1길 73-18 (사직동)",
+        "jibunAddr": "서울특별시 종로구 사직동 304-43 양의문교회",
+        "zipNo": "03028",
+        "siNm": "서울특별시",
+        "sggNm": "종로구",
+        "coordParams": {
+          "admCd": "1111011500",
+          "rnMgtSn": "111104100191",
+          "udrtYn": "0",
+          "buldMnnm": "73",
+          "buldSlno": "18"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "열린교회-종로구",
+      "name": "열린교회",
+      "original": {
+        "address": "서울 은평구 증산로 275 순수지혜 3층",
+        "region": "서울",
+        "subRegion": "종로구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 은평구 증산로 275 (증산동)",
+        "jibunAddr": "서울특별시 은평구 증산동 174-1 순수지혜",
+        "zipNo": "03500",
+        "siNm": "서울특별시",
+        "sggNm": "은평구",
+        "coordParams": {
+          "admCd": "1138011000",
+          "rnMgtSn": "113803005056",
+          "udrtYn": "0",
+          "buldMnnm": "275",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "동래언약교회-동래구",
+      "name": "동래언약교회",
+      "original": {
+        "address": "부산시 동래구 명륜로 261-1",
+        "region": "부산",
+        "subRegion": "동래구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "부산광역시 동래구 명륜로 261-1 (명륜동)",
+        "jibunAddr": "부산광역시 동래구 명륜동 4-8",
+        "zipNo": "47739",
+        "siNm": "부산광역시",
+        "sggNm": "동래구",
+        "coordParams": {
+          "admCd": "2626010700",
+          "rnMgtSn": "262603130023",
+          "udrtYn": "0",
+          "buldMnnm": "261",
+          "buldSlno": "1"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "반석위교회-부산진구",
+      "name": "반석위교회",
+      "original": {
+        "address": "부산시 부산진구 개금본동로 40 5층",
+        "region": "부산",
+        "subRegion": "부산진구"
+      },
+      "totalCount": 6,
+      "matched": {
+        "roadAddr": "부산광역시 부산진구 개금본동로 40 (개금동)",
+        "jibunAddr": "부산광역시 부산진구 개금동 19-6 반도보라아파트",
+        "zipNo": "47168",
+        "siNm": "부산광역시",
+        "sggNm": "부산진구",
+        "coordParams": {
+          "admCd": "2623011100",
+          "rnMgtSn": "262303129002",
+          "udrtYn": "0",
+          "buldMnnm": "40",
+          "buldSlno": "0"
+        }
+      },
+      "status": "multiple",
+      "reason": "후보 6건 — 어느 것인지 확인 필요"
+    },
+    {
+      "id": "유은교회-사하구",
+      "name": "유은교회",
+      "original": {
+        "address": "부산시 사하구 하단동 1157-5",
+        "region": "부산",
+        "subRegion": "사하구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "부산광역시 사하구 하신번영로 423-1 (하단동)",
+        "jibunAddr": "부산광역시 사하구 하단동 1157-5",
+        "zipNo": "49301",
+        "siNm": "부산광역시",
+        "sggNm": "사하구",
+        "coordParams": {
+          "admCd": "2638010300",
+          "rnMgtSn": "263803134034",
+          "udrtYn": "0",
+          "buldMnnm": "423",
+          "buldSlno": "1"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "한우리교회-해운대구",
+      "name": "한우리교회",
+      "original": {
+        "address": "부산시 해운대구 반여1동 1199-26",
+        "region": "부산",
+        "subRegion": "해운대구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "부산광역시 해운대구 선수촌로 65-35 (반여동)",
+        "jibunAddr": "부산광역시 해운대구 반여동 1199-26 한우리교회",
+        "zipNo": "48038",
+        "siNm": "부산광역시",
+        "sggNm": "해운대구",
+        "coordParams": {
+          "admCd": "2635010300",
+          "rnMgtSn": "263503133009",
+          "udrtYn": "0",
+          "buldMnnm": "65",
+          "buldSlno": "35"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "성서계명교회-달서구",
+      "name": "성서계명교회",
+      "original": {
+        "address": "대구시 달서구 신당동 1836-7",
+        "region": "대구",
+        "subRegion": "달서구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "대구광역시 달서구 서당로3길 115 (신당동)",
+        "jibunAddr": "대구광역시 달서구 신당동 1836-7",
+        "zipNo": "42614",
+        "siNm": "대구광역시",
+        "sggNm": "달서구",
+        "coordParams": {
+          "admCd": "2729010700",
+          "rnMgtSn": "272904241226",
+          "udrtYn": "0",
+          "buldMnnm": "115",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "언약교회-수성구",
+      "name": "언약교회",
+      "original": {
+        "address": "대구시 수성구 범어 4동 140-3",
+        "region": "대구",
+        "subRegion": "수성구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "대구광역시 수성구 달구벌대로496길 19-11 (범어동)",
+        "jibunAddr": "대구광역시 수성구 범어동 140-3",
+        "zipNo": "42094",
+        "siNm": "대구광역시",
+        "sggNm": "수성구",
+        "coordParams": {
+          "admCd": "2726010100",
+          "rnMgtSn": "272604238066",
+          "udrtYn": "0",
+          "buldMnnm": "19",
+          "buldSlno": "11"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "주님뜻이룸교회-남동구",
+      "name": "주님뜻이룸교회",
+      "original": {
+        "address": "인천시 남동구 서창남순환로 6 신화빌딩 3층 302",
+        "region": "인천",
+        "subRegion": "남동구"
+      },
+      "totalCount": 4,
+      "matched": {
+        "roadAddr": "인천광역시 남동구 서창남순환로 6 (서창동)",
+        "jibunAddr": "인천광역시 남동구 서창동 663-2 신화빌딩",
+        "zipNo": "21610",
+        "siNm": "인천광역시",
+        "sggNm": "남동구",
+        "coordParams": {
+          "admCd": "2820010500",
+          "rnMgtSn": "282003153092",
+          "udrtYn": "0",
+          "buldMnnm": "6",
+          "buldSlno": "0"
+        }
+      },
+      "status": "multiple",
+      "reason": "후보 4건 — 어느 것인지 확인 필요",
+      "keywordUsed": "인천시 남동구 서창남순환로 6"
+    },
+    {
+      "id": "어진내교회-남동구",
+      "name": "어진내교회",
+      "original": {
+        "address": "인천시 남동구 논현동 617-1 성지타워 9층",
+        "region": "인천",
+        "subRegion": "남동구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "인천광역시 남동구 청능대로595번길 17 (논현동)",
+        "jibunAddr": "인천광역시 남동구 논현동 617-1 성지타워",
+        "zipNo": "21666",
+        "siNm": "인천광역시",
+        "sggNm": "남동구",
+        "coordParams": {
+          "admCd": "2820011000",
+          "rnMgtSn": "282004259714",
+          "udrtYn": "0",
+          "buldMnnm": "17",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "튜울립장로교회-부평구",
+      "name": "튜울립장로교회",
+      "original": {
+        "address": "인천시 부평구 동암남로 34 2층",
+        "region": "인천",
+        "subRegion": "부평구"
+      },
+      "totalCount": 3,
+      "matched": {
+        "roadAddr": "인천광역시 부평구 동암남로 34 (십정동)",
+        "jibunAddr": "인천광역시 부평구 십정동 476-4",
+        "zipNo": "21439",
+        "siNm": "인천광역시",
+        "sggNm": "부평구",
+        "coordParams": {
+          "admCd": "2823710200",
+          "rnMgtSn": "282373154015",
+          "udrtYn": "0",
+          "buldMnnm": "34",
+          "buldSlno": "0"
+        }
+      },
+      "status": "multiple",
+      "reason": "후보 3건 — 어느 것인지 확인 필요"
+    },
+    {
+      "id": "반석교회-서구",
+      "name": "반석교회",
+      "original": {
+        "address": "인천 서해구 연희로14번길 9-7 반석교회",
+        "region": "인천",
+        "subRegion": "서구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "인천광역시 서해구 연희로14번길 9-7 (연희동)",
+        "jibunAddr": "인천광역시 서해구 연희동 684-21 반석교회",
+        "zipNo": "22721",
+        "siNm": "인천광역시",
+        "sggNm": "서해구",
+        "coordParams": {
+          "admCd": "2827510400",
+          "rnMgtSn": "282754268495",
+          "udrtYn": "0",
+          "buldMnnm": "9",
+          "buldSlno": "7"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "주님의교회-북구",
+      "name": "주님의교회",
+      "original": {
+        "address": "전남광주 북구 석곡월산길 36",
+        "region": "전남광주",
+        "subRegion": "북구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "전남광주통합특별시 북구 석곡월산길 36 (망월동)",
+        "jibunAddr": "전남광주통합특별시 북구 망월동 1154-147 주님의교회",
+        "zipNo": "61140",
+        "siNm": "전남광주통합특별시",
+        "sggNm": "북구",
+        "coordParams": {
+          "admCd": "1230012100",
+          "rnMgtSn": "123004286418",
+          "udrtYn": "0",
+          "buldMnnm": "36",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "복용교회-유성구",
+      "name": "복용교회",
+      "original": {
+        "address": "대전시 유성구 학하서로 187-23(복용동 452-12)",
+        "region": "대전",
+        "subRegion": "유성구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "대전광역시 유성구 학하서로 187-23 (복용동)",
+        "jibunAddr": "대전광역시 유성구 복용동 452-12",
+        "zipNo": "34157",
+        "siNm": "대전광역시",
+        "sggNm": "유성구",
+        "coordParams": {
+          "admCd": "3020011600",
+          "rnMgtSn": "302003342042",
+          "udrtYn": "0",
+          "buldMnnm": "187",
+          "buldSlno": "23"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "울산언약교회-북구",
+      "name": "울산언약교회",
+      "original": {
+        "address": "울산시 북구 화봉동 886-3번지(1층)",
+        "region": "울산",
+        "subRegion": "북구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "울산광역시 북구 사청6길 6 (화봉동)",
+        "jibunAddr": "울산광역시 북구 화봉동 886-3",
+        "zipNo": "44239",
+        "siNm": "울산광역시",
+        "sggNm": "북구",
+        "coordParams": {
+          "admCd": "3120012500",
+          "rnMgtSn": "312004316131",
+          "udrtYn": "0",
+          "buldMnnm": "6",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "주님의-교회",
+      "name": "주님의 교회",
+      "original": {
+        "address": "세종시 마음로 70 에셀프라자 701호",
+        "region": "세종",
+        "subRegion": ""
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "세종특별자치시 마음로 70 (고운동)",
+        "jibunAddr": "세종특별자치시 고운동 1720 에셀프라자",
+        "zipNo": "30063",
+        "siNm": "세종특별자치시",
+        "sggNm": "",
+        "coordParams": {
+          "admCd": "3611011200",
+          "rnMgtSn": "361103258108",
+          "udrtYn": "0",
+          "buldMnnm": "70",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "세종말씀교회",
+      "name": "세종말씀교회",
+      "original": {
+        "address": "세종시 고운서길 19, 스마트큐브1차 701호(고운동)",
+        "region": "세종",
+        "subRegion": ""
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "세종특별자치시 고운서길 19 (고운동)",
+        "jibunAddr": "세종특별자치시 고운동 1717 세종 스마트큐브Ⅰ",
+        "zipNo": "30063",
+        "siNm": "세종특별자치시",
+        "sggNm": "",
+        "coordParams": {
+          "admCd": "3611011200",
+          "rnMgtSn": "361104853496",
+          "udrtYn": "0",
+          "buldMnnm": "19",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상",
+      "keywordUsed": "세종시 고운서길 19"
+    },
+    {
+      "id": "삼송제일교회-고양시",
+      "name": "삼송제일교회",
+      "original": {
+        "address": "경기도 고양시 덕양구 동세로 138",
+        "region": "경기",
+        "subRegion": "고양시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 고양시 덕양구 동세로 138 (원흥동)",
+        "jibunAddr": "경기도 고양시 덕양구 원흥동 673 삼송제일교회",
+        "zipNo": "10557",
+        "siNm": "경기도",
+        "sggNm": "고양시 덕양구",
+        "coordParams": {
+          "admCd": "4128110400",
+          "rnMgtSn": "412813194066",
+          "udrtYn": "0",
+          "buldMnnm": "138",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "주교개혁장로교회-고양시",
+      "name": "주교개혁장로교회",
+      "original": {
+        "address": "경기도 고양시 덕양구 주교동 582-3",
+        "region": "경기",
+        "subRegion": "고양시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 고양시 덕양구 마상로108번길 24 (주교동)",
+        "jibunAddr": "경기도 고양시 덕양구 주교동 582-3",
+        "zipNo": "10459",
+        "siNm": "경기도",
+        "sggNm": "고양시 덕양구",
+        "coordParams": {
+          "admCd": "4128110100",
+          "rnMgtSn": "412814376089",
+          "udrtYn": "0",
+          "buldMnnm": "24",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "금정제일교회-군포시",
+      "name": "금정제일교회",
+      "original": {
+        "address": "경기도 군포시 금정동 769-7",
+        "region": "경기",
+        "subRegion": "군포시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 군포시 당산로126번길 1 (금정동)",
+        "jibunAddr": "경기도 군포시 금정동 769-8",
+        "zipNo": "15830",
+        "siNm": "경기도",
+        "sggNm": "군포시",
+        "coordParams": {
+          "admCd": "4141010500",
+          "rnMgtSn": "414104400143",
+          "udrtYn": "0",
+          "buldMnnm": "1",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "예숲교회-군포시",
+      "name": "예숲교회",
+      "original": {
+        "address": "경기도 군포시 산본동 1142-1 유화프라자 702호",
+        "region": "경기",
+        "subRegion": "군포시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 군포시 번영로 515 (산본동)",
+        "jibunAddr": "경기도 군포시 산본동 1142-1 유화프라자빌딩",
+        "zipNo": "15865",
+        "siNm": "경기도",
+        "sggNm": "군포시",
+        "coordParams": {
+          "admCd": "4141010400",
+          "rnMgtSn": "414103200025",
+          "udrtYn": "0",
+          "buldMnnm": "515",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "새소망교회-김포시",
+      "name": "새소망교회",
+      "original": {
+        "address": "경기도 김포시 김포한강 11로 38 한강화성파크드린아파트 단지상가 2층",
+        "region": "경기",
+        "subRegion": "김포시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 김포시 김포한강11로 38 (운양동, 모담마을 한강 화성파크드림)",
+        "jibunAddr": "경기도 김포시 운양동 1325-7 모담마을 한강 화성파크드림",
+        "zipNo": "10077",
+        "siNm": "경기도",
+        "sggNm": "김포시",
+        "coordParams": {
+          "admCd": "4157010300",
+          "rnMgtSn": "415703209174",
+          "udrtYn": "0",
+          "buldMnnm": "38",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상",
+      "keywordUsed": "경기도 김포시 김포한강 11로 38"
+    },
+    {
+      "id": "솔리데오글로리아교회-남양주시",
+      "name": "솔리데오글로리아교회",
+      "original": {
+        "address": "경기도 남양주시 진건읍 진관리 162-1",
+        "region": "경기",
+        "subRegion": "남양주시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 남양주시 진건읍 양진로 375-77",
+        "jibunAddr": "경기도 남양주시 진건읍 진관리 162-1",
+        "zipNo": "12139",
+        "siNm": "경기도",
+        "sggNm": "남양주시",
+        "coordParams": {
+          "admCd": "4136025923",
+          "rnMgtSn": "413603197039",
+          "udrtYn": "0",
+          "buldMnnm": "375",
+          "buldSlno": "77"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "온생명교회-남양주시",
+      "name": "온생명교회",
+      "original": {
+        "address": "경기 남양주시 가운로1길 1",
+        "region": "경기",
+        "subRegion": "남양주시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 남양주시 가운로1길 1 (다산동)",
+        "jibunAddr": "경기도 남양주시 다산동 666-3 드림프라자",
+        "zipNo": "12263",
+        "siNm": "경기도",
+        "sggNm": "남양주시",
+        "coordParams": {
+          "admCd": "4136011200",
+          "rnMgtSn": "413604391021",
+          "udrtYn": "0",
+          "buldMnnm": "1",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "한사랑교회-동두천시",
+      "name": "한사랑교회",
+      "original": {
+        "address": "경기도 동두천시 보산동 407-49",
+        "region": "경기",
+        "subRegion": "동두천시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 동두천시 동광로 152 (보산동)",
+        "jibunAddr": "경기도 동두천시 보산동 407-49",
+        "zipNo": "11310",
+        "siNm": "경기도",
+        "sggNm": "동두천시",
+        "coordParams": {
+          "admCd": "4125010600",
+          "rnMgtSn": "412503189004",
+          "udrtYn": "0",
+          "buldMnnm": "152",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "한마음개혁교회-성남시",
+      "name": "한마음개혁교회",
+      "original": {
+        "address": "경기도 성남시 분당구 벌말로 47 304호",
+        "region": "경기",
+        "subRegion": "성남시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 성남시 분당구 벌말로 47 (야탑동)",
+        "jibunAddr": "경기도 성남시 분당구 야탑동 275-1 명지프라자",
+        "zipNo": "13504",
+        "siNm": "경기도",
+        "sggNm": "성남시 분당구",
+        "coordParams": {
+          "admCd": "4113510700",
+          "rnMgtSn": "411353196015",
+          "udrtYn": "0",
+          "buldMnnm": "47",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "광교장로교회-수원시",
+      "name": "광교장로교회",
+      "original": {
+        "address": "경기도 수원시 팔달구 우만동 530-26 2층",
+        "region": "경기",
+        "subRegion": "수원시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 수원시 팔달구 팔달문로 157 (우만동)",
+        "jibunAddr": "경기도 수원시 팔달구 우만동 530-26 대복빌딩",
+        "zipNo": "16239",
+        "siNm": "경기도",
+        "sggNm": "수원시 팔달구",
+        "coordParams": {
+          "admCd": "4111514000",
+          "rnMgtSn": "411153176015",
+          "udrtYn": "0",
+          "buldMnnm": "157",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "미문교회-수원시",
+      "name": "미문교회",
+      "original": {
+        "address": "경기도 수원시 권선구 탑동 861-9",
+        "region": "경기",
+        "subRegion": "수원시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 수원시 권선구 하탑로30번길 24 (탑동)",
+        "jibunAddr": "경기도 수원시 권선구 탑동 861-9",
+        "zipNo": "16610",
+        "siNm": "경기도",
+        "sggNm": "수원시 권선구",
+        "coordParams": {
+          "admCd": "4111313300",
+          "rnMgtSn": "411134325479",
+          "udrtYn": "0",
+          "buldMnnm": "24",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "우만교회-수원시",
+      "name": "우만교회",
+      "original": {
+        "address": "경기도 수원시 영통구 매탄동 810",
+        "region": "경기",
+        "subRegion": "수원시"
+      },
+      "totalCount": 5,
+      "matched": {
+        "roadAddr": "경기도 수원시 영통구 매영로 10 (매탄동, 삼성2차아파트)",
+        "jibunAddr": "경기도 수원시 영통구 매탄동 810 삼성2차아파트",
+        "zipNo": "16538",
+        "siNm": "경기도",
+        "sggNm": "수원시 영통구",
+        "coordParams": {
+          "admCd": "4111710100",
+          "rnMgtSn": "411173177003",
+          "udrtYn": "0",
+          "buldMnnm": "10",
+          "buldSlno": "0"
+        }
+      },
+      "status": "multiple",
+      "reason": "후보 5건 — 어느 것인지 확인 필요"
+    },
+    {
+      "id": "우리개혁교회-안산시",
+      "name": "우리개혁교회",
+      "original": {
+        "address": "경기도 안산시 상록구 월피동 442-17",
+        "region": "경기",
+        "subRegion": "안산시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 안산시 상록구 충장로 568-1 (월피동)",
+        "jibunAddr": "경기도 안산시 상록구 월피동 442-17 안산장대현교회",
+        "zipNo": "15279",
+        "siNm": "경기도",
+        "sggNm": "안산시 상록구",
+        "coordParams": {
+          "admCd": "4127110900",
+          "rnMgtSn": "412713190071",
+          "udrtYn": "0",
+          "buldMnnm": "568",
+          "buldSlno": "1"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "안산회복의교회-안산시",
+      "name": "안산회복의교회",
+      "original": {
+        "address": "경기도 안산시 상록구 본오1동 904",
+        "region": "경기",
+        "subRegion": "안산시"
+      },
+      "totalCount": 18,
+      "matched": {
+        "roadAddr": "경기도 안산시 상록구 샘골로 78 (본오동)",
+        "jibunAddr": "경기도 안산시 상록구 본오동 904-13",
+        "zipNo": "15554",
+        "siNm": "경기도",
+        "sggNm": "안산시 상록구",
+        "coordParams": {
+          "admCd": "4127110400",
+          "rnMgtSn": "412713190036",
+          "udrtYn": "0",
+          "buldMnnm": "78",
+          "buldSlno": "0"
+        }
+      },
+      "status": "multiple",
+      "reason": "후보 18건 — 어느 것인지 확인 필요"
+    },
+    {
+      "id": "안산푸른교회-안산시",
+      "name": "안산푸른교회",
+      "original": {
+        "address": "경기도 안산시 단원구 와동 115",
+        "region": "경기",
+        "subRegion": "안산시"
+      },
+      "totalCount": 23,
+      "matched": {
+        "roadAddr": "경기도 안산시 단원구 와동로 103 (와동)",
+        "jibunAddr": "경기도 안산시 단원구 와동 115 푸른교회",
+        "zipNo": "15254",
+        "siNm": "경기도",
+        "sggNm": "안산시 단원구",
+        "coordParams": {
+          "admCd": "4127310200",
+          "rnMgtSn": "412733191053",
+          "udrtYn": "0",
+          "buldMnnm": "103",
+          "buldSlno": "0"
+        }
+      },
+      "status": "multiple",
+      "reason": "후보 23건 — 어느 것인지 확인 필요"
+    },
+    {
+      "id": "안산믿음교회-안산시",
+      "name": "안산믿음교회",
+      "original": {
+        "address": "경기도 안산시 상록구 본오동 충장로3길 15-1 303호",
+        "region": "경기",
+        "subRegion": "안산시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 안산시 상록구 충장로3길 15-1 (본오동, 호민)",
+        "jibunAddr": "경기도 안산시 상록구 본오동 888-14 호민",
+        "zipNo": "15552",
+        "siNm": "경기도",
+        "sggNm": "안산시 상록구",
+        "coordParams": {
+          "admCd": "4127110400",
+          "rnMgtSn": "412714370490",
+          "udrtYn": "0",
+          "buldMnnm": "15",
+          "buldSlno": "1"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "진리사랑교회-안양시",
+      "name": "진리사랑교회",
+      "original": {
+        "address": "경기도 안양시 동안구 211번길16 삼희월드프라자 9층",
+        "region": "경기",
+        "subRegion": "안양시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 안양시 동안구 평촌대로211번길 16 (호계동)",
+        "jibunAddr": "경기도 안양시 동안구 호계동 1048-2 삼희월드프라자",
+        "zipNo": "14072",
+        "siNm": "경기도",
+        "sggNm": "안양시 동안구",
+        "coordParams": {
+          "admCd": "4117310400",
+          "rnMgtSn": "411734349198",
+          "udrtYn": "0",
+          "buldMnnm": "16",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "다우리교회-용인시",
+      "name": "다우리교회",
+      "original": {
+        "address": "경기 용인시 기흥구 흥덕2로117번길 15 504호",
+        "region": "경기",
+        "subRegion": "용인시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 용인시 기흥구 흥덕2로117번길 15 (영덕동)",
+        "jibunAddr": "경기도 용인시 기흥구 영덕동 974-3 로데오프라자",
+        "zipNo": "16953",
+        "siNm": "경기도",
+        "sggNm": "용인시 기흥구",
+        "coordParams": {
+          "admCd": "4146311100",
+          "rnMgtSn": "414634412296",
+          "udrtYn": "0",
+          "buldMnnm": "15",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "하늘마을장로교회-용인시",
+      "name": "하늘마을장로교회",
+      "original": {
+        "address": "경기도 용인시 수지구 동천동 862 현대홈타운 2차 아파트 단지상가",
+        "region": "경기",
+        "subRegion": "용인시"
+      },
+      "totalCount": 2,
+      "matched": {
+        "roadAddr": "경기도 용인시 수지구 동천로63번길 10 (동천동, 동천마을현대2차홈타운)",
+        "jibunAddr": "경기도 용인시 수지구 동천동 862 동천마을현대2차홈타운",
+        "zipNo": "16823",
+        "siNm": "경기도",
+        "sggNm": "용인시 수지구",
+        "coordParams": {
+          "admCd": "4146510300",
+          "rnMgtSn": "414654415188",
+          "udrtYn": "0",
+          "buldMnnm": "10",
+          "buldSlno": "0"
+        }
+      },
+      "status": "multiple",
+      "reason": "후보 2건 — 어느 것인지 확인 필요",
+      "keywordUsed": "경기도 용인시 수지구 동천동 862"
+    },
+    {
+      "id": "선실교회-의왕시",
+      "name": "선실교회",
+      "original": {
+        "address": "경기도 의왕시 내손동 637 보우상가 4층",
+        "region": "경기",
+        "subRegion": "의왕시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 의왕시 내손로 76 (내손동)",
+        "jibunAddr": "경기도 의왕시 내손동 637 보우상가",
+        "zipNo": "16026",
+        "siNm": "경기도",
+        "sggNm": "의왕시",
+        "coordParams": {
+          "admCd": "4143010700",
+          "rnMgtSn": "414303201009",
+          "udrtYn": "0",
+          "buldMnnm": "76",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "주언교회-의왕시",
+      "name": "주언교회",
+      "original": {
+        "address": "경기도 의왕시 내손동 755 우성메디칼센터 7층 704",
+        "region": "경기",
+        "subRegion": "의왕시"
+      },
+      "totalCount": 5,
+      "matched": {
+        "roadAddr": "경기도 의왕시 계원대학로 20 (내손동)",
+        "jibunAddr": "경기도 의왕시 내손동 755 우성메디컬센타",
+        "zipNo": "16039",
+        "siNm": "경기도",
+        "sggNm": "의왕시",
+        "coordParams": {
+          "admCd": "4143010700",
+          "rnMgtSn": "414303201007",
+          "udrtYn": "0",
+          "buldMnnm": "20",
+          "buldSlno": "0"
+        }
+      },
+      "status": "multiple",
+      "reason": "후보 5건 — 어느 것인지 확인 필요",
+      "keywordUsed": "경기도 의왕시 내손동 755"
+    },
+    {
+      "id": "소식교회-일산시",
+      "name": "소식교회",
+      "original": {
+        "address": "경기도 일산시",
+        "region": "경기",
+        "subRegion": "일산시"
+      },
+      "totalCount": 7,
+      "matched": {
+        "roadAddr": "경기도 고양시 일산서구 일청로59번길 20-1 (일산동, 일산시티타운)",
+        "jibunAddr": "경기도 고양시 일산서구 일산동 584-43 일산시티타운",
+        "zipNo": "10346",
+        "siNm": "경기도",
+        "sggNm": "고양시 일산서구",
+        "coordParams": {
+          "admCd": "4128710100",
+          "rnMgtSn": "412874382125",
+          "udrtYn": "0",
+          "buldMnnm": "20",
+          "buldSlno": "1"
+        }
+      },
+      "status": "multiple",
+      "reason": "후보 7건 — 어느 것인지 확인 필요"
+    },
+    {
+      "id": "현산교회-일산시",
+      "name": "현산교회",
+      "original": {
+        "address": "경기도 고양시 일산서구 탄현동 1585 탄현마을 풍림상가 201",
+        "region": "경기",
+        "subRegion": "일산시"
+      },
+      "totalCount": 2,
+      "matched": {
+        "roadAddr": "경기도 고양시 일산서구 현중로 8 (탄현동)",
+        "jibunAddr": "경기도 고양시 일산서구 탄현동 1585 탄현마을16단지",
+        "zipNo": "10345",
+        "siNm": "경기도",
+        "sggNm": "고양시 일산서구",
+        "coordParams": {
+          "admCd": "4128710300",
+          "rnMgtSn": "412873194024",
+          "udrtYn": "0",
+          "buldMnnm": "8",
+          "buldSlno": "0"
+        }
+      },
+      "status": "multiple",
+      "reason": "후보 2건 — 어느 것인지 확인 필요",
+      "keywordUsed": "경기도 고양시 일산서구 탄현동 1585"
+    },
+    {
+      "id": "더불어사는교회-평택시",
+      "name": "더불어사는교회",
+      "original": {
+        "address": "경기 평택시 청북읍 광승길 161",
+        "region": "경기",
+        "subRegion": "평택시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 평택시 청북읍 광승길 161",
+        "jibunAddr": "경기도 평택시 청북읍 현곡리 120-3",
+        "zipNo": "17811",
+        "siNm": "경기도",
+        "sggNm": "평택시",
+        "coordParams": {
+          "admCd": "4122025921",
+          "rnMgtSn": "412204364041",
+          "udrtYn": "0",
+          "buldMnnm": "161",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "반석교회-평택시",
+      "name": "반석교회",
+      "original": {
+        "address": "경기도 평택시 서정동 792-10",
+        "region": "경기",
+        "subRegion": "평택시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 평택시 특구로43번길 90 (서정동)",
+        "jibunAddr": "경기도 평택시 서정동 792-10",
+        "zipNo": "17773",
+        "siNm": "경기도",
+        "sggNm": "평택시",
+        "coordParams": {
+          "admCd": "4122010100",
+          "rnMgtSn": "412204364828",
+          "udrtYn": "0",
+          "buldMnnm": "90",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "한가족교회-화성시",
+      "name": "한가족교회",
+      "original": {
+        "address": "경기도 화성시 우정읍 멱우방죽1길 15-4",
+        "region": "경기",
+        "subRegion": "화성시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 화성시 만세구 우정읍 멱우방죽1길 15-4",
+        "jibunAddr": "경기도 화성시 만세구 우정읍 멱우리 228-1",
+        "zipNo": "18561",
+        "siNm": "경기도",
+        "sggNm": "화성시 만세구",
+        "coordParams": {
+          "admCd": "4159125025",
+          "rnMgtSn": "415914430434",
+          "udrtYn": "0",
+          "buldMnnm": "15",
+          "buldSlno": "4"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "덕일교회-김천시",
+      "name": "덕일교회",
+      "original": {
+        "address": "경북 김천시 무실1길 6",
+        "region": "경북",
+        "subRegion": "김천시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경상북도 김천시 무실1길 6 (덕곡동)",
+        "jibunAddr": "경상북도 김천시 덕곡동 977-7",
+        "zipNo": "39657",
+        "siNm": "경상북도",
+        "sggNm": "김천시",
+        "coordParams": {
+          "admCd": "4715011600",
+          "rnMgtSn": "471504718337",
+          "udrtYn": "0",
+          "buldMnnm": "6",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "실로암교회-영천시",
+      "name": "실로암교회",
+      "original": {
+        "address": "경북 영천시 금호읍 성천앞길 29",
+        "region": "경북",
+        "subRegion": "영천시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경상북도 영천시 금호읍 성천앞길 29",
+        "jibunAddr": "경상북도 영천시 금호읍 성천리 395-1 실로암예배당",
+        "zipNo": "38873",
+        "siNm": "경상북도",
+        "sggNm": "영천시",
+        "coordParams": {
+          "admCd": "4723025023",
+          "rnMgtSn": "472304730358",
+          "udrtYn": "0",
+          "buldMnnm": "29",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "한결교회-창원시",
+      "name": "한결교회",
+      "original": {
+        "address": "경남 창원시 의창구 사림로 130번길 10-12 청호빌딩 301-501호",
+        "region": "경남",
+        "subRegion": "창원시"
+      },
+      "totalCount": 38,
+      "matched": {
+        "roadAddr": "경상남도 창원시 의창구 사림로 13 (봉곡동)",
+        "jibunAddr": "경상남도 창원시 의창구 봉곡동 164-17",
+        "zipNo": "51147",
+        "siNm": "경상남도",
+        "sggNm": "창원시 의창구",
+        "coordParams": {
+          "admCd": "4812112700",
+          "rnMgtSn": "481213327024",
+          "udrtYn": "0",
+          "buldMnnm": "13",
+          "buldSlno": "0"
+        }
+      },
+      "status": "multiple",
+      "reason": "후보 38건 — 어느 것인지 확인 필요",
+      "keywordUsed": "경남 창원시 의창구 사림로 13"
+    },
+    {
+      "id": "군산진성교회-군산시",
+      "name": "군산진성교회",
+      "original": {
+        "address": "전북 군산시 삼학동 884",
+        "region": "전북",
+        "subRegion": "군산시"
+      },
+      "totalCount": 13,
+      "matched": {
+        "roadAddr": "전북특별자치도 군산시 미원로 66-3 (삼학동)",
+        "jibunAddr": "전북특별자치도 군산시 삼학동 884-50",
+        "zipNo": "54118",
+        "siNm": "전북특별자치도",
+        "sggNm": "군산시",
+        "coordParams": {
+          "admCd": "5213011100",
+          "rnMgtSn": "521303268033",
+          "udrtYn": "0",
+          "buldMnnm": "66",
+          "buldSlno": "3"
+        }
+      },
+      "status": "multiple",
+      "reason": "후보 13건 — 어느 것인지 확인 필요"
+    },
+    {
+      "id": "내흥교회-군산시",
+      "name": "내흥교회",
+      "original": {
+        "address": "전북특별자치도 군산시 내흥1길 15 (내흥동)",
+        "region": "전북",
+        "subRegion": "군산시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "전북특별자치도 군산시 내흥1길 15 (내흥동)",
+        "jibunAddr": "전북특별자치도 군산시 내흥동 0",
+        "zipNo": "54042",
+        "siNm": "전북특별자치도",
+        "sggNm": "군산시",
+        "coordParams": {
+          "admCd": "5213013800",
+          "rnMgtSn": "521304604183",
+          "udrtYn": "0",
+          "buldMnnm": "15",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "예본교회-김제시",
+      "name": "예본교회",
+      "original": {
+        "address": "전북 김제시 동서로 255 (요촌동)",
+        "region": "전북",
+        "subRegion": "김제시"
+      },
+      "totalCount": 0,
+      "status": "notFound",
+      "reason": "검색 결과 없음"
+    },
+    {
+      "id": "익산우리교회-익산시",
+      "name": "익산우리교회",
+      "original": {
+        "address": "전북 익산시 송학동 322-20",
+        "region": "전북",
+        "subRegion": "익산시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "전북특별자치도 익산시 학곤로16길 28 (송학동)",
+        "jibunAddr": "전북특별자치도 익산시 송학동 322-20 익산우리교회",
+        "zipNo": "54665",
+        "siNm": "전북특별자치도",
+        "sggNm": "익산시",
+        "coordParams": {
+          "admCd": "5214011600",
+          "rnMgtSn": "521404608365",
+          "udrtYn": "0",
+          "buldMnnm": "28",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "삼천제일교회-전주시",
+      "name": "삼천제일교회",
+      "original": {
+        "address": "전북 전주시 완산구 효자동1가 205-12",
+        "region": "전북",
+        "subRegion": "전주시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "전북특별자치도 전주시 완산구 효동2길 23 (효자동1가)",
+        "jibunAddr": "전북특별자치도 전주시 완산구 효자동1가 205-12",
+        "zipNo": "55094",
+        "siNm": "전북특별자치도",
+        "sggNm": "전주시 완산구",
+        "coordParams": {
+          "admCd": "5211114000",
+          "rnMgtSn": "521114598441",
+          "udrtYn": "0",
+          "buldMnnm": "23",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "옥토교회-정읍시",
+      "name": "옥토교회",
+      "original": {
+        "address": "전북 정읍시 상동 253-8",
+        "region": "전북",
+        "subRegion": "정읍시"
+      },
+      "totalCount": 2,
+      "matched": {
+        "roadAddr": "전북특별자치도 정읍시 학산로 127-2 (상동)",
+        "jibunAddr": "전북특별자치도 정읍시 상동 253-8 쿠치Pczone",
+        "zipNo": "56194",
+        "siNm": "전북특별자치도",
+        "sggNm": "정읍시",
+        "coordParams": {
+          "admCd": "5218010300",
+          "rnMgtSn": "521803270051",
+          "udrtYn": "0",
+          "buldMnnm": "127",
+          "buldSlno": "2"
+        }
+      },
+      "status": "multiple",
+      "reason": "후보 2건 — 어느 것인지 확인 필요"
+    },
+    {
+      "id": "광양개혁교회-광양시",
+      "name": "광양개혁교회",
+      "original": {
+        "address": "전남 광양시 광양읍 덕례리 1661-1",
+        "region": "전남광주",
+        "subRegion": "광양시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "전남광주통합특별시 광양시 광양읍 서산길 66",
+        "jibunAddr": "전남광주통합특별시 광양시 광양읍 덕례리 1661-1 광양개혁교회",
+        "zipNo": "57761",
+        "siNm": "전남광주통합특별시",
+        "sggNm": "광양시",
+        "coordParams": {
+          "admCd": "1219025035",
+          "rnMgtSn": "121904655232",
+          "udrtYn": "0",
+          "buldMnnm": "66",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "목포장로교회-목포시",
+      "name": "목포장로교회",
+      "original": {
+        "address": "전남 목포시 신흥로 92, 4층",
+        "region": "전남광주",
+        "subRegion": "목포시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "전남광주통합특별시 목포시 신흥로 92 (옥암동)",
+        "jibunAddr": "전남광주통합특별시 목포시 옥암동 1003-4",
+        "zipNo": "58685",
+        "siNm": "전남광주통합특별시",
+        "sggNm": "목포시",
+        "coordParams": {
+          "admCd": "1211016400",
+          "rnMgtSn": "121103281049",
+          "udrtYn": "0",
+          "buldMnnm": "92",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "필그림교회-천안시",
+      "name": "필그림교회",
+      "original": {
+        "address": "충남 천안시 두정동 두정프라자 4층",
+        "region": "충남",
+        "subRegion": "천안시"
+      },
+      "totalCount": 13,
+      "matched": {
+        "roadAddr": "충청남도 천안시 서북구 노태산로 10 (두정동)",
+        "jibunAddr": "충청남도 천안시 서북구 두정동 611 한양프라자",
+        "zipNo": "31099",
+        "siNm": "충청남도",
+        "sggNm": "천안시 서북구",
+        "coordParams": {
+          "admCd": "4413310400",
+          "rnMgtSn": "441333250015",
+          "udrtYn": "0",
+          "buldMnnm": "10",
+          "buldSlno": "0"
+        }
+      },
+      "status": "multiple",
+      "reason": "후보 13건 — 어느 것인지 확인 필요"
+    },
+    {
+      "id": "죽림교회-태안군",
+      "name": "죽림교회",
+      "original": {
+        "address": "충남 태안군 근흥면 근흥로 1312-7",
+        "region": "충남",
+        "subRegion": "태안군"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "충청남도 태안군 근흥면 근흥로 1312-7",
+        "jibunAddr": "충청남도 태안군 근흥면 정죽리 845-13",
+        "zipNo": "32131",
+        "siNm": "충청남도",
+        "sggNm": "태안군",
+        "coordParams": {
+          "admCd": "4482533027",
+          "rnMgtSn": "448253264002",
+          "udrtYn": "0",
+          "buldMnnm": "1312",
+          "buldSlno": "7"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "제천행복한교회-제천시",
+      "name": "제천행복한교회",
+      "original": {
+        "address": "충북 제천시 청전동 14-13",
+        "region": "충북",
+        "subRegion": "제천시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "충청북도 제천시 청전대로15길 28 (청전동)",
+        "jibunAddr": "충청북도 제천시 청전동 14-13",
+        "zipNo": "27147",
+        "siNm": "충청북도",
+        "sggNm": "제천시",
+        "coordParams": {
+          "admCd": "4315011300",
+          "rnMgtSn": "431504517982",
+          "udrtYn": "0",
+          "buldMnnm": "28",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "새소망교회-청주시",
+      "name": "새소망교회",
+      "original": {
+        "address": "충북 청주시 오송읍 동평서평길 59-43",
+        "region": "충북",
+        "subRegion": "청주시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "충청북도 청주시 흥덕구 오송읍 동평서평길 59-43",
+        "jibunAddr": "충청북도 청주시 흥덕구 오송읍 동평리 179-15",
+        "zipNo": "28169",
+        "siNm": "충청북도",
+        "sggNm": "청주시 흥덕구",
+        "coordParams": {
+          "admCd": "4311325029",
+          "rnMgtSn": "431134520206",
+          "udrtYn": "0",
+          "buldMnnm": "59",
+          "buldSlno": "43"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "수문앞장로교회-청주시",
+      "name": "수문앞장로교회",
+      "original": {
+        "address": "충북 청주시 청원구 율봉로 167번길34",
+        "region": "충북",
+        "subRegion": "청주시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "충청북도 청주시 청원구 율봉로167번길 34 (율량동)",
+        "jibunAddr": "충청북도 청주시 청원구 율량동 806-2",
+        "zipNo": "28328",
+        "siNm": "충청북도",
+        "sggNm": "청주시 청원구",
+        "coordParams": {
+          "admCd": "4311410300",
+          "rnMgtSn": "431144508573",
+          "udrtYn": "0",
+          "buldMnnm": "34",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "청주언약교회-청주시",
+      "name": "청주언약교회",
+      "original": {
+        "address": "충북 청주시 흥덕구 복대2동 2386",
+        "region": "충북",
+        "subRegion": "청주시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "충청북도 청주시 흥덕구 풍산로178번길 65 (복대동)",
+        "jibunAddr": "충청북도 청주시 흥덕구 복대동 2386",
+        "zipNo": "28604",
+        "siNm": "충청북도",
+        "sggNm": "청주시 흥덕구",
+        "coordParams": {
+          "admCd": "4311311400",
+          "rnMgtSn": "431134512061",
+          "udrtYn": "0",
+          "buldMnnm": "65",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "원주청신교회-원주시",
+      "name": "원주청신교회",
+      "original": {
+        "address": "강원도 원주시 단계동 512-20 2층",
+        "region": "강원",
+        "subRegion": "원주시"
+      },
+      "totalCount": 2,
+      "matched": {
+        "roadAddr": "강원특별자치도 원주시 원문로 174 (단계동)",
+        "jibunAddr": "강원특별자치도 원주시 단계동 512-20",
+        "zipNo": "26408",
+        "siNm": "강원특별자치도",
+        "sggNm": "원주시",
+        "coordParams": {
+          "admCd": "5113011000",
+          "rnMgtSn": "511303219041",
+          "udrtYn": "0",
+          "buldMnnm": "174",
+          "buldSlno": "0"
+        }
+      },
+      "status": "multiple",
+      "reason": "후보 2건 — 어느 것인지 확인 필요"
+    },
+    {
+      "id": "춘천시민교회-춘천시",
+      "name": "춘천시민교회",
+      "original": {
+        "address": "강원도 춘천시 석사동 730",
+        "region": "강원",
+        "subRegion": "춘천시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "강원특별자치도 춘천시 애막골길3번길 51 (석사동)",
+        "jibunAddr": "강원특별자치도 춘천시 석사동 730",
+        "zipNo": "24320",
+        "siNm": "강원특별자치도",
+        "sggNm": "춘천시",
+        "coordParams": {
+          "admCd": "5111012400",
+          "rnMgtSn": "511104454474",
+          "udrtYn": "0",
+          "buldMnnm": "51",
+          "buldSlno": "0"
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    }
+  ]
+}

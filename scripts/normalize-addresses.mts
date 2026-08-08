@@ -1,11 +1,12 @@
 // 도로명주소 검색 API로 보유 주소를 진단한다 — 보고만 하고 churches.json은 건드리지 않는다
 
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
 import { normalizeRegion, toAddressKeyword } from "../src/lib/church-utils.ts";
-import type { Church } from "../src/types/church.ts";
+import { readSource, type SourceRow } from "./lib/source.mts";
 
-const INPUT = "data/churches.json";
-const OUTPUT = "data/reports/address-check.json";
+// 커밋 대상이다. import-source가 이 파일을 읽어 정규화된 주소를 반영하고,
+// 2단계(좌표)도 여기 coordParams를 쓴다. 저장소를 clone하면 재실행 없이 같은 결과가 나온다.
+const OUTPUT = "data/geocode.json";
 const ENDPOINT = "https://business.juso.go.kr/addrlink/addrLinkApi.do";
 const DELAY_MS = 1000; // 준수 사항의 "초당 1건 이하"를 그대로 따른다
 const TIMEOUT_MS = 15_000;
@@ -84,11 +85,11 @@ async function search(keyword: string): Promise<{ total: number; juso: Juso[] } 
   return { total: Number(common.totalCount ?? 0), juso: body.results?.juso ?? [] };
 }
 
-function classify(church: Church, r: { total: number; juso: Juso[] }): Entry {
+function classify(church: SourceRow, r: { total: number; juso: Juso[] }): Entry {
   const base = {
     id: church.id,
     name: church.name,
-    original: { address: church.address, region: church.region, subRegion: church.subRegion },
+    original: { address: church.rawAddress, region: church.region, subRegion: church.subRegion },
     totalCount: r.total,
   };
 
@@ -131,9 +132,10 @@ function classify(church: Church, r: { total: number; juso: Juso[] }): Entry {
   return { ...base, matched, status: "ok", reason: "정상" };
 }
 
-const churches: Church[] = JSON.parse(readFileSync(INPUT, "utf8"));
+// 원본 주소로 조회한다. churches.json의 주소는 이미 정규화됐을 수 있어 쓰면 결과가 흔들린다.
+const { rows } = readSource();
 const only = process.argv.find((a) => a.startsWith("--only="))?.slice(7);
-const targets = only ? churches.filter((c) => c.name.includes(only)) : churches;
+const targets = only ? rows.filter((c) => c.name.includes(only)) : rows;
 
 console.log(`대상 ${targets.length}건 · 요청 간격 ${DELAY_MS}ms · 예상 ${Math.ceil((targets.length * (DELAY_MS + 400)) / 60000)}분\n`);
 
@@ -142,13 +144,13 @@ let trimmed = 0;
 for (const [i, church] of targets.entries()) {
   if (i > 0) await sleep(DELAY_MS);
   let keywordUsed: string | undefined;
-  let r = await search(church.address);
+  let r = await search(church.rawAddress);
 
   // 원본 그대로 못 찾으면 건물명·층을 뗀 검색어로 한 번 더 시도한다.
   // 검색어만 다듬는 것이고 원본 주소는 그대로 둔다.
   if (!("error" in r) && r.total === 0) {
-    const keyword = toAddressKeyword(church.address);
-    if (keyword && keyword !== church.address) {
+    const keyword = toAddressKeyword(church.rawAddress);
+    if (keyword && keyword !== church.rawAddress) {
       await sleep(DELAY_MS);
       const retry = await search(keyword);
       if (!("error" in retry) && retry.total > 0) {
@@ -165,7 +167,7 @@ for (const [i, church] of targets.entries()) {
       name: church.name,
       status: "apiError",
       reason: r.error,
-      original: { address: church.address, region: church.region, subRegion: church.subRegion },
+      original: { address: church.rawAddress, region: church.region, subRegion: church.subRegion },
     });
     process.stdout.write("!");
     continue;
@@ -206,8 +208,19 @@ for (const s of ["apiError", "notFound", "multiple", "historical", "regionMismat
   }
 }
 
-mkdirSync("data/reports", { recursive: true });
-writeFileSync(OUTPUT, JSON.stringify(entries, null, 2) + "\n", "utf8");
-console.log(`\n상세 → ${OUTPUT}`);
-console.log("※ 이 스크립트는 보고만 한다. data/churches.json은 수정하지 않는다.");
-console.log("※ 좌표 단계(2단계)는 이 파일의 coordParams를 읽어 쓴다 — 재검색이 필요 없다.");
+writeFileSync(
+  OUTPUT,
+  JSON.stringify(
+    {
+      note: "도로명주소 검색 API 조회 결과. import-source가 status가 'ok'인 건만 address를 roadAddr로 교체한다. 다중 후보·검색 실패는 1순위가 맞다는 보장이 없어 원본을 유지한다. 좌표 단계는 coordParams를 그대로 쓴다.",
+      checkedAt: new Date().toISOString().slice(0, 10),
+      entries,
+    },
+    null,
+    2,
+  ) + "\n",
+  "utf8",
+);
+console.log(`\n결과 → ${OUTPUT}`);
+console.log("※ 이 스크립트는 data/churches.json을 직접 수정하지 않는다.");
+console.log("※ 반영은 npm run import:source가 한다 — status가 'ok'인 건만.");

@@ -152,6 +152,13 @@ describe("normalizePhone", () => {
     expect(normalizePhone("021234567")).toBe("02-123-4567");
   });
 
+  it("050X 안심번호는 앞자리를 네 자리로 끊는다", () => {
+    // 실제 보유 데이터에 있는 번호다. 세 자리로 끊으면 형식 이탈로 오판한다
+    expect(normalizePhone("0507-1312-5303")).toBe("0507-1312-5303");
+    expect(normalizePhone("050713125303")).toBe("0507-1312-5303");
+    expect(normalizePhone("0505-123-4567")).toBe("0505-123-4567");
+  });
+
   it("자릿수가 맞지 않으면 임의로 고치지 않고 원본을 돌려준다", () => {
     expect(normalizePhone("010-8993-777")).toBe("010-8993-777");
   });

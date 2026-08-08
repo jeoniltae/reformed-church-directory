@@ -80,6 +80,12 @@ function splitPhone(raw: string): [string, string, string] | null {
   if (d.startsWith("010")) {
     return d.length === 11 ? ["010", d.slice(3, 7), d.slice(7)] : null;
   }
+  // 050X 안심번호는 앞자리가 네 자리다 (0507-1234-5678 / 0505-123-4567)
+  if (/^050\d/.test(d)) {
+    return d.length === 11 || d.length === 12
+      ? [d.slice(0, 4), d.slice(4, -4), d.slice(-4)]
+      : null;
+  }
   // 서울은 지역번호가 두 자리다
   if (d.startsWith("02")) {
     return d.length === 9 || d.length === 10

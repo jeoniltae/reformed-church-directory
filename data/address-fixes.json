@@ -1,0 +1,189 @@
+{
+  "note": "사람이 확인해 교정한 값. import-source가 이 값으로 원본을 덮어쓴다. 원본 CSV는 수정하지 않으므로 이 목록이 없으면 다음 변환에서 되돌아간다. 빈 문자열은 무시하므로 바뀐 항목만 채우면 된다.",
+  "fields": {
+    "corrected": "교정한 주소. 도로명주소가 가장 좋고 정확한 지번도 무방하다",
+    "phoneCorrected": "전화번호가 바뀌었을 때만",
+    "pastorCorrected": "담임목사가 바뀌었을 때만",
+    "phoneHint": "원본 전화번호 — 검색용 참고값이며 수정해도 반영되지 않는다",
+    "pastorHint": "원본 담임목사 — 참고값",
+    "note": "확인 경위 메모 (선택)"
+  },
+  "fixes": [
+    {
+      "id": "언약교회-강동구",
+      "church": "언약교회",
+      "original": "서울시 강동구 강일동 69",
+      "corrected": "서울 강동구 강일동 69",
+      "phoneHint": "02-428-3578",
+      "phoneCorrected": "070-4101-3578",
+      "pastorHint": "최현진",
+      "pastorCorrected": "이승구",
+      "note": ""
+    },
+    {
+      "id": "바른교회-노원구",
+      "church": "바른교회",
+      "original": "서울시 노원구 중례4동 445번지 염광아파트상가 3층",
+      "corrected": "서울 노원구 덕릉로79길 35 염광아파트 상가",
+      "phoneHint": "02-969-0432",
+      "phoneCorrected": "",
+      "pastorHint": "배병권",
+      "pastorCorrected": "",
+      "note": ""
+    },
+    {
+      "id": "고은교회-동대문구",
+      "church": "고은교회",
+      "original": "서울시 동대문구 이문3동 177-68 3층(신이문역 1번출구 근처)",
+      "corrected": "서울 동대문구 한천로 436",
+      "phoneHint": "02-3295-2771",
+      "phoneCorrected": "02-963-4891",
+      "pastorHint": "황부일",
+      "pastorCorrected": "",
+      "note": "https://moneypin.biz/bizno/detail/5588268413/에는 전화번호가 02-963-4891로 되어있음"
+    },
+    {
+      "id": "두레교회-영등포구",
+      "church": "두레교회",
+      "original": "서울 영등포구 ?당산동6가 121-156",
+      "corrected": "서울 영등포구 버드나루로14가길 14",
+      "phoneHint": "02-2677-5271",
+      "phoneCorrected": "02-2677-5281",
+      "pastorHint": "오세택",
+      "pastorCorrected": "",
+      "note": ""
+    },
+    {
+      "id": "샘터교회-은평구",
+      "church": "샘터교회",
+      "original": "서울시 은평구 불광3동 422-20",
+      "corrected": "서울 은평구 연서로35길 8",
+      "phoneHint": "02-388-2847",
+      "phoneCorrected": "",
+      "pastorHint": "이정화",
+      "pastorCorrected": "",
+      "note": ""
+    },
+    {
+      "id": "명륜교회-종로구",
+      "church": "명륜교회",
+      "original": "서울시 종로구 명륜동1가 46-7",
+      "corrected": "서울 종로구 혜화로3길 6 명륜교회",
+      "phoneHint": "02-762-4595",
+      "phoneCorrected": "",
+      "pastorHint": "고석남",
+      "pastorCorrected": "",
+      "note": ""
+    },
+    {
+      "id": "열린교회-종로구",
+      "church": "열린교회",
+      "original": "서울시 종로구 필운동 298 3층",
+      "corrected": "서울 은평구 증산로 275 순수지혜 3층",
+      "phoneHint": "010-8993-777",
+      "phoneCorrected": "02-306-0643",
+      "pastorHint": "문정식",
+      "pastorCorrected": "",
+      "note": ""
+    },
+    {
+      "id": "반석교회-서구",
+      "church": "반석교회",
+      "original": "인천시 서구 연희동 684-21",
+      "corrected": "인천 서해구 연희로14번길 9-7 반석교회",
+      "phoneHint": "010-9704-8973",
+      "phoneCorrected": "032-564-6187",
+      "pastorHint": "이경섭",
+      "pastorCorrected": "",
+      "note": ""
+    },
+    {
+      "id": "주님의교회-북구",
+      "church": "주님의교회",
+      "original": "광주시 북구 망월동 1154-147",
+      "corrected": "전남광주 북구 석곡월산길 36",
+      "phoneHint": "062-267-7762",
+      "phoneCorrected": "062-401-7762",
+      "pastorHint": "고경태",
+      "pastorCorrected": "",
+      "note": ""
+    },
+    {
+      "id": "온생명교회-남양주시",
+      "church": "온생명교회",
+      "original": "경기도 남양주시 가운동 666-3 드림프라자 8층",
+      "corrected": "경기 남양주시 가운로1길 1",
+      "phoneHint": "031-553-5303",
+      "phoneCorrected": "0507-1312-5303",
+      "pastorHint": "안재경",
+      "pastorCorrected": "",
+      "note": "유튜브: https://www.youtube.com/@osmchurch/featured"
+    },
+    {
+      "id": "다우리교회-용인시",
+      "church": "다우리교회",
+      "original": "경기도 용인시 기흥구 마복동 502-194",
+      "corrected": "경기 용인시 기흥구 흥덕2로117번길 15 504호",
+      "phoneHint": "010-3887-9966",
+      "phoneCorrected": "0507-1372-9967",
+      "pastorHint": "임경근",
+      "pastorCorrected": "",
+      "note": "홈페이지 변경됨: http://dawoori.or.kr/"
+    },
+    {
+      "id": "더불어사는교회-평택시",
+      "church": "더불어사는교회",
+      "original": "경기도 평택시 청북면 현곡리 120-3",
+      "corrected": "경기 평택시 청북읍 광승길 161",
+      "phoneHint": "031-683-7469",
+      "phoneCorrected": "",
+      "pastorHint": "김영길",
+      "pastorCorrected": "",
+      "note": ""
+    },
+    {
+      "id": "덕일교회-김천시",
+      "church": "덕일교회",
+      "original": "경북 김천시 덕곡동 977-5",
+      "corrected": "경북 김천시 무실1길 6",
+      "phoneHint": "054-439-1695",
+      "phoneCorrected": "",
+      "pastorHint": "이차식",
+      "pastorCorrected": "",
+      "note": ""
+    },
+    {
+      "id": "내흥교회-군산시",
+      "church": "내흥교회",
+      "original": "전북 군산시 내흥동 579",
+      "corrected": "전북특별자치도 군산시 내흥1길 15 (내흥동)",
+      "phoneHint": "063-445-3458",
+      "phoneCorrected": "",
+      "pastorHint": "장재훈",
+      "pastorCorrected": "",
+      "note": ""
+    },
+    {
+      "id": "예본교회-김제시",
+      "church": "예본교회",
+      "original": "전북 김제시 동서로 255 (요촌동) 2층",
+      "corrected": "전북 김제시 동서로 255 (요촌동)",
+      "phoneHint": "010-6653-9684",
+      "phoneCorrected": "",
+      "pastorHint": "임진남",
+      "pastorCorrected": "",
+      "note": ""
+    },
+    {
+      "id": "죽림교회-태안군",
+      "church": "죽림교회",
+      "original": "충남 태안군 근흥면 정죽2리 826",
+      "corrected": "충남 태안군 근흥면 근흥로 1312-7",
+      "phoneHint": "",
+      "phoneCorrected": "041-675-1329",
+      "pastorHint": "가재기",
+      "pastorCorrected": "",
+      "note": ""
+    }
+  ]
+}

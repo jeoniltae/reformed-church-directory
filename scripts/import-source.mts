@@ -14,6 +14,7 @@ import type { Church } from "../src/types/church.ts";
 const INPUT = "data/raw/추천교회.CSV";
 const OUTPUT = "data/churches.json";
 const DEAD_LINKS = "data/dead-links.json";
+const ADDRESS_FIXES = "data/address-fixes.json";
 const HEADER_ROW = 3; // 1-based. 1행 제목, 2행 빈 줄
 const SOURCE = "자체 수집";
 
@@ -83,10 +84,28 @@ const deadLinks = new Set<string>(
   ).links.map((l) => l.url),
 );
 
+// 사람이 확인해 교정한 값. 원본 CSV를 고치지 않으므로 이 목록이 없으면 되돌아간다.
+type Fix = {
+  id: string;
+  corrected?: string;
+  phoneCorrected?: string;
+  pastorCorrected?: string;
+};
+const fixes = new Map<string, Fix>(
+  (JSON.parse(readFileSync(ADDRESS_FIXES, "utf8")) as { fixes: Fix[] }).fixes.map(
+    (f) => [f.id, f],
+  ),
+);
+const fixOf = (id: string, key: keyof Omit<Fix, "id">): string | undefined => {
+  const v = fixes.get(id)?.[key]?.trim();
+  return v ? v : undefined;
+};
+
 const warnings: string[] = [];
 const idCount = new Map<string, number>();
 const churches: Church[] = [];
 let droppedLinks = 0;
+const fixedCount = { address: 0, phone: 0, pastor: 0 };
 
 for (const row of rows) {
   const name = at(row, "교회명");
@@ -103,21 +122,31 @@ for (const row of rows) {
     warnings.push(`ID 충돌 → ${id} (${name})`);
   }
 
-  if (phone && isSuspectPhone(phone)) {
-    warnings.push(`전화번호 형식 확인 필요 → ${name}: ${phone}`);
-  }
+  const fixedAddress = fixOf(id, "corrected");
+  const fixedPhone = fixOf(id, "phoneCorrected");
+  const fixedPastor = fixOf(id, "pastorCorrected");
+  if (fixedAddress) fixedCount.address++;
+  if (fixedPhone) fixedCount.phone++;
+  if (fixedPastor) fixedCount.pastor++;
 
   const church: Church = {
     id,
     name,
     region: normalizeRegion(at(row, "지역")),
-    address: normalizeAddress(at(row, "주소")),
-    pastor: at(row, "담임목사"),
+    address: fixedAddress ?? normalizeAddress(at(row, "주소")),
+    pastor: fixedPastor ?? at(row, "담임목사"),
     source: SOURCE,
   };
   if (subRegion) church.subRegion = subRegion;
   if (denomination) church.denomination = denomination;
-  if (phone) church.phone = normalizePhone(phone);
+  // 교정값이 있으면 그것을 쓴다. 여전히 형식이 어긋나면 사람에게 다시 알린다.
+  const effectivePhone = fixedPhone ?? phone;
+  if (effectivePhone) {
+    church.phone = normalizePhone(effectivePhone);
+    if (isSuspectPhone(effectivePhone)) {
+      warnings.push(`전화번호 형식 확인 필요 → ${name}: ${effectivePhone}`);
+    }
+  }
   if (homepage) {
     const url = normalizeUrl(homepage);
     if (deadLinks.has(url)) droppedLinks++;
@@ -138,6 +167,9 @@ console.log(`${churches.length}건 → ${OUTPUT}`);
 console.log(`버린 열: ${dropped.length ? dropped.join(", ") : "없음"}`);
 console.log(
   `죽은 링크로 비운 homepage: ${droppedLinks}건 (등록 ${deadLinks.size}건, ${DEAD_LINKS})`,
+);
+console.log(
+  `사람이 교정한 값: 주소 ${fixedCount.address} · 전화 ${fixedCount.phone} · 담임목사 ${fixedCount.pastor}  (${ADDRESS_FIXES})`,
 );
 if (droppedLinks !== deadLinks.size) {
   warnings.push(

@@ -1,65 +1,77 @@
-import Image from "next/image";
+// 홈 — 수록 현황, 지역 타일, 교회 미리보기를 얹은 랜딩 화면
+
+import { Search } from "lucide-react";
+import Link from "next/link";
+import { ChurchRow } from "@/features/churches/components/ChurchRow";
+import { RegionTiles } from "@/features/churches/components/RegionTiles";
+import { getAllChurches } from "@/features/churches/data";
+import { collectRegionCounts } from "@/features/churches/search";
+
+/** 홈 타일에 세울 지역 수. 나머지는 `그 외 지역` 한 칸으로 모은다 */
+const TILE_REGIONS = 5;
+/** 홈에서 미리 보여줄 교회 수 */
+const PREVIEW_CHURCHES = 5;
 
 export default function Home() {
+  const churches = getAllChurches();
+  const regions = collectRegionCounts(churches);
+
+  const topRegions = regions.slice(0, TILE_REGIONS);
+  const restCount =
+    churches.length - topRegions.reduce((sum, { count }) => sum + count, 0);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="mx-auto w-full max-w-2xl flex-1 px-4 pt-8">
+      <p className="text-t4 text-muted-foreground">국내 개혁주의 교회</p>
+      <h1 className="mt-2 text-t9 font-bold text-foreground">
+        오늘, 어디로
+        <br />
+        예배하러 가시나요
+      </h1>
+
+      <div className="mt-6 rounded-lg bg-primary p-5 text-primary-foreground">
+        <p className="text-t4 text-primary-foreground/70">수록 교회</p>
+        <p className="mt-1 flex items-baseline gap-1.5">
+          <span className="text-t10 font-bold">{churches.length}</span>
+          <span className="text-t5">
+            곳 · {regions.length}개 지역
+          </span>
+        </p>
+        <Link
+          href="/churches"
+          className="mt-5 flex items-center gap-2 rounded-lg bg-primary-foreground/10 px-3 py-3 text-t4 text-primary-foreground/70 outline-none transition-colors hover:bg-primary-foreground/20 focus-visible:ring-3 focus-visible:ring-primary-foreground/40"
+        >
+          <Search aria-hidden className="size-4" />
+          교회명·주소·담임목사 검색
+        </Link>
+      </div>
+
+      <h2 className="mt-8 mb-3 text-t6 font-semibold text-foreground">
+        지역으로 찾기
+      </h2>
+      <RegionTiles regions={topRegions} restCount={restCount} />
+
+      <div className="mt-8 flex items-baseline justify-between border-t border-border pt-6">
+        <h2 className="text-t6 font-semibold text-foreground">교회 둘러보기</h2>
+        <Link
+          href="/churches"
+          className="rounded-lg text-t4 text-muted-foreground outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+        >
+          전체 보기
+        </Link>
+      </div>
+      <ul className="mt-1 divide-y divide-border">
+        {churches.slice(0, PREVIEW_CHURCHES).map((church) => (
+          <li key={church.id}>
+            <ChurchRow church={church} />
+          </li>
+        ))}
+      </ul>
+
+      <p className="mt-8 border-t border-border py-6 text-t2 text-muted-foreground">
+        교회 정보는 자체 수집 자료를 정리한 것입니다. 정보 수정·삭제 요청 창구는
+        준비 중입니다.
+      </p>
+    </main>
   );
 }

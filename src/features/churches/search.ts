@@ -31,13 +31,23 @@ export function filterChurches(
   });
 }
 
-/** 실제 데이터에 등장하는 지역만, 건수 내림차순으로 돌려준다 */
-export function collectRegions(churches: Church[]): string[] {
+export interface RegionCount {
+  region: string;
+  count: number;
+}
+
+/** 실제 데이터에 등장하는 지역과 그 건수를, 건수 내림차순으로 돌려준다 */
+export function collectRegionCounts(churches: Church[]): RegionCount[] {
   const counts = new Map<string, number>();
   for (const church of churches) {
     counts.set(church.region, (counts.get(church.region) ?? 0) + 1);
   }
   return [...counts.entries()]
     .sort(([, a], [, b]) => b - a)
-    .map(([region]) => region);
+    .map(([region, count]) => ({ region, count }));
+}
+
+/** 실제 데이터에 등장하는 지역만, 건수 내림차순으로 돌려준다 */
+export function collectRegions(churches: Church[]): string[] {
+  return collectRegionCounts(churches).map(({ region }) => region);
 }

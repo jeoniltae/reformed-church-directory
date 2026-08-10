@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from "vitest";
 import type { Church } from "@/types/church";
-import { collectRegions, filterChurches } from "./search";
+import { collectRegionCounts, collectRegions, filterChurches } from "./search";
 
 const churches: Church[] = [
   {
@@ -87,5 +87,22 @@ describe("collectRegions", () => {
 
   it("빈 목록에는 빈 배열이다", () => {
     expect(collectRegions([])).toEqual([]);
+  });
+});
+
+describe("collectRegionCounts", () => {
+  it("지역과 건수를 함께 내림차순으로 돌려준다", () => {
+    expect(collectRegionCounts(churches)).toEqual([
+      { region: "서울", count: 2 },
+      { region: "경기", count: 1 },
+    ]);
+  });
+
+  it("건수 합계는 원본 건수와 같다 — 홈의 `그 외 지역` 계산이 이 성질에 기댄다", () => {
+    const total = collectRegionCounts(churches).reduce(
+      (sum, { count }) => sum + count,
+      0,
+    );
+    expect(total).toBe(churches.length);
   });
 });

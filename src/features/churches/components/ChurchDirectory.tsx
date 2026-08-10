@@ -8,11 +8,22 @@ import { ChurchCard } from "./ChurchCard";
 import { ChurchSearchBar } from "./ChurchSearchBar";
 import { ALL_REGIONS, RegionFilter } from "./RegionFilter";
 
-export function ChurchDirectory({ churches }: { churches: Church[] }) {
-  const [query, setQuery] = useState("");
-  const [region, setRegion] = useState(ALL_REGIONS);
+interface ChurchDirectoryProps {
+  churches: Church[];
+  /** 홈의 지역 타일에서 넘어온 초기 선택값. 이후 변경은 로컬 상태로만 관리한다 */
+  initialRegion?: string;
+}
 
+export function ChurchDirectory({
+  churches,
+  initialRegion,
+}: ChurchDirectoryProps) {
+  const [query, setQuery] = useState("");
   const regions = useMemo(() => collectRegions(churches), [churches]);
+  // 데이터에 없는 지역이 URL로 들어오면 빈 목록이 되므로 `전체`로 되돌린다
+  const [region, setRegion] = useState(() =>
+    initialRegion && regions.includes(initialRegion) ? initialRegion : ALL_REGIONS,
+  );
   const results = useMemo(
     () =>
       filterChurches(churches, {

@@ -28,7 +28,16 @@ export function RegionFilter({
           type="button"
           variant={region === selected ? "default" : "secondary"}
           aria-pressed={region === selected}
-          onClick={() => onSelect(region)}
+          onClick={(event) => {
+            onSelect(region);
+            // 목록 끝의 칩을 눌러도 잘리지 않도록 누른 칩을 가운데로 끌어온다.
+            // block: nearest가 없으면 세로 스크롤까지 함께 움직인다
+            event.currentTarget.scrollIntoView({
+              behavior: "smooth",
+              inline: "center",
+              block: "nearest",
+            });
+          }}
           className="h-9 shrink-0 px-3 text-t4"
         >
           {region}

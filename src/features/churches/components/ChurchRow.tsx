@@ -12,9 +12,15 @@ export function ChurchRow({ church }: { church: Church }) {
   return (
     <Link
       href={`/churches/${church.id}`}
-      className="flex items-center justify-between gap-3 py-4 outline-none transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50"
+      className="flex items-center gap-3 py-4 outline-none transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50"
     >
-      <span className="min-w-0">
+      <span
+        aria-hidden
+        className="grid size-9 shrink-0 place-items-center rounded-full bg-muted text-t4 font-semibold text-muted-foreground"
+      >
+        {[...church.name][0]}
+      </span>
+      <span className="min-w-0 flex-1">
         <span className="block truncate text-t5 font-semibold text-foreground">
           {church.name}
         </span>

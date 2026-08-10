@@ -40,7 +40,7 @@ UI는 모바일 우선 반응형 웹으로 제작한다.
 
 ### 데이터 저장소
 
-- **DB 없음.** 교회 데이터는 `data/churches.json` 하나에 담고 앱이 직접 읽는다. 약 3천 건 규모라 DB가 필요 없고, 상세 페이지는 `generateStaticParams`로 전부 SSG로 굽는다. 결정 배경은 `docs/context-notes.md` 참고.
+- **DB 없음.** 교회 데이터는 `data/churches.json` 하나에 담고 앱이 직접 읽는다(현재 89건, 고신·합신 확장 후 약 3천 건 예상). 이 규모에서는 DB가 필요 없고, 상세 페이지는 `generateStaticParams`로 전부 SSG로 구울 계획이다 — 상세 라우트는 아직 미구현. 결정 배경은 `docs/context-notes.md` 참고.
 - 데이터 생성·갱신은 크롤러(`scripts/`)가 오프라인 배치로만 수행하고, 결과 JSON을 커밋한다. 배포는 커밋에 따라 Vercel이 자동 처리한다.
 - API Route 없음 — Server Component에서 JSON을 직접 읽는다.
 - Supabase를 다시 검토할 조건(데이터 수만 건 초과, 재배포 없는 갱신, PostGIS·전문 검색 필요)은 `docs/context-notes.md`에 정리돼 있다.
@@ -78,7 +78,14 @@ npm run lint   # ESLint
 npm run build  # 프로덕션 빌드
 ```
 
-- `npm test`에는 아직 `--passWithNoTests`가 붙어 있다. 첫 유틸 테스트가 생기면 제거한다.
+데이터 정비용 오프라인 스크립트. 앱 런타임과 무관하며 수동으로만 돌린다.
+
+```bash
+npm run import:source        # 원본 → data/churches.json 변환
+npm run check:homepages      # 홈페이지 생존 확인 → data/dead-links.json
+npm run normalize:addresses  # 도로명주소 API로 주소 정규화 (.env.local 필요)
+```
+
 - `npm run crawl:kosin`은 `scripts/collect-kosin.ts`가 생기는 시점에 `node scripts/collect-kosin.ts`로 추가한다. Node 24가 `.ts`를 네이티브 실행하므로 tsx 같은 실행기가 필요 없다.
 
 ---
@@ -88,24 +95,44 @@ npm run build  # 프로덕션 빌드
 ```
 ├── src/
 │   ├── app/               # Next.js App Router (페이지 & 레이아웃)
-│   ├── components/        # 공유 UI 컴포넌트
-│   │   ├── ui/            # shadcn/ui 기본 컴포넌트
-│   │   └── shared/        # 프로젝트 공통 컴포넌트
+│   ├── components/
+│   │   ├── ui/            # shadcn/ui 기본 컴포넌트 (button, input, badge)
+│   │   └── shared/        # 프로젝트 공통 컴포넌트 (BottomTabBar)
 │   ├── features/          # 기능별 모듈
-│   │   ├── churches/      # [WIP] 교회 검색·조회 (컴포넌트, 훅, 데이터 조회 함께 관리)
+│   │   ├── churches/      # 교회 검색·조회 — data.ts, search.ts, components/
 │   │   └── reports/       # [WIP] 교회 정보 제보 (폼, Server Action → GitHub Issues)
-│   ├── lib/               # 유틸리티 (cn() 등)
-│   ├── hooks/             # 커스텀 React Hooks
+│   ├── lib/               # 유틸리티 (cn(), church-utils)
 │   └── types/             # 전역 TypeScript 타입
-├── scripts/               # [WIP] 크롤러 — 오프라인 배치 실행, 앱 런타임과 분리
-│   └── collect-kosin.ts   #        고신 교회 데이터 수집
-└── data/                  # [WIP] 크롤링 결과물 — 앱이 직접 읽는 유일한 데이터 소스
-    ├── churches.json      #        커밋 대상
-    ├── excluded.json      #        삭제 요청받은 교회 — 크롤러가 항상 제외
-    └── raw/               #        내려받은 원본(KML 등), git 제외
+├── scripts/               # 데이터 정비 스크립트 — 오프라인 배치, 앱 런타임과 분리
+│   ├── lib/               #   스크립트 공용 모듈
+│   ├── import-source.mts
+│   ├── check-homepages.mts
+│   ├── normalize-addresses.mts
+│   └── collect-kosin.ts   # [WIP] 고신 교회 데이터 수집
+└── data/                  # 앱이 직접 읽는 유일한 데이터 소스
+    ├── churches.json      #   커밋 대상 (89건)
+    ├── address-fixes.json #   주소 수동 교정 표
+    ├── dead-links.json    #   홈페이지 생존 확인 결과
+    ├── geocode.json       #   지오코딩 중간 산출물
+    ├── reports/           #   스크립트 점검 리포트
+    ├── excluded.json      # [WIP] 삭제 요청받은 교회 — 크롤러가 항상 제외
+    └── raw/               #   내려받은 원본(KML 등), git 제외
 ```
 
-`src/components/ui/`는 shadcn/ui가 관리하는 영역이므로 직접 수정하지 않는다. `[WIP]` 표시된 디렉토리는 아직 생성 전이다.
+`src/components/ui/`는 shadcn/ui가 관리하는 영역이므로 직접 수정하지 않는다. `[WIP]` 표시된 항목은 아직 생성 전이다. `src/hooks/`는 아직 필요해진 적이 없어 만들지 않았다.
+
+---
+
+## 라우트 구조
+
+| 경로 | 렌더링 | 내용 |
+|---|---|---|
+| `/` | Static | 랜딩 — 수록 현황 카드, 지역 타일 6칸, 교회 미리보기 5건 |
+| `/churches` | Dynamic | 검색·목록. `?region=`을 받느라 `searchParams`를 쓴다 |
+| `/churches/[id]` | [WIP] | 교회 상세 (SSG 89건 예정) |
+| `/map` | Static | 준비 중 안내. 좌표·지도 SDK 확보 전까지 자리만 지킨다 |
+
+**상단 헤더가 없다.** 전역 이동은 `src/components/shared/BottomTabBar.tsx`(홈·검색·지도)가 전담하고, `layout.tsx`는 탭바와 `pb-16` 여백만 얹는다. 사이트명은 화면에 노출되지 않고 `metadata.title.template`으로 문서 제목에만 남는다. **헤더를 다시 만들지 않는다** — 시안이 정한 구조다.
 
 ---
 
@@ -115,6 +142,8 @@ npm run build  # 프로덕션 빌드
 - 전역 상태: Zustand (UI 상태만 — 모달, 토스트 등)
 - 서버 상태: Next.js App Router 캐싱 (React Query/SWR 사용 안 함, 의도적 결정)
 - URL 상태: Next.js 라우터 (searchParams)
+
+**`/churches?region=`은 초기값 전용이다.** 홈의 지역 타일에서 넘어올 때만 읽고, 이후 칩 조작은 로컬 상태로만 관리한다 — URL과 양방향 동기화하지 않는다. 버그가 아니라 결정이다. 데이터에 없는 지역이 들어오면 `전체`로 되돌린다.
 
 ---
 
@@ -136,6 +165,15 @@ npm run build  # 프로덕션 빌드
 
 - Tailwind className 조합 시 `cn()` 유틸 사용
 - 인라인 스타일 금지
+
+디자인 토큰·타이포 스케일·안티패턴 규칙은 `docs/ui-checklist.md`의 "원칙"과 "3단계 검수"에 있다. 화면 작업 전에 그쪽을 본다.
+
+### shadcn `base-nova` — Base UI 기반이다
+
+설치된 컴포넌트는 Radix가 아니라 **Base UI** 기반이므로 인터넷의 고전 shadcn 스니펫이 그대로 통하지 않는다. 실제로 밟은 함정 둘.
+
+- **`Button`에 `render={<Link/>}`를 넘기지 않는다.** `nativeButton`이 기본 `true`라 네이티브 `<button>`을 기대하고, 링크를 렌더하면 접근성 경고가 난다. 링크에는 `buttonVariants`를 쓴다.
+- **`buttonVariants()`는 반드시 `cn()`으로 감싼다.** 직접 쓰면 tailwind-merge가 돌지 않아 base의 `border-transparent`가 variant의 `border-border`를 덮어 테두리가 사라진다.
 
 ---
 
@@ -262,42 +300,40 @@ npm run build  # 프로덕션 빌드
 - Kakao 로컬 API 결과의 저장·재배포 가능 여부 (약관 확인 필요)
 - 갱신 주기 및 스케줄 자동화(GitHub Actions) 여부
 - 합동·백석·대신 포함 여부
-- 디렉토리 UI를 둘 위치 (예: `features/churches`)
+- **교단 표기 정규화** — `denomination`이 21종으로 흩어져 있고 6건은 값이 없다(`고신`/`고려`/`고려개혁`/`고려연합`이 별개 값). 정규화 전까지 교단은 카드 배지로 표시만 하고 필터·집계에 쓰지 않는다. 홈의 타일이 `지역으로 찾기`인 이유다
 
 ---
 
 ## SEO 운영 가이드
 
-### 자동 처리 (추가 작업 불필요)
+> **SEO는 아직 하나도 구현되지 않았다.** 아래 파일은 전부 **미생성**이다 — `src/app/sitemap.ts`, `src/app/robots.ts`, `src/app/manifest.ts`, `src/lib/json-ld.ts`, `public/llms.txt`, `src/app/not-found.tsx`. 이 섹션은 "이렇게 만든다"는 계획이지 현황이 아니다. 작업 목록은 `docs/ui-checklist.md`의 SEO 섹션에 있다.
 
-- **교회 상세 페이지**: `generateMetadata`가 `data/churches.json`을 읽어 title/description/OG/canonical 생성
-- **sitemap.xml**: `src/app/sitemap.ts`가 `data/churches.json`을 읽어 자동 생성 — 크롤러로 새로 추가된 교회도 자동 포함
-- **JSON-LD (Organization·WebSite)**: `src/app/layout.tsx`에서 전역 적용
-- **JSON-LD (BreadcrumbList)**: about/vision 등 핵심 정적 페이지에 적용
-- **[미결정]** 교회 상세 페이지의 구조화 데이터 스키마(`LocalBusiness`/`Church`/`Place` 중 선택) — 확정되는 대로 `src/lib/json-ld.ts`에 헬퍼 추가
+### 현재 구현된 것
 
-### 새 페이지/교단(교회 그룹) 추가 시에만 수동 작업 필요
+- `src/app/layout.tsx` — `metadataBase`, `title`(`default` + `template`), `description`뿐이다. **OG·Twitter·검색엔진 인증·JSON-LD는 아직 없다.**
+- `/churches`, `/map` — 각 `page.tsx`에 `metadata`(title/description/canonical)를 직접 선언했다.
 
-1. **새 정적 페이지** (`page.tsx` 신규 생성) → 파일 상단에 `export const metadata: Metadata = { title, description, openGraph }` 추가
-2. **새 교단 데이터 추가** (예: 합신 크롤러 결과 반영) → `src/app/sitemap.ts`가 `data/churches.json` 기반이므로 별도 작업 불필요. 정적 라우트를 교단별로 나눈다면 `STATIC_ROUTES`에 경로 추가
-3. **새 동적 라우트** (`[id]/page.tsx` 신규 생성) → `generateMetadata` + 해당 JSON-LD 헬퍼 추가 (`src/lib/json-ld.ts`)
-4. **새 핵심 정적 페이지(about/vision류)** → `src/lib/json-ld.ts`의 `breadcrumbJsonLd()`로 BreadcrumbList 적용
+### 구현할 때의 방침
 
-### AI 크롤러 정책
+- **sitemap**: `src/app/sitemap.ts`가 `data/churches.json`을 읽어 자동 생성한다. 크롤러로 교회가 늘어도 별도 작업이 없어야 한다.
+- **교회 상세**: `generateMetadata`가 교회명·지역으로 title/description/canonical을 만든다.
+- **JSON-LD**: `src/lib/json-ld.ts`에 `organizationJsonLd`·`websiteJsonLd`·`breadcrumbJsonLd`를 두고 `layout.tsx`에서 전역 적용한다.
+- **[미결정]** 교회 상세의 구조화 데이터 스키마(`LocalBusiness`/`Church`/`Place` 중 선택).
 
-- `src/app/robots.ts`에 GPTBot, ClaudeBot, PerplexityBot, Google-Extended 등 주요 AI 크롤러를 명시적으로 allow — 학습용/검색용 구분 없이 전부 허용(최대 노출 우선, 2026-06-19 결정)
-- `public/llms.txt` — AI 검색·답변 엔진을 위한 사이트 개요 및 핵심 섹션 링크(llmstxt.org 표준 포맷). 게시글 개별 URL은 나열하지 않음(sitemap.xml의 역할)
+### 새 페이지 추가 시 손대야 하는 곳
 
-### 접근 제한으로 사이트맵/llms.txt에서 제외된 경로
+1. **새 정적 페이지** → 파일 상단에 `export const metadata: Metadata = { title, description, alternates }` 추가
+2. **새 교단 데이터 추가** → sitemap이 `data/churches.json` 기반이므로 별도 작업 없음
+3. **새 동적 라우트** → `generateMetadata` + 해당 JSON-LD 헬퍼
+4. **새 핵심 정적 페이지(about/vision류)** → `breadcrumbJsonLd()`로 BreadcrumbList 적용
+
+### AI 크롤러 정책 — 미구현
+
+- `src/app/robots.ts`를 만들 때 GPTBot, ClaudeBot, PerplexityBot, Google-Extended 등 주요 AI 크롤러를 명시적으로 allow한다. 학습용/검색용 구분 없이 전부 허용(최대 노출 우선, 2026-06-19 결정).
+- `public/llms.txt` — AI 검색·답변 엔진을 위한 사이트 개요 및 핵심 섹션 링크(llmstxt.org 표준 포맷). 개별 교회 URL은 나열하지 않는다(sitemap.xml의 역할).
+
+### 접근 제한으로 사이트맵/llms.txt에서 제외할 경로
 
 - 현재 없음. 로그인 기능이 없고 전체 공개 조회 사이트이므로 접근 제한 라우트가 존재하지 않는다.
 - 추후 관리자 페이지(`/admin` 등)가 생기면 이 섹션에 추가하고 사이트맵·llms.txt에서 제외한다.
-
-### 관련 파일
-
-- `src/app/sitemap.ts` — 사이트맵 (정적 + 동적 URL 자동 생성)
-- `src/app/robots.ts` — 크롤러 허용/차단 규칙 (AI 크롤러 포함)
-- `public/llms.txt` — AI 검색·답변 엔진용 사이트 개요
-- `src/app/manifest.ts` — PWA 설정
-- `src/lib/json-ld.ts` — JSON-LD 헬퍼 (`organizationJsonLd`, `websiteJsonLd`, `breadcrumbJsonLd`; 교회 상세용 헬퍼는 스키마 확정 후 추가 예정)
-- `src/app/layout.tsx` — 전역 metadata (OG, Twitter, canonical, 구글/네이버 인증, Organization·WebSite JSON-LD)
+- `/map`은 준비 중 안내 화면이라 검색 노출 가치가 없다. sitemap을 만들 때 포함 여부를 판단한다.

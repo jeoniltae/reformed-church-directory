@@ -151,6 +151,73 @@
 }
 
 /*
+  홈 제목의 지역 롤링. 자바스크립트 0줄이라 홈이 Server Component·Static으로 남는다.
+
+  지역명만 굴러가고 뒤의 `에서`는 고정이다. 사라질 때는 위로 올라가며 흐려지고
+  다음 지역은 아래에서 올라오며 나타난다 — 두 항목이 잠깐 겹치므로 한 칸에 포개야 한다.
+
+  **`inline-grid`로 포갠다.** 모든 항목을 같은 그리드 칸(1/1)에 두면
+  상자 폭이 가장 긴 지역명에 맞춰 고정된다. `전남광주`(4자)가 상위권에 올라와도
+  뒤의 `에서`가 밀리지 않는다. 높이도 한 줄로 자동이라 line-height를 하드코딩할 필요가 없다.
+
+  **항목 수가 5개에 고정돼 있다.** `page.tsx`의 `TILE_REGIONS`를 바꾸면
+  아래 `nth-child` 지연과 주기(10s = 5 × 2s)도 함께 고쳐야 한다.
+*/
+.region-roll {
+  display: inline-grid;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.region-roll > span {
+  grid-area: 1 / 1;
+  /* 차례가 오기 전(애니메이션 지연 구간)에는 이 기본값이 적용돼 숨는다 */
+  opacity: 0;
+  animation: region-roll 10s ease-in-out infinite;
+}
+
+.region-roll > span:nth-child(2) {
+  animation-delay: 2s;
+}
+.region-roll > span:nth-child(3) {
+  animation-delay: 4s;
+}
+.region-roll > span:nth-child(4) {
+  animation-delay: 6s;
+}
+.region-roll > span:nth-child(5) {
+  animation-delay: 8s;
+}
+
+@keyframes region-roll {
+  0% {
+    opacity: 0;
+    translate: 0 100%;
+  }
+  5% {
+    opacity: 1;
+    translate: 0 0;
+  }
+  18% {
+    opacity: 1;
+    translate: 0 0;
+  }
+  /*
+    다음 항목은 20%(=2초) 지점에 올라오기 시작한다.
+    나가는 구간을 25%까지 끌어 0.5초 겹치게 했다 — 딱 맞추면 교체 순간이 잠깐 빈다.
+  */
+  25% {
+    opacity: 0;
+    translate: 0 -100%;
+  }
+  /* 나머지 구간은 다음 차례를 기다리며 숨어 있는다 */
+  100% {
+    opacity: 0;
+    translate: 0 -100%;
+  }
+}
+
+/*
   화면 전환 — 하단 탭바 고정.
   탭바에 이름을 주면 루트 스냅샷에서 분리돼 내용만 밀리고 탭바는 제자리에 남는다.
   이름은 문서 전체에서 유일해야 하므로 탭바 하나에만 쓴다.
@@ -245,5 +312,16 @@
   ::view-transition-group(*) {
     animation-duration: 0s !important;
     animation-delay: 0s !important;
+  }
+
+  /*
+    무한 반복이라 모션 민감성에 특히 직접적이다. 첫 지역에서 멈춘다.
+    항목의 기본값이 `opacity: 0`이므로 첫 항목을 따로 보이게 해야 빈칸이 되지 않는다.
+  */
+  .region-roll > span {
+    animation: none;
+  }
+  .region-roll > span:first-child {
+    opacity: 1;
   }
 }

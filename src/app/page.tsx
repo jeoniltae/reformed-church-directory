@@ -28,10 +28,26 @@ export default function Home() {
     <PageTransition>
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 pt-8">
       <p className="text-t4 text-muted-foreground">국내 개혁주의 교회</p>
+      {/*
+        롤링은 장식이라 aria-hidden으로 감추고, 제목이 완결된 문장으로 읽히도록
+        보이지 않는 대체 문구를 둔다. 스크린리더는 지역이 바뀔 때마다 읽지 않는다.
+        globals.css의 키프레임이 6칸 고정이라 TILE_REGIONS와 짝이다.
+      */}
       <h1 className="mt-2 text-t9 font-bold text-foreground">
-        오늘, 어디로
+        오늘,{" "}
+        {/* `에서`는 굴러가지 않는다. 감추는 범위는 롤링 상자가 아니라 이 구절 전체다 */}
+        <span aria-hidden>
+          <span className="region-roll">
+            {topRegions.map(({ region }) => (
+              <span key={region}>{region}</span>
+            ))}
+          </span>
+          에서
+        </span>
+        {/* 롤링 대신 스크린리더가 읽을 원래 카피. 뒤 공백이 없으면 다음 줄과 붙어 읽힌다 */}
+        <span className="sr-only">어디로 </span>
         <br />
-        예배하러 가시나요
+        예배하러 가시나요?
       </h1>
 
       <div className="mt-6 rounded-lg bg-primary p-5 text-primary-foreground">

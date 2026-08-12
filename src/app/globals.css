@@ -149,3 +149,28 @@
     @apply font-sans;
   }
 }
+
+/*
+  화면 전환 — 하단 탭바 고정.
+  탭바에 이름을 주면 루트 스냅샷에서 분리돼 내용만 밀리고 탭바는 제자리에 남는다.
+  이름은 문서 전체에서 유일해야 하므로 탭바 하나에만 쓴다.
+*/
+.vt-tab-bar {
+  view-transition-name: tab-bar;
+}
+
+::view-transition-group(tab-bar) {
+  /* 내용이 미끄러지는 동안 탭바는 움직이지 않는다 */
+  animation: none;
+  /* 슬라이드하는 내용 위에 남아야 한다 */
+  z-index: 100;
+}
+
+::view-transition-old(tab-bar) {
+  /* 옛 탭바와 새 탭바가 겹쳐 보이는 깜빡임을 막는다 */
+  display: none;
+}
+
+::view-transition-new(tab-bar) {
+  animation: none;
+}

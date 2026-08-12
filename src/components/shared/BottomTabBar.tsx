@@ -18,7 +18,9 @@ export function BottomTabBar() {
   return (
     <nav
       aria-label="주요 메뉴"
-      className="fixed inset-x-0 bottom-0 z-10 border-t border-border bg-background"
+      // vt-tab-bar는 화면 전환 시 탭바를 스냅샷에서 분리해 고정한다 (globals.css).
+      // 이 클래스를 지우면 탭바가 내용과 함께 화면 밖으로 밀린다
+      className="vt-tab-bar fixed inset-x-0 bottom-0 z-10 border-t border-border bg-background"
     >
       <ul className="mx-auto flex w-full max-w-2xl">
         {TABS.map(({ href, label, icon: Icon }) => {

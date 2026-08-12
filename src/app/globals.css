@@ -151,6 +151,16 @@
 }
 
 /*
+  type="search"의 기본 지우기 버튼을 숨긴다.
+  이 버튼은 브라우저 UA 스타일시트가 그리는 것이라 데스크톱 크롬·사파리에만 나타나고
+  안드로이드 크롬·iOS 사파리에는 없다. 플랫폼마다 다른 동작을 없애고
+  ChurchSearchBar가 직접 그린 버튼 하나로 통일한다.
+*/
+input[type="search"]::-webkit-search-cancel-button {
+  display: none;
+}
+
+/*
   홈 제목의 지역 롤링. 자바스크립트 0줄이라 홈이 Server Component·Static으로 남는다.
 
   지역명만 굴러가고 뒤의 `에서`는 고정이다. 사라질 때는 위로 올라가며 흐려지고

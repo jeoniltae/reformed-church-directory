@@ -11,12 +11,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/churches" },
 };
 
-export default async function ChurchesPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ region?: string }>;
-}) {
-  const { region } = await searchParams;
+export default function ChurchesPage() {
   const churches = getAllChurches();
 
   return (
@@ -27,7 +22,7 @@ export default async function ChurchesPage({
       <p className="mt-1 mb-5 text-t4 text-muted-foreground">
         국내 개혁주의 교회 {churches.length}곳을 수록했습니다.
       </p>
-      <ChurchDirectory churches={churches} initialRegion={region} />
+      <ChurchDirectory churches={churches} />
     </main>
   );
 }

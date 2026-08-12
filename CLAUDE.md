@@ -128,7 +128,7 @@ npm run normalize:addresses  # 도로명주소 API로 주소 정규화 (.env.loc
 | 경로 | 렌더링 | 내용 |
 |---|---|---|
 | `/` | Static | 랜딩 — 수록 현황 카드, 지역 타일 6칸, 교회 미리보기 5건 |
-| `/churches` | Dynamic | 검색·목록. `?region=`을 받느라 `searchParams`를 쓴다 |
+| `/churches` | Static | 검색·목록. `?region=`은 클라이언트에서 읽는다 (아래 "상태 관리") |
 | `/churches/[id]` | [WIP] | 교회 상세 (SSG 89건 예정) |
 | `/map` | Static | 준비 중 안내. 좌표·지도 SDK 확보 전까지 자리만 지킨다 |
 
@@ -144,6 +144,8 @@ npm run normalize:addresses  # 도로명주소 API로 주소 정규화 (.env.loc
 - URL 상태: Next.js 라우터 (searchParams)
 
 **`/churches?region=`은 초기값 전용이다.** 홈의 지역 타일에서 넘어올 때만 읽고, 이후 칩 조작은 로컬 상태로만 관리한다 — URL과 양방향 동기화하지 않는다. 버그가 아니라 결정이다. 데이터에 없는 지역이 들어오면 `전체`로 되돌린다.
+
+**이 값을 서버에서 읽지 않는다.** `searchParams`를 받으면 라우트가 Dynamic이 되어 탭 전환마다 서버 왕복이 생기고, `useSearchParams()`를 쓰면 Suspense 경계가 필요해져 교회 목록이 정적 HTML에서 빠진다(SEO 손실). 그래서 `ChurchDirectory`가 `useSyncExternalStore`로 URL을 외부 저장소처럼 읽는다 — 서버 스냅샷이 비어 있어 하이드레이션도 어긋나지 않는다. **여기를 `searchParams`로 되돌리지 않는다.**
 
 ---
 

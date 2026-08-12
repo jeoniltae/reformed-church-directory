@@ -4,6 +4,7 @@
 import { House, Map as MapIcon, Search } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { NAV_BACK, NAV_FORWARD } from "@/components/shared/PageTransition";
 import { cn } from "@/lib/utils";
 
 const TABS = [
@@ -41,8 +42,8 @@ export function BottomTabBar() {
             currentIndex === -1 || index === currentIndex
               ? undefined
               : index > currentIndex
-                ? ["nav-forward"]
-                : ["nav-back"];
+                ? NAV_FORWARD
+                : NAV_BACK;
 
           return (
             <li key={href} className="flex-1">

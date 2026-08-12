@@ -2,7 +2,10 @@
 
 import { Search } from "lucide-react";
 import Link from "next/link";
-import { PageTransition } from "@/components/shared/PageTransition";
+import {
+  NAV_FORWARD,
+  PageTransition,
+} from "@/components/shared/PageTransition";
 import { ChurchRow } from "@/features/churches/components/ChurchRow";
 import { RegionTiles } from "@/features/churches/components/RegionTiles";
 import { getAllChurches } from "@/features/churches/data";
@@ -41,6 +44,7 @@ export default function Home() {
         </p>
         <Link
           href="/churches"
+          transitionTypes={NAV_FORWARD}
           className="mt-5 flex items-center gap-2 rounded-lg bg-primary-foreground/10 px-3 py-3 text-t4 text-primary-foreground/70 outline-none transition-colors hover:bg-primary-foreground/20 focus-visible:ring-3 focus-visible:ring-primary-foreground/40"
         >
           <Search aria-hidden className="size-4" />
@@ -57,6 +61,7 @@ export default function Home() {
         <h2 className="text-t6 font-semibold text-foreground">교회 둘러보기</h2>
         <Link
           href="/churches"
+          transitionTypes={NAV_FORWARD}
           className="rounded-lg text-t4 text-muted-foreground outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
         >
           전체 보기

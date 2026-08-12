@@ -3,7 +3,7 @@
 import type { Metadata } from "next";
 import { MapPin } from "lucide-react";
 import Link from "next/link";
-import { PageTransition } from "@/components/shared/PageTransition";
+import { NAV_BACK, PageTransition } from "@/components/shared/PageTransition";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -29,8 +29,10 @@ export default function MapPage() {
           Base UI Button은 네이티브 <button>을 전제하므로 링크에는 variant만 빌려 쓴다.
           cn()을 거치지 않으면 base의 border-transparent가 outline의 border-border를 덮는다.
         */}
+        {/* 지도(2) → 검색(1)이라 왼쪽으로 되돌아간다 */}
         <Link
           href="/churches"
+          transitionTypes={NAV_BACK}
           className={cn(buttonVariants({ variant: "outline" }))}
         >
           목록에서 찾기

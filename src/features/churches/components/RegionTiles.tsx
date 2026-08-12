@@ -1,6 +1,7 @@
 // 홈의 지역 타일 — 건수 상위 지역 다섯 칸과 `그 외 지역` 한 칸을 2열로 배치한다
 
 import Link from "next/link";
+import { NAV_FORWARD } from "@/components/shared/PageTransition";
 import { cn } from "@/lib/utils";
 import type { RegionCount } from "../search";
 
@@ -49,7 +50,12 @@ export function RegionTiles({ regions, restCount }: RegionTilesProps) {
   return (
     <div className="grid grid-cols-2 gap-2">
       {tiles.map(({ label, count, href }) => (
-        <Link key={label} href={href} className={TILE}>
+        <Link
+          key={label}
+          href={href}
+          transitionTypes={NAV_FORWARD}
+          className={TILE}
+        >
           <span className="text-t5 font-semibold text-foreground">{label}</span>
           <span className="text-t4 text-muted-foreground">{count}곳</span>
           {/* 건수는 바로 위에 숫자로 있으므로 막대는 장식이다 */}

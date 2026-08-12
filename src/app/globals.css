@@ -174,3 +174,68 @@
 ::view-transition-new(tab-bar) {
   animation: none;
 }
+
+/*
+  방향 슬라이드. 오른쪽 탭으로 가면 nav-forward, 왼쪽 탭이면 nav-back이며
+  방향은 BottomTabBar가 `transitionTypes`로 넘긴다.
+  60px는 방향만 전달하고 눈이 요소를 쫓아가지 않을 만큼의 거리다.
+*/
+::view-transition-old(.nav-forward) {
+  --slide-offset: -60px;
+  animation:
+    150ms ease-in both fade reverse,
+    400ms ease-in-out both slide reverse;
+}
+
+::view-transition-new(.nav-forward) {
+  --slide-offset: 60px;
+  animation:
+    210ms ease-out 150ms both fade,
+    400ms ease-in-out both slide;
+}
+
+::view-transition-old(.nav-back) {
+  --slide-offset: 60px;
+  animation:
+    150ms ease-in both fade reverse,
+    400ms ease-in-out both slide reverse;
+}
+
+::view-transition-new(.nav-back) {
+  --slide-offset: -60px;
+  animation:
+    210ms ease-out 150ms both fade,
+    400ms ease-in-out both slide;
+}
+
+@keyframes slide {
+  from {
+    translate: var(--slide-offset);
+  }
+  to {
+    translate: 0;
+  }
+}
+
+/* Next 문서의 스니펫이 `fade`를 쓰면서 정의를 빠뜨렸다. 없으면 페이드가 조용히 죽는다 */
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/*
+  방향 슬라이드는 화면을 가로지르는 물리적 이동이라 모션 민감성을 가장 흔하게 자극한다.
+  지속시간을 0으로 만들면 브라우저 기본 동작(즉시 교체)으로 떨어진다.
+*/
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}

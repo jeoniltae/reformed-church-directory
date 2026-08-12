@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ViewTransition } from "react";
 import { BottomTabBar } from "@/components/shared/BottomTabBar";
 import "./globals.css";
 
@@ -38,26 +37,9 @@ export default function RootLayout({
     >
       {/* pb-16은 고정된 하단 탭바가 마지막 콘텐츠를 가리지 않게 하는 여백이다 */}
       <body className="min-h-full flex flex-col pb-16">
-        {/*
-          탭 전환에만 방향 슬라이드를 건다. 애니메이션 정의는 globals.css에 있다.
-          `default: "none"`이 없으면 타입이 없는 이동(첫 로드·뒤로가기)에도 전환이 걸린다.
-          탭바는 이 경계 밖에 둬서 함께 밀리지 않게 한다.
-        */}
-        <ViewTransition
-          enter={{
-            "nav-forward": "nav-forward",
-            "nav-back": "nav-back",
-            default: "none",
-          }}
-          exit={{
-            "nav-forward": "nav-forward",
-            "nav-back": "nav-back",
-            default: "none",
-          }}
-          default="none"
-        >
-          {children}
-        </ViewTransition>
+        {/* 전환 래퍼는 여기가 아니라 각 page.tsx에 있다 (PageTransition 주석 참고).
+            탭바는 그 경계 밖이라 내용만 밀리고 탭바는 제자리에 남는다 */}
+        {children}
         <BottomTabBar />
       </body>
     </html>

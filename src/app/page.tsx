@@ -2,6 +2,7 @@
 
 import { Search } from "lucide-react";
 import Link from "next/link";
+import { PageTransition } from "@/components/shared/PageTransition";
 import { ChurchRow } from "@/features/churches/components/ChurchRow";
 import { RegionTiles } from "@/features/churches/components/RegionTiles";
 import { getAllChurches } from "@/features/churches/data";
@@ -21,7 +22,8 @@ export default function Home() {
     churches.length - topRegions.reduce((sum, { count }) => sum + count, 0);
 
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 px-4 pt-8">
+    <PageTransition>
+      <main className="mx-auto w-full max-w-2xl flex-1 px-4 pt-8">
       <p className="text-t4 text-muted-foreground">국내 개혁주의 교회</p>
       <h1 className="mt-2 text-t9 font-bold text-foreground">
         오늘, 어디로
@@ -72,6 +74,7 @@ export default function Home() {
         교회 정보는 자체 수집 자료를 정리한 것입니다. 정보 수정·삭제 요청 창구는
         준비 중입니다.
       </p>
-    </main>
+      </main>
+    </PageTransition>
   );
 }

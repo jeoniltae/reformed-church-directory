@@ -134,6 +134,13 @@ npm run normalize:addresses  # 도로명주소 API로 주소 정규화 (.env.loc
 
 **상단 헤더가 없다.** 전역 이동은 `src/components/shared/BottomTabBar.tsx`(홈·검색·지도)가 전담하고, `layout.tsx`는 탭바와 `pb-16` 여백만 얹는다. 사이트명은 화면에 노출되지 않고 `metadata.title.template`으로 문서 제목에만 남는다. **헤더를 다시 만들지 않는다** — 시안이 정한 구조다.
 
+### 화면 전환 (View Transitions)
+
+탭 이동에 방향 슬라이드가 걸린다. `next.config.ts`의 `experimental.viewTransition`으로 켜져 있고, 애니메이션은 `globals.css`에 있다. 건드릴 때 지켜야 할 두 가지.
+
+- **`PageTransition`은 각 `page.tsx`가 감싼다. `layout.tsx`로 올리면 전환이 통째로 죽는다** — `enter`/`exit`는 래퍼가 마운트·언마운트될 때만 발동하는데 레이아웃의 래퍼는 계속 살아 있다.
+- **탭바의 `vt-tab-bar` 클래스를 지우지 않는다.** 지우면 탭바가 내용과 함께 화면 밖으로 밀린다.
+
 ---
 
 ## 상태 관리

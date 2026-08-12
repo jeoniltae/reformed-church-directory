@@ -88,6 +88,18 @@ npm run normalize:addresses  # 도로명주소 API로 주소 정규화 (.env.loc
 
 - `npm run crawl:kosin`은 `scripts/collect-kosin.ts`가 생기는 시점에 `node scripts/collect-kosin.ts`로 추가한다. Node 24가 `.ts`를 네이티브 실행하므로 tsx 같은 실행기가 필요 없다.
 
+### 화면 확인 — 개발 서버와 프로덕션 서버를 구분한다
+
+| | 반영 | 쓰는 때 |
+|---|---|---|
+| `npm run dev` | 저장 즉시 | UI 반복 작업 |
+| `npm run build` → `npx next start` | 매번 재빌드 필요 | 프리페치·정적 HTML 확인 |
+
+- **`next start`는 구워진 HTML을 그대로 내려준다.** 소스를 고쳐도 재빌드 없이는 안 바뀐다. "고쳤는데 화면이 그대로"의 첫 번째 원인이다.
+- **`<Link>` 프리페치와 정적 HTML 내용은 프로덕션 빌드에서만 확인된다.** SEO 검증(교회명이 정적 HTML에 들어갔는지)은 `next start` 쪽을 봐야 한다.
+- **폰에서 볼 때는 `npm run dev` + LAN IP를 쓴다.** `next.config.ts`의 `allowedDevOrigins`가 이를 허용한다 — 이게 없으면 HTML은 200인데 JS 청크가 403이라 **화면은 보이는데 아무 조작도 안 먹는다.** 개발 모드 전용 설정이라 배포에는 영향이 없다.
+- **기기 에뮬레이션으로는 못 잡는 것이 있다.** 뷰포트·UA만 바뀌고 렌더링은 데스크톱 크롬이다. UA 스타일시트에 의존하는 것(`::-webkit-search-cancel-button` 등)은 실기기에서만 드러난다.
+
 ---
 
 ## 프로젝트 구조
@@ -136,10 +148,15 @@ npm run normalize:addresses  # 도로명주소 API로 주소 정규화 (.env.loc
 
 ### 화면 전환 (View Transitions)
 
-탭 이동에 방향 슬라이드가 걸린다. `next.config.ts`의 `experimental.viewTransition`으로 켜져 있고, 애니메이션은 `globals.css`에 있다. 건드릴 때 지켜야 할 두 가지.
+탭 이동에 방향 슬라이드가 걸린다. `next.config.ts`의 `experimental.viewTransition`으로 켜져 있고, 애니메이션은 `globals.css`에 있다. 건드릴 때 지켜야 할 다섯 가지.
 
 - **`PageTransition`은 각 `page.tsx`가 감싼다. `layout.tsx`로 올리면 전환이 통째로 죽는다** — `enter`/`exit`는 래퍼가 마운트·언마운트될 때만 발동하는데 레이아웃의 래퍼는 계속 살아 있다.
 - **탭바의 `vt-tab-bar` 클래스를 지우지 않는다.** 지우면 탭바가 내용과 함께 화면 밖으로 밀린다.
+- **이전 화면에 페이드아웃을 걸지 않는다.** `::view-transition-old(.nav-*)`는 `display: none`이다. 60px 슬라이드로는 이전 화면이 화면 밖으로 못 나가서, 투명해지는 동안 계속 보인다 — 실기기에서 잔상으로 드러났다. `opacity`만 지우면 불투명한 채 남아 더 나빠진다.
+- **방향 문자열을 직접 쓰지 않는다.** `PageTransition`의 `NAV_FORWARD`·`NAV_BACK` 상수를 쓴다. 오타가 나도 에러가 없고 애니메이션만 조용히 죽는다.
+- **속도 조절은 `--nav-slide-duration` 한 줄이다.** `animation` 단축 속성 안에서 `var()`로 쓰이므로 값이 사라지면 선언 전체가 무효가 되어 전환이 없어진다. 바꾼 뒤 `getAnimations()`로 실제 지속시간을 확인할 것.
+
+미지원 브라우저에서는 전환 없이 정상 동작한다. 브라우저 뒤로가기·스와이프에는 방향이 실리지 않는다(Next 문서 명시).
 
 ---
 

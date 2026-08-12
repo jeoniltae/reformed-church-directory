@@ -179,33 +179,41 @@
   방향 슬라이드. 오른쪽 탭으로 가면 nav-forward, 왼쪽 탭이면 nav-back이며
   방향은 BottomTabBar가 `transitionTypes`로 넘긴다.
   60px는 방향만 전달하고 눈이 요소를 쫓아가지 않을 만큼의 거리다.
+
+  **이전 화면은 페이드아웃시키지 않고 즉시 없앤다.**
+  60px 이동으로는 이전 화면이 화면 밖으로 나가지 못해, 투명해지는 동안 계속 보인다.
+  실기기에서 이게 잔상으로 드러났다(데스크톱에서는 빨라서 안 보인다).
+  배경이 흰색이라 이전 화면이 빠진 자리는 티가 나지 않는다.
 */
-::view-transition-old(.nav-forward) {
-  --slide-offset: -60px;
+::view-transition-old(.nav-forward),
+::view-transition-old(.nav-back) {
+  display: none;
+}
+
+/*
+  새 화면만 들어온다. 이전 화면을 기다릴 이유가 없으므로 페이드 지연을 두지 않는다.
+
+  **슬라이드 체감 속도는 아래 변수 한 줄로 조절한다.**
+  원래 400ms였고 느린 기기를 감안해 250ms까지 줄였더니 이번엔 빠르게 느껴져 320ms로 잡았다.
+  느린 기기에서는 이 시간 앞에 스냅샷 캡처 지연(4x 감속 기준 약 135ms)이 더 붙는다.
+
+  페이드는 150ms 그대로 둔다 — 가독성용이라 이동 시간과 함께 늘릴 이유가 없고,
+  슬라이드가 끝나기 전에 글자가 또렷해지는 편이 낫다.
+*/
+::view-transition-new(.nav-forward),
+::view-transition-new(.nav-back) {
+  --nav-slide-duration: 320ms;
   animation:
-    150ms ease-in both fade reverse,
-    400ms ease-in-out both slide reverse;
+    150ms ease-out both fade,
+    var(--nav-slide-duration) ease-out both slide;
 }
 
 ::view-transition-new(.nav-forward) {
   --slide-offset: 60px;
-  animation:
-    210ms ease-out 150ms both fade,
-    400ms ease-in-out both slide;
-}
-
-::view-transition-old(.nav-back) {
-  --slide-offset: 60px;
-  animation:
-    150ms ease-in both fade reverse,
-    400ms ease-in-out both slide reverse;
 }
 
 ::view-transition-new(.nav-back) {
   --slide-offset: -60px;
-  animation:
-    210ms ease-out 150ms both fade,
-    400ms ease-in-out both slide;
 }
 
 @keyframes slide {

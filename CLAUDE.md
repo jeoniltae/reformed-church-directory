@@ -194,6 +194,8 @@ npm run normalize:addresses  # 도로명주소 API로 주소 정규화 (.env.loc
 
 디자인 토큰·타이포 스케일·안티패턴 규칙은 `docs/ui-checklist.md`의 "원칙"과 "3단계 검수"에 있다. 화면 작업 전에 그쪽을 본다.
 
+**`@theme`에 타이포 단계를 추가하면 `src/lib/utils.ts`에도 등록한다.** tailwind-merge는 Tailwind 기본 스케일만 알아서, 등록하지 않은 `text-t*`를 폰트 크기가 아니라 **색상으로 오인한다.** 그러면 같은 `cn()` 안의 `text-primary-foreground` 같은 색 클래스를 조용히 지운다(실제로 지역 필터 선택 칩 글자가 검정으로 나왔다). `src/lib/utils.test.ts`가 이 동작을 고정한다.
+
 ### shadcn `base-nova` — Base UI 기반이다
 
 설치된 컴포넌트는 Radix가 아니라 **Base UI** 기반이므로 인터넷의 고전 shadcn 스니펫이 그대로 통하지 않는다. 실제로 밟은 함정 둘.

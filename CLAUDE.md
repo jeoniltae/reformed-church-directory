@@ -81,10 +81,13 @@ npm run build  # 프로덕션 빌드
 데이터 정비용 오프라인 스크립트. 앱 런타임과 무관하며 수동으로만 돌린다.
 
 ```bash
-npm run import:source        # 원본 → data/churches.json 변환
 npm run check:homepages      # 홈페이지 생존 확인 → data/dead-links.json
-npm run normalize:addresses  # 도로명주소 API로 주소 정규화 (.env.local 필요)
+npm run normalize:addresses  # 도로명주소 검색 API로 주소 진단 → data/geocode.json
+npm run geocode:coords       # 좌표제공 API로 좌표 채움 → data/geocode.json
+npm run import:source        # 위 결과를 모아 data/churches.json 생성
 ```
+
+**순서가 있다.** `normalize:addresses` → `geocode:coords` → `import:source`. 앞의 둘은 `data/geocode.json`만 갱신하고 `churches.json`은 건드리지 않는다. **주소를 재조회하면 좌표도 무효가 되므로** `normalize:addresses`를 다시 돌렸으면 `geocode:coords`도 다시 돌린다. 둘 다 `.env.local`의 승인키가 필요하다(`JUSO_SEARCH_KEY`·`JUSO_COORD_KEY`, API별로 키가 다르다).
 
 - `npm run crawl:kosin`은 `scripts/collect-kosin.ts`가 생기는 시점에 `node scripts/collect-kosin.ts`로 추가한다. Node 24가 `.ts`를 네이티브 실행하므로 tsx 같은 실행기가 필요 없다.
 
@@ -346,7 +349,8 @@ npm run normalize:addresses  # 도로명주소 API로 주소 정규화 (.env.loc
 - **sitemap**: `src/app/sitemap.ts`가 `data/churches.json`을 읽어 자동 생성한다. 크롤러로 교회가 늘어도 별도 작업이 없어야 한다.
 - **교회 상세**: `generateMetadata`가 교회명·지역으로 title/description/canonical을 만든다.
 - **JSON-LD**: `src/lib/json-ld.ts`에 `organizationJsonLd`·`websiteJsonLd`·`breadcrumbJsonLd`를 두고 `layout.tsx`에서 전역 적용한다.
-- **[미결정]** 교회 상세의 구조화 데이터 스키마(`LocalBusiness`/`Church`/`Place` 중 선택).
+- **교회 상세에 `geo`(위도·경도)를 넣는다** (2026-08-12 결정). 그래서 좌표 확보가 지도(5단계)가 아니라 **상세 페이지(2단계)의 선행 조건**이 됐다. 나중에 넣으면 상세 89개 정적 페이지를 다시 구워야 한다.
+- **[미결정]** 스키마 타입(`LocalBusiness`/`Church`/`Place` 중 선택). 셋 다 `geo`를 지원하므로 좌표 작업과는 무관하다.
 
 ### 새 페이지 추가 시 손대야 하는 곳
 

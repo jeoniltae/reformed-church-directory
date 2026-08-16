@@ -28,7 +28,8 @@ type Geo = {
   id: string;
   status: string;
   original: { address: string };
-  matched?: { roadAddr: string };
+  // coord는 geocode:coords가 채운다. 주소와 같은 조회에서 나온 값이라 낡음 판정도 같이 받는다
+  matched?: { roadAddr: string; coord?: { lat: number; lng: number } };
 };
 const geocode = new Map<string, Geo>(
   (JSON.parse(readFileSync(GEOCODE, "utf8")) as { entries: Geo[] }).entries.map((g) => [
@@ -44,6 +45,7 @@ const churches: Church[] = [];
 const fixedCount = { address: 0, phone: 0, pastor: 0 };
 let droppedLinks = 0;
 let normalizedAddresses = 0;
+let withCoords = 0;
 
 for (const row of rows) {
   if (row.fixed.address) fixedCount.address++;
@@ -52,11 +54,14 @@ for (const row of rows) {
 
   // 조회는 rawAddress로 했다. 그 사이 주소가 바뀌었으면 낡은 결과로 덮어쓰지 않는다.
   let address = row.rawAddress;
+  let coord: { lat: number; lng: number } | undefined;
   const geo = geocode.get(row.id);
   if (geo?.status === "ok" && geo.matched) {
     if (geo.original.address === row.rawAddress) {
       address = geo.matched.roadAddr;
       normalizedAddresses++;
+      // 좌표는 이 주소에 대해 조회한 것이므로 주소가 낡지 않았을 때만 함께 반영한다
+      coord = geo.matched.coord;
     } else {
       warnings.push(
         `geocode 결과가 낡음 → ${row.name}: 재조회 필요 (npm run normalize:addresses)`,
@@ -72,6 +77,11 @@ for (const row of rows) {
     pastor: row.pastor,
     source: SOURCE,
   };
+  if (coord) {
+    church.lat = coord.lat;
+    church.lng = coord.lng;
+    withCoords++;
+  }
   if (row.subRegion) church.subRegion = row.subRegion;
   if (row.denomination) church.denomination = row.denomination;
   if (row.phone) {
@@ -102,6 +112,7 @@ console.log(
 console.log(
   `도로명주소로 정규화: ${normalizedAddresses}건 / ${geocode.size}건 조회  (${GEOCODE})`,
 );
+console.log(`좌표 반영: ${withCoords}건 / ${churches.length}건`);
 if (droppedLinks !== deadLinks.size) {
   warnings.push(
     `dead-links.json의 URL ${deadLinks.size - droppedLinks}건이 원본과 매칭되지 않았다 — 오타 또는 원본 변경`,

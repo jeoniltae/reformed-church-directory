@@ -11,7 +11,8 @@
     "test": "vitest run",
     "import:source": "node scripts/import-source.mts",
     "check:homepages": "node scripts/check-homepages.mts",
-    "normalize:addresses": "node --env-file=.env.local scripts/normalize-addresses.mts"
+    "normalize:addresses": "node --env-file=.env.local scripts/normalize-addresses.mts",
+    "geocode:coords": "node --env-file=.env.local scripts/geocode-coords.mts"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

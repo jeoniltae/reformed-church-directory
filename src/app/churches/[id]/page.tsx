@@ -1,6 +1,12 @@
 // 교회 상세 — 89건 전량을 빌드 시점에 정적 생성한다 (SSG)
 
-import { ChevronLeft, ExternalLink, MapPin, Phone, User } from "lucide-react";
+import {
+  ChevronLeft,
+  ExternalLink,
+  MapPin,
+  Navigation,
+  Phone,
+} from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -10,6 +16,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { getAllChurchIds, getChurchById } from "@/features/churches/data";
 import { churchJsonLd, toJsonLdScript } from "@/lib/json-ld";
 import { cn } from "@/lib/utils";
+import type { Church } from "@/types/church";
 
 export function generateStaticParams() {
   return getAllChurchIds().map((id) => ({ id }));
@@ -18,6 +25,18 @@ export function generateStaticParams() {
 /** 교회명에 한글이 섞여 URL이 인코딩된 채 들어올 수 있다. `%`가 없으면 그대로 통과한다 */
 function decodeId(raw: string): string {
   return raw.includes("%") ? decodeURIComponent(raw) : raw;
+}
+
+/**
+ * 카카오맵 웹 링크. SDK도 앱 키도 필요 없어 지금 바로 쓸 수 있다.
+ * 좌표가 없는 21건은 주소 검색으로 대체하므로 89건 전부 길찾기가 가능하다.
+ */
+function directionsUrl(church: Church): string {
+  if (church.lat !== undefined && church.lng !== undefined) {
+    const name = encodeURIComponent(church.name);
+    return `https://map.kakao.com/link/to/${name},${church.lat},${church.lng}`;
+  }
+  return `https://map.kakao.com/link/search/${encodeURIComponent(church.address)}`;
 }
 
 export async function generateMetadata({
@@ -59,62 +78,85 @@ export default async function ChurchDetailPage({
           목록으로
         </Link>
 
-        <div className="mt-3 flex items-start justify-between gap-3">
-          <h1 className="text-t8 font-bold text-foreground">{church.name}</h1>
-          {church.denomination && (
-            <Badge variant="secondary" className="mt-1 shrink-0">
-              {church.denomination}
-            </Badge>
-          )}
+        {/*
+          지도 자리. 실제 지도는 5단계(Kakao 지도 SDK 앱 키)에서 이 박스를 교체한다.
+          좌표 유무로 구분하지 않는다 — 지금은 지도가 없어 68건과 21건이 똑같이 보인다.
+        */}
+        <div className="mt-3 flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-lg bg-muted">
+          <MapPin aria-hidden className="size-6 text-muted-foreground" />
+          <p className="text-t4 text-muted-foreground">지도 준비 중</p>
         </div>
 
-        <dl className="mt-5 flex flex-col gap-3">
-          <div className="flex gap-2">
-            <dt className="sr-only">주소</dt>
-            <MapPin
-              aria-hidden
-              className="mt-0.5 size-4 shrink-0 text-muted-foreground"
-            />
-            {/* 지역은 따로 적지 않는다 — 한국 주소는 항상 시도로 시작해 그대로 중복이다 */}
-            <dd className="text-t5 text-foreground">{church.address}</dd>
-          </div>
-          <div className="flex gap-2">
-            <dt className="sr-only">담임목사</dt>
-            <User
-              aria-hidden
-              className="mt-0.5 size-4 shrink-0 text-muted-foreground"
-            />
-            <dd className="text-t5 text-foreground">{church.pastor} 목사</dd>
-          </div>
-        </dl>
+        <div className="mt-5">
+          {church.denomination && (
+            <Badge variant="secondary">{church.denomination}</Badge>
+          )}
+          <h1 className="mt-2 text-t8 font-bold text-foreground">
+            {church.name}
+          </h1>
+          {/* 지역은 따로 적지 않는다 — 한국 주소는 항상 시도로 시작해 그대로 중복이다 */}
+          <p className="mt-1 text-t4 text-muted-foreground">{church.address}</p>
+        </div>
+
+        {/* 교단과 주소는 위 헤더에만 둔다. 여기 또 넣으면 같은 화면에 두 번 나온다 */}
+        <section className="mt-6 border-t border-border pt-5">
+          <h2 className="text-t4 font-semibold text-foreground">교회 정보</h2>
+          <dl className="mt-3 flex flex-col gap-3">
+            <div className="flex items-baseline justify-between gap-4">
+              <dt className="shrink-0 text-t4 text-muted-foreground">
+                담임목사
+              </dt>
+              <dd className="text-right text-t4 text-foreground">
+                {church.pastor} 목사
+              </dd>
+            </div>
+            {church.homepage && (
+              <div className="flex items-baseline justify-between gap-4">
+                <dt className="shrink-0 text-t4 text-muted-foreground">
+                  홈페이지
+                </dt>
+                <dd className="text-t4">
+                  <a
+                    href={church.homepage}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 rounded-lg text-foreground underline outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                  >
+                    홈페이지 열기
+                    <ExternalLink aria-hidden className="size-3.5" />
+                  </a>
+                </dd>
+              </div>
+            )}
+          </dl>
+        </section>
 
         {/*
           전화 걸기가 이 화면의 유일한 brand-solid다.
           CLAUDE.md가 "탭 한 번으로 전화"를 핵심 동선으로 규정했다.
           Base UI Button은 네이티브 <button>을 전제하므로 링크에는 variant만 빌려 쓴다.
+          phone이 없는 2건은 grid-cols-1로 떨어져 길찾기가 전체 너비를 쓴다.
         */}
-        <div className="mt-6 flex flex-col gap-2">
+        <div className={cn("mt-6 grid gap-2", church.phone && "grid-cols-2")}>
+          <a
+            href={directionsUrl(church)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(
+              buttonVariants({ variant: "outline", size: "lg" }),
+              "w-full text-t4",
+            )}
+          >
+            <Navigation aria-hidden />
+            길찾기
+          </a>
           {church.phone && (
             <a
               href={`tel:${church.phone}`}
-              className={cn(buttonVariants({ size: "lg" }), "w-full text-t5")}
+              className={cn(buttonVariants({ size: "lg" }), "w-full text-t4")}
             >
               <Phone aria-hidden />
               {church.phone}
-            </a>
-          )}
-          {church.homepage && (
-            <a
-              href={church.homepage}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn(
-                buttonVariants({ variant: "outline", size: "lg" }),
-                "w-full text-t5",
-              )}
-            >
-              <ExternalLink aria-hidden />
-              홈페이지 열기
             </a>
           )}
         </div>

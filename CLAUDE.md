@@ -40,7 +40,7 @@ UI는 모바일 우선 반응형 웹으로 제작한다.
 
 ### 데이터 저장소
 
-- **DB 없음.** 교회 데이터는 `data/churches.json` 하나에 담고 앱이 직접 읽는다(현재 89건, 고신·합신 확장 후 약 3천 건 예상). 이 규모에서는 DB가 필요 없고, 상세 페이지는 `generateStaticParams`로 전부 SSG로 구울 계획이다 — 상세 라우트는 아직 미구현. 결정 배경은 `docs/context-notes.md` 참고.
+- **DB 없음.** 교회 데이터는 `data/churches.json` 하나에 담고 앱이 직접 읽는다(현재 89건, 고신·합신 확장 후 약 3천 건 예상). 이 규모에서는 DB가 필요 없고, 상세 페이지는 `generateStaticParams`로 89건 전부 SSG로 굽는다(구현 완료). 결정 배경은 `docs/context-notes.md` 참고.
 - 데이터 생성·갱신은 크롤러(`scripts/`)가 오프라인 배치로만 수행하고, 결과 JSON을 커밋한다. 배포는 커밋에 따라 Vercel이 자동 처리한다.
 - API Route 없음 — Server Component에서 JSON을 직접 읽는다.
 - Supabase를 다시 검토할 조건(데이터 수만 건 초과, 재배포 없는 갱신, PostGIS·전문 검색 필요)은 `docs/context-notes.md`에 정리돼 있다.
@@ -116,13 +116,15 @@ npm run import:source        # 위 결과를 모아 data/churches.json 생성
 │   ├── features/          # 기능별 모듈
 │   │   ├── churches/      # 교회 검색·조회 — data.ts, search.ts, components/
 │   │   └── reports/       # [WIP] 교회 정보 제보 (폼, Server Action → GitHub Issues)
-│   ├── lib/               # 유틸리티 (cn(), church-utils)
+│   ├── lib/               # 유틸리티 (cn(), church-utils, json-ld)
 │   └── types/             # 전역 TypeScript 타입
 ├── scripts/               # 데이터 정비 스크립트 — 오프라인 배치, 앱 런타임과 분리
 │   ├── lib/               #   스크립트 공용 모듈
+│   ├── lib/coords.mts     #   UTM-K → WGS84 변환 (proj4, devDependency)
 │   ├── import-source.mts
 │   ├── check-homepages.mts
 │   ├── normalize-addresses.mts
+│   ├── geocode-coords.mts
 │   └── collect-kosin.ts   # [WIP] 고신 교회 데이터 수집
 └── data/                  # 앱이 직접 읽는 유일한 데이터 소스
     ├── churches.json      #   커밋 대상 (89건)
@@ -144,7 +146,7 @@ npm run import:source        # 위 결과를 모아 data/churches.json 생성
 |---|---|---|
 | `/` | Static | 랜딩 — 수록 현황 카드, 지역 타일 6칸, 교회 미리보기 5건 |
 | `/churches` | Static | 검색·목록. `?region=`은 클라이언트에서 읽는다 (아래 "상태 관리") |
-| `/churches/[id]` | [WIP] | 교회 상세 (SSG 89건 예정) |
+| `/churches/[id]` | SSG | 교회 상세 89건. `generateStaticParams`로 빌드 시점에 전량 생성 |
 | `/map` | Static | 준비 중 안내. 좌표·지도 SDK 확보 전까지 자리만 지킨다 |
 
 **상단 헤더가 없다.** 전역 이동은 `src/components/shared/BottomTabBar.tsx`(홈·검색·지도)가 전담하고, `layout.tsx`는 탭바와 `pb-16` 여백만 얹는다. 사이트명은 화면에 노출되지 않고 `metadata.title.template`으로 문서 제목에만 남는다. **헤더를 다시 만들지 않는다** — 시안이 정한 구조다.
@@ -337,20 +339,24 @@ npm run import:source        # 위 결과를 모아 data/churches.json 생성
 
 ## SEO 운영 가이드
 
-> **SEO는 아직 하나도 구현되지 않았다.** 아래 파일은 전부 **미생성**이다 — `src/app/sitemap.ts`, `src/app/robots.ts`, `src/app/manifest.ts`, `src/lib/json-ld.ts`, `public/llms.txt`, `src/app/not-found.tsx`. 이 섹션은 "이렇게 만든다"는 계획이지 현황이 아니다. 작업 목록은 `docs/ui-checklist.md`의 SEO 섹션에 있다.
+> **아직 대부분 미구현이다.** `src/app/sitemap.ts`, `src/app/robots.ts`, `src/app/manifest.ts`, `public/llms.txt`는 **미생성**이다. 아래에서 "구현할 때의 방침"은 계획이지 현황이 아니다. 작업 목록은 `docs/ui-checklist.md`의 SEO 섹션에 있다.
 
 ### 현재 구현된 것
 
-- `src/app/layout.tsx` — `metadataBase`, `title`(`default` + `template`), `description`뿐이다. **OG·Twitter·검색엔진 인증·JSON-LD는 아직 없다.**
+- `src/app/layout.tsx` — `metadataBase`, `title`(`default` + `template`), `description`뿐이다. **OG·Twitter·검색엔진 인증은 아직 없다.**
 - `/churches`, `/map` — 각 `page.tsx`에 `metadata`(title/description/canonical)를 직접 선언했다.
+- `/churches/[id]` — `generateMetadata`로 교회명·지역 기반 title/description/canonical을 만든다.
+- `src/lib/json-ld.ts` — **`churchJsonLd()`만 있다.** 상세 페이지에서만 쓰고 전역 적용은 아직 없다. `organizationJsonLd`·`websiteJsonLd`·`breadcrumbJsonLd`는 미작성이다.
+- `src/app/not-found.tsx` — 없는 교회 id 접근 시. 상세의 `notFound()` 호출과 짝이다.
 
 ### 구현할 때의 방침
 
 - **sitemap**: `src/app/sitemap.ts`가 `data/churches.json`을 읽어 자동 생성한다. 크롤러로 교회가 늘어도 별도 작업이 없어야 한다.
 - **교회 상세**: `generateMetadata`가 교회명·지역으로 title/description/canonical을 만든다.
 - **JSON-LD**: `src/lib/json-ld.ts`에 `organizationJsonLd`·`websiteJsonLd`·`breadcrumbJsonLd`를 두고 `layout.tsx`에서 전역 적용한다.
-- **교회 상세에 `geo`(위도·경도)를 넣는다** (2026-08-12 결정). 그래서 좌표 확보가 지도(5단계)가 아니라 **상세 페이지(2단계)의 선행 조건**이 됐다. 나중에 넣으면 상세 89개 정적 페이지를 다시 구워야 한다.
-- **[미결정]** 스키마 타입(`LocalBusiness`/`Church`/`Place` 중 선택). 셋 다 `geo`를 지원하므로 좌표 작업과는 무관하다.
+- **교회 상세 구조화 데이터는 `@type: "Church"`에 `geo`를 넣는다** (2026-08-12 결정, 구현 완료). schema.org에 `Place > CivicStructure > PlaceOfWorship > Church`로 실재하는 타입이다. **`LocalBusiness`를 쓰지 않는다** — 교회를 사업체로 표기하게 되어 사실과 어긋난다. `src/lib/json-ld.ts`의 `churchJsonLd()`.
+- 좌표가 이 `geo` 때문에 필요해졌다. 그래서 좌표 확보가 지도(5단계)가 아니라 상세 페이지의 선행 조건이었다 — 나중에 넣으면 89개 정적 페이지를 다시 구워야 한다.
+- **없는 값은 키 자체를 넣지 않는다.** 빈 문자열은 "값이 있는데 비어 있다"로 읽힌다. 좌표 없는 21건에는 `geo`가 없다.
 
 ### 새 페이지 추가 시 손대야 하는 곳
 

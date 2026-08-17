@@ -1,6 +1,7 @@
 // 홈 미리보기 목록의 교회 한 줄 — 카드보다 가벼운 행 형태
 
 import Link from "next/link";
+import { NAV_FORWARD } from "@/components/shared/PageTransition";
 import { Badge } from "@/components/ui/badge";
 import type { Church } from "@/types/church";
 
@@ -12,6 +13,7 @@ export function ChurchRow({ church }: { church: Church }) {
   return (
     <Link
       href={`/churches/${church.id}`}
+      transitionTypes={NAV_FORWARD}
       className="flex items-center gap-3 py-4 outline-none transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50"
     >
       <span

@@ -2,6 +2,7 @@
 
 import { MapPin, Phone, User } from "lucide-react";
 import Link from "next/link";
+import { NAV_FORWARD } from "@/components/shared/PageTransition";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -23,6 +24,7 @@ export function ChurchCard({ church }: { church: Church }) {
         <div className="flex items-start justify-between gap-2">
           <Link
             href={`/churches/${church.id}`}
+            transitionTypes={NAV_FORWARD}
             className="truncate text-t6 font-semibold text-foreground outline-none after:absolute after:inset-0"
           >
             {church.name}

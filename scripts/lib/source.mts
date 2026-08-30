@@ -33,9 +33,15 @@ export type SourceRow = {
   pastor: string;
   denomination: string;
   phone: string;
+  /**
+   * CSV 원본 그대로다. 다른 항목과 달리 교정을 얹지 않는다 —
+   * import-source가 이 값으로 죽은 링크 판정을 해야 매칭 집계가 어긋나지 않는다.
+   */
   homepage: string;
+  /** 이전한 홈페이지 주소. 있으면 원본 대신 이 값을 싣는다 */
+  homepageCorrected: string;
   /** 사람이 교정한 항목 (반영 건수 집계용) */
-  fixed: { address: boolean; phone: boolean; pastor: boolean };
+  fixed: { address: boolean; phone: boolean; pastor: boolean; homepage: boolean };
 };
 
 export function parseCsv(text: string): string[][] {
@@ -76,6 +82,7 @@ type Fix = {
   corrected?: string;
   phoneCorrected?: string;
   pastorCorrected?: string;
+  homepageCorrected?: string;
 };
 
 export function readSource(): { rows: SourceRow[]; droppedColumns: string[] } {
@@ -113,6 +120,7 @@ export function readSource(): { rows: SourceRow[]; droppedColumns: string[] } {
     const fixedAddress = fixOf(id, "corrected");
     const fixedPhone = fixOf(id, "phoneCorrected");
     const fixedPastor = fixOf(id, "pastorCorrected");
+    const fixedHomepage = fixOf(id, "homepageCorrected");
 
     return {
       id,
@@ -124,10 +132,12 @@ export function readSource(): { rows: SourceRow[]; droppedColumns: string[] } {
       denomination: at(row, "교단"),
       phone: fixedPhone ?? at(row, "전화번호"),
       homepage: at(row, "홈페이지"),
+      homepageCorrected: fixedHomepage ?? "",
       fixed: {
         address: Boolean(fixedAddress),
         phone: Boolean(fixedPhone),
         pastor: Boolean(fixedPastor),
+        homepage: Boolean(fixedHomepage),
       },
     };
   });

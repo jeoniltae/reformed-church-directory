@@ -352,7 +352,7 @@
     "name": "명륜교회",
     "region": "서울",
     "address": "서울특별시 종로구 혜화로3길 6 (명륜1가)",
-    "pastor": "고석남",
+    "pastor": "박세덕",
     "source": "자체 수집",
     "lat": 37.58644,
     "lng": 126.999729,
@@ -535,13 +535,14 @@
     "name": "복용교회",
     "region": "대전",
     "address": "대전광역시 유성구 학하서로 187-23 (복용동)",
-    "pastor": "박석중",
+    "pastor": "김희신",
     "source": "자체 수집",
     "lat": 36.345359,
     "lng": 127.30648,
     "subRegion": "유성구",
     "denomination": "계신",
-    "phone": "042-522-2005"
+    "phone": "042-522-2005",
+    "homepage": "http://ytbch.79.ypage.kr"
   },
   {
     "id": "울산언약교회-북구",

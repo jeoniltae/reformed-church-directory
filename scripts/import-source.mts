@@ -42,7 +42,7 @@ const { rows, droppedColumns } = readSource();
 
 const warnings: string[] = [];
 const churches: Church[] = [];
-const fixedCount = { address: 0, phone: 0, pastor: 0 };
+const fixedCount = { address: 0, phone: 0, pastor: 0, homepage: 0 };
 let droppedLinks = 0;
 let normalizedAddresses = 0;
 let withCoords = 0;
@@ -51,6 +51,7 @@ for (const row of rows) {
   if (row.fixed.address) fixedCount.address++;
   if (row.fixed.phone) fixedCount.phone++;
   if (row.fixed.pastor) fixedCount.pastor++;
+  if (row.fixed.homepage) fixedCount.homepage++;
 
   // 조회는 rawAddress로 했다. 그 사이 주소가 바뀌었으면 낡은 결과로 덮어쓰지 않는다.
   let address = row.rawAddress;
@@ -95,6 +96,11 @@ for (const row of rows) {
     if (deadLinks.has(url)) droppedLinks++;
     else church.homepage = url;
   }
+  // 이전한 주소는 죽은 링크 판정 뒤에 얹는다. 원본 URL은 여전히 죽은 것이므로
+  // dead-links 매칭 집계를 건드리지 않아야 "매칭되지 않았다" 경고가 헛울리지 않는다.
+  if (row.homepageCorrected) {
+    church.homepage = normalizeUrl(row.homepageCorrected);
+  }
 
   churches.push(church);
 }
@@ -107,7 +113,7 @@ console.log(
   `죽은 링크로 비운 homepage: ${droppedLinks}건 (등록 ${deadLinks.size}건, ${DEAD_LINKS})`,
 );
 console.log(
-  `사람이 교정한 값: 주소 ${fixedCount.address} · 전화 ${fixedCount.phone} · 담임목사 ${fixedCount.pastor}`,
+  `사람이 교정한 값: 주소 ${fixedCount.address} · 전화 ${fixedCount.phone} · 담임목사 ${fixedCount.pastor} · 홈페이지 ${fixedCount.homepage}`,
 );
 console.log(
   `도로명주소로 정규화: ${normalizedAddresses}건 / ${geocode.size}건 조회  (${GEOCODE})`,

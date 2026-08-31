@@ -1,6 +1,6 @@
 {
   "note": "도로명주소 검색 API 조회 결과. import-source가 status가 'ok'인 건만 address를 roadAddr로 교체한다. 다중 후보·검색 실패는 1순위가 맞다는 보장이 없어 원본을 유지한다. 좌표 단계는 coordParams를 그대로 쓴다.",
-  "checkedAt": "2026-08-08",
+  "checkedAt": "2026-08-31",
   "entries": [
     {
       "id": "언약교회-강동구",
@@ -2118,32 +2118,32 @@
       "reason": "정상"
     },
     {
-      "id": "한가족교회-화성시",
-      "name": "한가족교회",
+      "id": "새언약교회-수원시",
+      "name": "새언약교회",
       "original": {
-        "address": "경기도 화성시 우정읍 멱우방죽1길 15-4",
+        "address": "경기도 수원시 팔달구 효원로249번길 46-15",
         "region": "경기",
-        "subRegion": "화성시"
+        "subRegion": "수원시"
       },
       "totalCount": 1,
       "matched": {
-        "roadAddr": "경기도 화성시 만세구 우정읍 멱우방죽1길 15-4",
-        "jibunAddr": "경기도 화성시 만세구 우정읍 멱우리 228-1",
-        "zipNo": "18561",
+        "roadAddr": "경기도 수원시 팔달구 효원로249번길 46-15 (인계동)",
+        "jibunAddr": "경기도 수원시 팔달구 인계동 1042-7",
+        "zipNo": "16490",
         "siNm": "경기도",
-        "sggNm": "화성시 만세구",
+        "sggNm": "수원시 팔달구",
         "coordParams": {
-          "admCd": "4159125025",
-          "rnMgtSn": "415914430434",
+          "admCd": "4111514100",
+          "rnMgtSn": "411154328467",
           "udrtYn": "0",
-          "buldMnnm": "15",
-          "buldSlno": "4"
+          "buldMnnm": "46",
+          "buldSlno": "15"
         },
         "coord": {
-          "lat": 37.105665,
-          "lng": 126.807243,
-          "entX": 938446.18939,
-          "entY": 1901003.6733500003
+          "lat": 37.264445,
+          "lng": 127.030822,
+          "entX": 958399.2961309666,
+          "entY": 1918496.8806149
         }
       },
       "status": "ok",
@@ -2185,29 +2185,29 @@
       "id": "실로암교회-영천시",
       "name": "실로암교회",
       "original": {
-        "address": "경북 영천시 금호읍 성천앞길 29",
+        "address": "경상북도 영천시 금호읍 대동마을길 58-42",
         "region": "경북",
         "subRegion": "영천시"
       },
       "totalCount": 1,
       "matched": {
-        "roadAddr": "경상북도 영천시 금호읍 성천앞길 29",
-        "jibunAddr": "경상북도 영천시 금호읍 성천리 395-1 실로암예배당",
+        "roadAddr": "경상북도 영천시 금호읍 대동마을길 58-42",
+        "jibunAddr": "경상북도 영천시 금호읍 대미리 산2-5 대한예수장로회 실로암교회",
         "zipNo": "38873",
         "siNm": "경상북도",
         "sggNm": "영천시",
         "coordParams": {
-          "admCd": "4723025023",
-          "rnMgtSn": "472304730358",
+          "admCd": "4723025024",
+          "rnMgtSn": "472304730131",
           "udrtYn": "0",
-          "buldMnnm": "29",
-          "buldSlno": "0"
+          "buldMnnm": "58",
+          "buldSlno": "42"
         },
         "coord": {
-          "lat": 35.943721,
-          "lng": 128.867864,
-          "entX": 1123373.5292154667,
-          "entY": 1772755.8197098337
+          "lat": 35.950191,
+          "lng": 128.886802,
+          "entX": 1125071.5263705,
+          "entY": 1773497.5921674669
         }
       },
       "status": "ok",
@@ -2250,8 +2250,8 @@
       },
       "totalCount": 13,
       "matched": {
-        "roadAddr": "전북특별자치도 군산시 미원로 66-3 (삼학동)",
-        "jibunAddr": "전북특별자치도 군산시 삼학동 884-50",
+        "roadAddr": "전북특별자치도 군산시 미원로 66-2 (삼학동)",
+        "jibunAddr": "전북특별자치도 군산시 삼학동 884-46",
         "zipNo": "54118",
         "siNm": "전북특별자치도",
         "sggNm": "군산시",
@@ -2260,7 +2260,7 @@
           "rnMgtSn": "521303268033",
           "udrtYn": "0",
           "buldMnnm": "66",
-          "buldSlno": "3"
+          "buldSlno": "2"
         }
       },
       "status": "multiple",
@@ -2306,9 +2306,29 @@
         "region": "전북",
         "subRegion": "김제시"
       },
-      "totalCount": 0,
-      "status": "notFound",
-      "reason": "검색 결과 없음"
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "전북특별자치도 김제시 동서로 255 (요촌동)",
+        "jibunAddr": "전북특별자치도 김제시 요촌동 614-6",
+        "zipNo": "54379",
+        "siNm": "전북특별자치도",
+        "sggNm": "김제시",
+        "coordParams": {
+          "admCd": "5221010100",
+          "rnMgtSn": "522103272085",
+          "udrtYn": "0",
+          "buldMnnm": "255",
+          "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 35.804129,
+          "lng": 126.894944,
+          "entX": 945332.8965586,
+          "entY": 1756577.7275226666
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
     },
     {
       "id": "익산우리교회-익산시",
@@ -2709,5 +2729,5 @@
       "reason": "정상"
     }
   ],
-  "coordsCheckedAt": "2026-08-16T17:06:29.649Z"
+  "coordsCheckedAt": "2026-08-31T13:01:41.559Z"
 }

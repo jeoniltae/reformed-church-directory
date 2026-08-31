@@ -48,6 +48,7 @@ export type SourceRow = {
     homepage: boolean;
     name: boolean;
     subRegion: boolean;
+    region: boolean;
   };
 };
 
@@ -93,6 +94,7 @@ type Fix = {
   homepageCorrected?: string;
   nameCorrected?: string;
   subRegionCorrected?: string;
+  regionCorrected?: string;
 };
 
 export function readSource(): { rows: SourceRow[]; droppedColumns: string[] } {
@@ -134,6 +136,7 @@ export function readSource(): { rows: SourceRow[]; droppedColumns: string[] } {
     const fixedHomepage = fixOf(lookupId, "homepageCorrected");
     const fixedName = fixOf(lookupId, "nameCorrected");
     const fixedSubRegion = fixOf(lookupId, "subRegionCorrected");
+    const fixedRegion = fixOf(lookupId, "regionCorrected");
 
     // 교회를 식별하는 값이 바뀌면 id도 따라 바뀐다. URL과 geocode 키가 함께 움직인다.
     const id =
@@ -144,7 +147,7 @@ export function readSource(): { rows: SourceRow[]; droppedColumns: string[] } {
     return {
       id,
       name: fixedName ?? name,
-      region: normalizeRegion(at(row, "지역")),
+      region: normalizeRegion(fixedRegion ?? at(row, "지역")),
       subRegion: fixedSubRegion ?? subRegion,
       rawAddress: fixedAddress ?? normalizeAddress(at(row, "주소")),
       pastor: fixedPastor ?? at(row, "담임목사"),
@@ -159,6 +162,7 @@ export function readSource(): { rows: SourceRow[]; droppedColumns: string[] } {
         homepage: Boolean(fixedHomepage),
         name: Boolean(fixedName),
         subRegion: Boolean(fixedSubRegion),
+        region: Boolean(fixedRegion),
       },
     };
   });

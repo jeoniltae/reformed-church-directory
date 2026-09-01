@@ -7,11 +7,17 @@ import {
   normalizeUrl,
 } from "../src/lib/church-utils.ts";
 import type { Church } from "../src/types/church.ts";
+import {
+  buildDenominationIndex,
+  type DenominationTable,
+  normalizeDenomination,
+} from "./lib/denominations.mts";
 import { readSource } from "./lib/source.mts";
 
 const OUTPUT = "data/churches.json";
 const DEAD_LINKS = "data/dead-links.json";
 const GEOCODE = "data/geocode.json";
+const DENOMINATIONS = "data/denominations.json";
 const SOURCE = "자체 수집";
 
 // 생존 확인에서 죽은 것으로 판정된 URL. 원본 CSV를 고치지 않으므로
@@ -38,6 +44,11 @@ const geocode = new Map<string, Geo>(
   ]),
 );
 
+// 교단 표기 판정표. 매핑표는 여기서만 읽고 앱 번들에는 들어가지 않는다.
+const denominations = buildDenominationIndex(
+  JSON.parse(readFileSync(DENOMINATIONS, "utf8")) as DenominationTable,
+);
+
 const { rows, droppedColumns } = readSource();
 
 const warnings: string[] = [];
@@ -54,6 +65,9 @@ const fixedCount = {
 let droppedLinks = 0;
 let normalizedAddresses = 0;
 let withCoords = 0;
+let grouped = 0;
+let renamedDenoms = 0;
+const unmappedDenoms: string[] = [];
 
 for (const row of rows) {
   if (row.fixed.address) fixedCount.address++;
@@ -95,7 +109,26 @@ for (const row of rows) {
     withCoords++;
   }
   if (row.subRegion) church.subRegion = row.subRegion;
-  if (row.denomination) church.denomination = row.denomination;
+  if (row.denomination) {
+    const normalized = normalizeDenomination(
+      row.denomination,
+      row.id,
+      denominations,
+    );
+    if (normalized) {
+      church.denomination = normalized.denomination;
+      if (normalized.denominationGroup) {
+        church.denominationGroup = normalized.denominationGroup;
+        grouped++;
+      }
+      if (normalized.denomination !== row.denomination) renamedDenoms++;
+    } else {
+      // 표에 없는 표기다. 원본을 그대로 두고 사람이 판정표에 추가하게 한다 —
+      // 조용히 비우면 확장 때 교단이 사라진 것을 알아챌 수 없다.
+      church.denomination = row.denomination;
+      unmappedDenoms.push(`${row.name}: ${row.denomination}`);
+    }
+  }
   if (row.phone) {
     church.phone = normalizePhone(row.phone);
     if (isSuspectPhone(row.phone)) {
@@ -130,6 +163,12 @@ console.log(
   `도로명주소로 정규화: ${normalizedAddresses}건 / ${geocode.size}건 조회  (${GEOCODE})`,
 );
 console.log(`좌표 반영: ${withCoords}건 / ${churches.length}건`);
+console.log(
+  `교단 정규화: 묶음 ${grouped}건 · 표기 교체 ${renamedDenoms}건 · 미등록 ${unmappedDenoms.length}건  (${DENOMINATIONS})`,
+);
+for (const u of unmappedDenoms) {
+  warnings.push(`교단 표기 미등록 → ${u} (${DENOMINATIONS}에 행을 추가할 것)`);
+}
 if (droppedLinks !== deadLinks.size) {
   warnings.push(
     `dead-links.json의 URL ${deadLinks.size - droppedLinks}건이 원본과 매칭되지 않았다 — 오타 또는 원본 변경`,

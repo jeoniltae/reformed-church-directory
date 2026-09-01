@@ -10,8 +10,14 @@ export interface Church {
   subRegion?: string;
   address: string;
   pastor: string;
-  /** 표시용 메타데이터. 수록 여부를 가르는 기준이 아니다 */
+  /** 배지에 보이는 총회 이름. 표시용 메타데이터이며 수록 여부를 가르는 기준이 아니다 */
   denomination?: string;
+  /**
+   * 필터·집계에 쓰는 묶음. `denomination`과 나눠 둔 덕에 별개 총회를 같은 묶음에
+   * 담을 수 있다(예: 고려는 고신과 다른 총회지만 `고신·고려 계열`이다).
+   * 값은 `data/denominations.json`의 `groups` 6종뿐이다.
+   */
+  denominationGroup?: string;
   phone?: string;
   homepage?: string;
   /** 도로명주소 API로 확보 예정 */

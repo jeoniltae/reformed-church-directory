@@ -8,6 +8,7 @@
     "source": "자체 수집",
     "subRegion": "강동구",
     "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "phone": "070-4101-3578",
     "homepage": "http://www.cvtchurch.org/"
   },
@@ -22,6 +23,7 @@
     "lng": 126.915737,
     "subRegion": "관악구",
     "denomination": "고려",
+    "denominationGroup": "고신·고려 계열",
     "phone": "02-861-7444",
     "homepage": "http://www.calvary.kr/"
   },
@@ -49,6 +51,7 @@
     "lng": 126.937556,
     "subRegion": "관악구",
     "denomination": "고신",
+    "denominationGroup": "고신·고려 계열",
     "phone": "070-8682-3991",
     "homepage": "http://cafe.daum.net/-goodchurch"
   },
@@ -63,6 +66,7 @@
     "lng": 127.089751,
     "subRegion": "광진구",
     "denomination": "고신",
+    "denominationGroup": "고신·고려 계열",
     "phone": "010-7423-0113",
     "homepage": "http://cafe.daum.net/hgpch"
   },
@@ -76,7 +80,8 @@
     "lat": 37.657177,
     "lng": 127.072752,
     "subRegion": "노원구",
-    "denomination": "고려연합",
+    "denomination": "고려",
+    "denominationGroup": "고신·고려 계열",
     "phone": "02-969-0432",
     "homepage": "http://blog.naver.com/daleun71"
   },
@@ -103,6 +108,7 @@
     "lng": 127.049964,
     "subRegion": "노원구",
     "denomination": "개혁",
+    "denominationGroup": "기타",
     "phone": "02-977-2780"
   },
   {
@@ -116,6 +122,7 @@
     "lng": 127.067887,
     "subRegion": "동대문구",
     "denomination": "대신",
+    "denominationGroup": "대신 계열",
     "phone": "02-963-4891",
     "homepage": "http://cafe.naver.com/ghkdqndlf"
   },
@@ -130,6 +137,7 @@
     "lng": 126.972453,
     "subRegion": "동작구",
     "denomination": "계신",
+    "denominationGroup": "기타",
     "phone": "02-534-4228",
     "homepage": "http://www.young-hwa.or.kr/"
   },
@@ -144,6 +152,7 @@
     "lng": 126.935866,
     "subRegion": "동작구",
     "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "phone": "02-7760-6442",
     "homepage": "https://seum.onmam.com/"
   },
@@ -156,6 +165,7 @@
     "source": "자체 수집",
     "subRegion": "마포구",
     "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "phone": "02-718-9898",
     "homepage": "http://sungga.or.kr/"
   },
@@ -170,6 +180,7 @@
     "lng": 126.917623,
     "subRegion": "마포구",
     "denomination": "고신",
+    "denominationGroup": "고신·고려 계열",
     "phone": "02-3144-6607",
     "homepage": "http://www.sgreformed.org/xe/"
   },
@@ -184,6 +195,7 @@
     "lng": 126.915034,
     "subRegion": "마포구",
     "denomination": "합동",
+    "denominationGroup": "합동 계열",
     "phone": "02-337-4645",
     "homepage": "http://www.jesusfamily.kr/"
   },
@@ -195,7 +207,8 @@
     "pastor": "성경준",
     "source": "자체 수집",
     "subRegion": "마포구",
-    "denomination": "독립",
+    "denomination": "독립(근본노회)",
+    "denominationGroup": "독립·해외",
     "phone": "02-334-8291",
     "homepage": "http://www.hjdc.net/"
   },
@@ -210,6 +223,7 @@
     "lng": 127.044962,
     "subRegion": "서초구",
     "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "phone": "02-572-1583"
   },
   {
@@ -223,6 +237,7 @@
     "lng": 126.984444,
     "subRegion": "서초구",
     "denomination": "합동",
+    "denominationGroup": "합동 계열",
     "phone": "010-8784-0823",
     "homepage": "http://cafe.daum.net/bangbaebon-church"
   },
@@ -235,6 +250,7 @@
     "source": "자체 수집",
     "subRegion": "서초구",
     "denomination": "대신",
+    "denominationGroup": "대신 계열",
     "phone": "02-536-4511",
     "homepage": "http://www.sbpcc.or.kr/"
   },
@@ -249,6 +265,7 @@
     "lng": 127.009833,
     "subRegion": "성북구",
     "denomination": "대신",
+    "denominationGroup": "대신 계열",
     "phone": "02-941-2019",
     "homepage": "http://cafe.naver.com/ariel300"
   },
@@ -263,6 +280,7 @@
     "lng": 127.122217,
     "subRegion": "송파구",
     "denomination": "계신",
+    "denominationGroup": "기타",
     "phone": "02-408-6993",
     "homepage": "http://www.garakdb.org/"
   },
@@ -277,6 +295,7 @@
     "lng": 127.127967,
     "subRegion": "송파구",
     "denomination": "합동",
+    "denominationGroup": "합동 계열",
     "phone": "02-488-0158",
     "homepage": "http://www.jinrichurch.org/"
   },
@@ -291,6 +310,7 @@
     "lng": 126.909695,
     "subRegion": "영등포구",
     "denomination": "고신",
+    "denominationGroup": "고신·고려 계열",
     "phone": "02-2677-5281",
     "homepage": "http://www.dooresarang.org/"
   },
@@ -305,6 +325,7 @@
     "lng": 126.904515,
     "subRegion": "영등포구",
     "denomination": "합동총회",
+    "denominationGroup": "기타",
     "phone": "02-894-9395",
     "homepage": "http://cafe.daum.net/cbcsus"
   },
@@ -319,6 +340,7 @@
     "lng": 126.997273,
     "subRegion": "용산구",
     "denomination": "합동",
+    "denominationGroup": "합동 계열",
     "phone": "02-792-2127",
     "homepage": "http://www.crossbc.org/"
   },
@@ -331,6 +353,7 @@
     "source": "자체 수집",
     "subRegion": "은평구",
     "denomination": "합동",
+    "denominationGroup": "합동 계열",
     "phone": "02-388-2847"
   },
   {
@@ -344,6 +367,7 @@
     "lng": 126.928554,
     "subRegion": "은평구",
     "denomination": "합동",
+    "denominationGroup": "합동 계열",
     "phone": "02-353-6265",
     "homepage": "http://www.joongsimch.org/"
   },
@@ -358,6 +382,7 @@
     "lng": 126.999729,
     "subRegion": "종로구",
     "denomination": "계신",
+    "denominationGroup": "기타",
     "phone": "02-762-4595",
     "homepage": "http://www.mrch.net/"
   },
@@ -372,6 +397,7 @@
     "lng": 126.964454,
     "subRegion": "종로구",
     "denomination": "고려개혁",
+    "denominationGroup": "기타",
     "phone": "02-733-5252",
     "homepage": "https://asheep.org/"
   },
@@ -386,6 +412,7 @@
     "lng": 126.90763,
     "subRegion": "종로구",
     "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "phone": "02-306-0643"
   },
   {
@@ -399,6 +426,7 @@
     "lng": 129.085104,
     "subRegion": "동래구",
     "denomination": "고신",
+    "denominationGroup": "고신·고려 계열",
     "phone": "010-4564-4890",
     "homepage": "http://cafe.daum.net/DRcovenent"
   },
@@ -411,6 +439,7 @@
     "source": "자체 수집",
     "subRegion": "부산진구",
     "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "phone": "010-9672-7242"
   },
   {
@@ -424,6 +453,7 @@
     "lng": 128.960659,
     "subRegion": "사하구",
     "denomination": "고신",
+    "denominationGroup": "고신·고려 계열",
     "phone": "010-3406-3373",
     "homepage": "http://cafe.daum.net/sola-gratia"
   },
@@ -438,6 +468,7 @@
     "lng": 129.116845,
     "subRegion": "해운대구",
     "denomination": "합동",
+    "denominationGroup": "합동 계열",
     "phone": "051-518-9125"
   },
   {
@@ -451,6 +482,7 @@
     "lng": 128.494635,
     "subRegion": "달서구",
     "denomination": "한국개혁장로교회",
+    "denominationGroup": "기타",
     "phone": "053-582-5824",
     "homepage": "http://kmcmi.org/"
   },
@@ -464,7 +496,8 @@
     "lat": 35.857004,
     "lng": 128.635323,
     "subRegion": "수성구",
-    "denomination": "대한예수교개혁회",
+    "denomination": "대한예수교 개혁회",
+    "denominationGroup": "기타",
     "phone": "053-741-6221"
   },
   {
@@ -476,6 +509,7 @@
     "source": "자체 수집",
     "subRegion": "남동구",
     "denomination": "대신",
+    "denominationGroup": "대신 계열",
     "phone": "032-465-4283",
     "homepage": "http://gwilliroom.or.kr"
   },
@@ -490,6 +524,7 @@
     "lng": 126.72483,
     "subRegion": "남동구",
     "denomination": "대신",
+    "denominationGroup": "대신 계열",
     "phone": "032-466-2776",
     "homepage": "http://blog.naver.com/churchejn/"
   },
@@ -502,6 +537,7 @@
     "source": "자체 수집",
     "subRegion": "부평구",
     "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "phone": "032-424-1559"
   },
   {
@@ -515,6 +551,7 @@
     "lng": 126.675267,
     "subRegion": "서구",
     "denomination": "고신",
+    "denominationGroup": "고신·고려 계열",
     "phone": "032-564-6187"
   },
   {
@@ -528,6 +565,7 @@
     "lng": 126.951332,
     "subRegion": "북구",
     "denomination": "합동",
+    "denominationGroup": "합동 계열",
     "phone": "062-401-7762",
     "homepage": "http://cafe.daum.net/mangwol91"
   },
@@ -542,6 +580,7 @@
     "lng": 127.30648,
     "subRegion": "유성구",
     "denomination": "계신",
+    "denominationGroup": "기타",
     "phone": "042-522-2005",
     "homepage": "http://ytbch.79.ypage.kr"
   },
@@ -568,6 +607,7 @@
     "lat": 36.505279,
     "lng": 127.234076,
     "denomination": "독립개혁장로회",
+    "denominationGroup": "독립·해외",
     "phone": "010-5568-4718",
     "homepage": "http://cafe.daum.net/churchinsejong"
   },
@@ -580,7 +620,8 @@
     "source": "자체 수집",
     "lat": 36.505858,
     "lng": 127.233987,
-    "denomination": "대신수호",
+    "denomination": "대신",
+    "denominationGroup": "대신 계열",
     "phone": "010-5050-5105"
   },
   {
@@ -594,6 +635,7 @@
     "lng": 126.881249,
     "subRegion": "고양시",
     "denomination": "개혁",
+    "denominationGroup": "기타",
     "phone": "010-8003-2246"
   },
   {
@@ -607,6 +649,7 @@
     "lng": 126.834417,
     "subRegion": "고양시",
     "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "phone": "010-8297-4120"
   },
   {
@@ -620,6 +663,7 @@
     "lng": 126.94526,
     "subRegion": "군포시",
     "denomination": "합동",
+    "denominationGroup": "합동 계열",
     "phone": "031-452-7836"
   },
   {
@@ -633,6 +677,7 @@
     "lng": 126.933686,
     "subRegion": "군포시",
     "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "phone": "070-4117-4020",
     "homepage": "http://yesup.kr/"
   },
@@ -647,6 +692,7 @@
     "lng": 126.692181,
     "subRegion": "김포시",
     "denomination": "합동",
+    "denominationGroup": "합동 계열",
     "phone": "010-9155-9088",
     "homepage": "http://blog.naver.com/PostList.nhn?blogId=sae-somang&categoryNo=18"
   },
@@ -661,6 +707,7 @@
     "lng": 127.169793,
     "subRegion": "남양주시",
     "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "phone": "010-7560-3340"
   },
   {
@@ -674,6 +721,7 @@
     "lng": 127.158566,
     "subRegion": "남양주시",
     "denomination": "고신",
+    "denominationGroup": "고신·고려 계열",
     "phone": "0507-1312-5303",
     "homepage": "http://cafe.daum.net/osm.or.kr"
   },
@@ -688,6 +736,7 @@
     "lng": 127.060486,
     "subRegion": "동두천시",
     "denomination": "고신",
+    "denominationGroup": "고신·고려 계열",
     "phone": "031-868-6264"
   },
   {
@@ -701,6 +750,7 @@
     "lng": 127.138198,
     "subRegion": "성남시",
     "denomination": "대신",
+    "denominationGroup": "대신 계열",
     "phone": "010-5130-6803",
     "homepage": "https://cafe.naver.com/hmchurch/"
   },
@@ -715,6 +765,7 @@
     "lng": 127.033161,
     "subRegion": "수원시",
     "denomination": "고신",
+    "denominationGroup": "고신·고려 계열",
     "phone": "010-7313-2012",
     "homepage": "http://cafe.naver.com/nextgeneration1/"
   },
@@ -729,6 +780,7 @@
     "lng": 126.97518,
     "subRegion": "수원시",
     "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "phone": "031-296-7381",
     "homepage": "http://www.meemoon.org/"
   },
@@ -741,6 +793,7 @@
     "source": "자체 수집",
     "subRegion": "수원시",
     "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "phone": "031-212-4184"
   },
   {
@@ -754,6 +807,7 @@
     "lng": 126.924095,
     "subRegion": "동작구",
     "denomination": "합동사당총신",
+    "denominationGroup": "합동 계열",
     "phone": "010-4100-7909",
     "homepage": "https://mahanaimjjang.wixsite.com/seoulreformedchurch"
   },
@@ -766,6 +820,7 @@
     "source": "자체 수집",
     "subRegion": "안산시",
     "denomination": "대신",
+    "denominationGroup": "대신 계열",
     "phone": "010-2758-4909",
     "homepage": "http://cafe.daum.net/ansanhoebok"
   },
@@ -777,7 +832,8 @@
     "pastor": "권형록",
     "source": "자체 수집",
     "subRegion": "안산시",
-    "denomination": "고신"
+    "denomination": "고신",
+    "denominationGroup": "고신·고려 계열"
   },
   {
     "id": "안산믿음교회-안산시",
@@ -790,6 +846,7 @@
     "lng": 126.860457,
     "subRegion": "안산시",
     "denomination": "개혁",
+    "denominationGroup": "기타",
     "phone": "010-2969-0143"
   },
   {
@@ -803,6 +860,7 @@
     "lng": 126.95503,
     "subRegion": "안양시",
     "denomination": "합동",
+    "denominationGroup": "합동 계열",
     "phone": "010-8356-1699",
     "homepage": "https://truthlove.kr/"
   },
@@ -817,6 +875,7 @@
     "lng": 127.072341,
     "subRegion": "용인시",
     "denomination": "고신",
+    "denominationGroup": "고신·고려 계열",
     "phone": "0507-1372-9967",
     "homepage": "http://cafe.daum.net/dawoorichurch"
   },
@@ -829,6 +888,7 @@
     "source": "자체 수집",
     "subRegion": "용인시",
     "denomination": "PCA",
+    "denominationGroup": "독립·해외",
     "phone": "031-261-4760"
   },
   {
@@ -842,6 +902,7 @@
     "lng": 126.979473,
     "subRegion": "의왕시",
     "denomination": "독립",
+    "denominationGroup": "독립·해외",
     "phone": "019-210-8187"
   },
   {
@@ -863,6 +924,7 @@
     "source": "자체 수집",
     "subRegion": "일산시",
     "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "homepage": "http://cafe.daum.net/yoongjukalvin"
   },
   {
@@ -874,6 +936,7 @@
     "source": "자체 수집",
     "subRegion": "일산시",
     "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "phone": "031-813-5316",
     "homepage": "http://www.hyunsan.net/"
   },
@@ -888,6 +951,7 @@
     "lng": 126.939971,
     "subRegion": "평택시",
     "denomination": "합동",
+    "denominationGroup": "합동 계열",
     "phone": "031-683-7469"
   },
   {
@@ -901,6 +965,7 @@
     "lng": 127.05958,
     "subRegion": "평택시",
     "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "phone": "031-662-4742"
   },
   {
@@ -913,7 +978,8 @@
     "lat": 37.264445,
     "lng": 127.030822,
     "subRegion": "수원시",
-    "denomination": "대신개혁",
+    "denomination": "정통대신",
+    "denominationGroup": "대신 계열",
     "phone": "031-354-0379",
     "homepage": "http://afamily.ijesus.net/"
   },
@@ -928,6 +994,7 @@
     "lng": 128.154454,
     "subRegion": "김천시",
     "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "phone": "054-439-1695"
   },
   {
@@ -941,6 +1008,7 @@
     "lng": 128.886802,
     "subRegion": "영천시",
     "denomination": "한국개혁장로교회",
+    "denominationGroup": "기타",
     "phone": "054-337-8925",
     "homepage": "http://www.siloam-church.org/"
   },
@@ -952,7 +1020,8 @@
     "pastor": "손재호",
     "source": "자체 수집",
     "subRegion": "창원시",
-    "denomination": "국신",
+    "denomination": "개혁",
+    "denominationGroup": "기타",
     "phone": "055-267-3604",
     "homepage": "http://hangyulcmi.org/"
   },
@@ -965,6 +1034,7 @@
     "source": "자체 수집",
     "subRegion": "군산시",
     "denomination": "합동",
+    "denominationGroup": "합동 계열",
     "phone": "070-8774-9332",
     "homepage": "http://cafe.daum.net/gsjsrc/"
   },
@@ -979,6 +1049,7 @@
     "lng": 126.746274,
     "subRegion": "군산시",
     "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "phone": "063-445-3458"
   },
   {
@@ -992,6 +1063,7 @@
     "lng": 126.894944,
     "subRegion": "김제시",
     "denomination": "합동",
+    "denominationGroup": "합동 계열",
     "phone": "010-6653-9684"
   },
   {
@@ -1005,6 +1077,7 @@
     "lng": 126.931396,
     "subRegion": "익산시",
     "denomination": "합동",
+    "denominationGroup": "합동 계열",
     "phone": "063-915-0082",
     "homepage": "http://cafe.daum.net/wooriecclesia"
   },
@@ -1019,6 +1092,7 @@
     "lng": 127.126788,
     "subRegion": "전주시",
     "denomination": "합동",
+    "denominationGroup": "합동 계열",
     "phone": "063-222-2272"
   },
   {
@@ -1030,6 +1104,7 @@
     "source": "자체 수집",
     "subRegion": "정읍시",
     "denomination": "합동진리",
+    "denominationGroup": "기타",
     "phone": "063-535-6297",
     "homepage": "http://thevine21.hompee.com/"
   },
@@ -1043,7 +1118,8 @@
     "lat": 34.968494,
     "lng": 127.569301,
     "subRegion": "광양시",
-    "denomination": "합신개혁",
+    "denomination": "독립개혁장로교회",
+    "denominationGroup": "독립·해외",
     "phone": "070-8612-4955",
     "homepage": "https://gwrech.com/"
   },
@@ -1058,6 +1134,7 @@
     "lng": 126.430155,
     "subRegion": "목포시",
     "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "phone": "010-9877-7026"
   },
   {
@@ -1069,6 +1146,7 @@
     "source": "자체 수집",
     "subRegion": "천안시",
     "denomination": "고신",
+    "denominationGroup": "고신·고려 계열",
     "phone": "041-569-9155",
     "homepage": "http://koreapilgrimchurch.com/"
   },
@@ -1083,6 +1161,7 @@
     "lng": 126.170801,
     "subRegion": "태안군",
     "denomination": "합동진리",
+    "denominationGroup": "기타",
     "phone": "041-675-1329",
     "homepage": "http://thevine21.hompee.com/kt/intro/index?menuId=101515&topMenuId=1&menuType=27&newmenuAt=0"
   },
@@ -1109,6 +1188,7 @@
     "lng": 127.32099,
     "subRegion": "청주시",
     "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "phone": "010-6574-3977",
     "homepage": "http://facebook.com/newhope179"
   },
@@ -1123,6 +1203,7 @@
     "lng": 127.487674,
     "subRegion": "청주시",
     "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "phone": "070-4383-1191",
     "homepage": "https://www.youtube.com/channel/UC_ltQy94qWRNw_KW8oogqfA/videos"
   },
@@ -1137,6 +1218,7 @@
     "lng": 127.449069,
     "subRegion": "청주시",
     "denomination": "개혁",
+    "denominationGroup": "기타",
     "phone": "010-3315-6801"
   },
   {
@@ -1161,6 +1243,7 @@
     "lng": 127.754078,
     "subRegion": "춘천시",
     "denomination": "고신",
+    "denominationGroup": "고신·고려 계열",
     "phone": "033-262-6752"
   }
 ]

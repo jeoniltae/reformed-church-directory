@@ -2,10 +2,18 @@
 
 import { readFileSync } from "node:fs";
 import type { Church } from "../src/types/church.ts";
+import {
+  decodeHtml,
+  extractTitle,
+  matchPlaceholder,
+  titleMatchesName,
+} from "./lib/page-title.mts";
 
 const INPUT = "data/churches.json";
 const DELAY_MS = 1200; // 초당 1건 이하 (같은 도메인이 연속되면 자연히 더 벌어진다)
 const TIMEOUT_MS = 10_000;
+/** <title>은 <head>에 있다. 앞부분만 받고 나머지는 버린다 */
+const HEAD_BYTES = 64 * 1024;
 const UA =
   "ReformedChurchDirectoryBot/0.1 (+https://github.com/jeoniltae/reformed-church-directory) link-check";
 
@@ -16,10 +24,14 @@ type Result = {
   church: Church;
   /**
    * dead — 도메인이 사라진 경우만. 죽은 링크 판정의 유일한 근거다.
+   * placeholder — 도메인은 살아 있고 200을 주는데 내용이 호스팅 안내 페이지다.
+   *   **후보일 뿐이다.** 사람이 열어 확인한 뒤 dead-links.json에 넣는다.
    * blocked — 서버는 살아 있는데 봇이 막히거나 원인을 모르는 경우. 사람이 봐야 한다.
    */
-  kind: "ok" | "moved" | "unreliable" | "blocked" | "dead";
+  kind: "ok" | "moved" | "unreliable" | "blocked" | "dead" | "placeholder";
   detail: string;
+  /** 본문에서 가져오는 유일한 값. 나머지 본문은 어디에도 남기지 않는다 */
+  title?: string;
 };
 
 /** DNS 단계에서 실패했는가 — 도메인 자체가 없다는 뜻이다 */
@@ -63,6 +75,36 @@ function reason(e: unknown): string {
   return code ? `${code}: ${cause?.message ?? ""}`.trim() : msg;
 }
 
+/**
+ * 응답 앞부분만 읽고 스트림을 끊는다.
+ * 본문을 통째로 받지 않으려는 것이고, 실제로 500KB짜리 교회 홈페이지가 있었다.
+ */
+async function readHead(res: Response, limit: number): Promise<Uint8Array> {
+  const reader = res.body?.getReader();
+  if (!reader) return new Uint8Array();
+
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  try {
+    while (size < limit) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+      size += value.length;
+    }
+  } finally {
+    await reader.cancel().catch(() => {});
+  }
+
+  const out = new Uint8Array(size);
+  let offset = 0;
+  for (const chunk of chunks) {
+    out.set(chunk, offset);
+    offset += chunk.length;
+  }
+  return out;
+}
+
 async function check(church: Church): Promise<Result> {
   const url = church.homepage!;
   let res: Response;
@@ -81,10 +123,8 @@ async function check(church: Church): Promise<Result> {
     };
   }
 
-  // 본문은 읽지 않는다. 생존 확인에 필요 없고, 받아두면 저장 유혹이 생긴다.
-  await res.body?.cancel();
-
   if (!res.ok) {
+    await res.body?.cancel();
     const bot = [401, 403, 405, 406, 429].includes(res.status);
     return {
       church,
@@ -93,15 +133,27 @@ async function check(church: Church): Promise<Result> {
     };
   }
 
+  // 본문에서 가져오는 것은 <title> 하나다. 나머지는 버리고 어디에도 저장하지 않는다.
+  const title = extractTitle(
+    decodeHtml(
+      await readHead(res, HEAD_BYTES),
+      res.headers.get("content-type"),
+    ),
+  );
+
   const from = hostOf(url);
   const to = hostOf(res.url);
+  const placeholder = matchPlaceholder(title);
+  if (placeholder) {
+    return { church, kind: "placeholder", detail: placeholder, title };
+  }
   if (UNRELIABLE.test(to) || UNRELIABLE.test(from)) {
-    return { church, kind: "unreliable", detail: `HTTP ${res.status} · ${to}` };
+    return { church, kind: "unreliable", detail: `HTTP ${res.status} · ${to}`, title };
   }
   if (to && from && !sameSite(from, to)) {
-    return { church, kind: "moved", detail: `${from} → ${to}` };
+    return { church, kind: "moved", detail: `${from} → ${to}`, title };
   }
-  return { church, kind: "ok", detail: `HTTP ${res.status}` };
+  return { church, kind: "ok", detail: `HTTP ${res.status}`, title };
 }
 
 const churches: Church[] = JSON.parse(readFileSync(INPUT, "utf8"));
@@ -122,20 +174,32 @@ for (const [i, church] of targets.entries()) {
   if (i > 0) await sleep(DELAY_MS);
   const r = await check(church);
   results.push(r);
-  process.stdout.write(r.kind === "ok" ? "." : r.kind === "dead" ? "x" : "?");
+  process.stdout.write(
+    r.kind === "ok" ? "." : r.kind === "dead" || r.kind === "placeholder" ? "x" : "?",
+  );
 }
 console.log("\n");
 
 const by = (kind: Result["kind"]) => results.filter((r) => r.kind === kind);
 const line = (r: Result) =>
   `  ${r.church.name} (${r.church.subRegion ?? r.church.region})`.padEnd(28) +
-  `${r.detail}\n    ${r.church.homepage}`;
+  `${r.detail}\n    ${r.church.homepage}` +
+  (r.title ? `\n    title: ${r.title}` : "");
 
 console.log("=".repeat(60));
 console.log(
-  `정상 ${by("ok").length} · 이동 ${by("moved").length} · 카페·블로그 ${by("unreliable").length} · 확인불가 ${by("blocked").length} · 죽음 ${by("dead").length}`,
+  `정상 ${by("ok").length} · 이동 ${by("moved").length} · 카페·블로그 ${by("unreliable").length} · 확인불가 ${by("blocked").length} · 안내페이지 ${by("placeholder").length} · 죽음 ${by("dead").length}`,
 );
 console.log("=".repeat(60));
+
+if (by("placeholder").length) {
+  console.log(`\n■ 안내 페이지 — 살아 있는 척하는 죽은 링크 (${by("placeholder").length}건)\n`);
+  console.log("  도메인은 살아 있고 HTTP 200을 주지만 내용이 호스팅 업체 안내 페이지다.");
+  console.log("  DNS만 보는 판정으로는 걸리지 않아 정상으로 통과하던 유형이다.");
+  console.log("  **후보일 뿐이다. 브라우저로 직접 열어 확인한 뒤 사람이");
+  console.log("  data/dead-links.json에 넣는다 — 이 스크립트는 넣지 않는다.**\n");
+  by("placeholder").forEach((r) => console.log(line(r)));
+}
 
 if (by("dead").length) {
   console.log(`\n■ 죽음 — 도메인 소멸 (${by("dead").length}건)\n`);
@@ -164,4 +228,22 @@ if (by("unreliable").length) {
   by("unreliable").forEach((r) => console.log(line(r)));
 }
 
+// 알려지지 않은 플랫폼의 안내 페이지를 훑어내기 위한 약한 신호다.
+// 영문 title을 쓰는 정상 교회도 걸리므로 죽음 판정에 쓰지 않고 눈으로 볼 목록만 만든다.
+const unrelated = by("ok").filter(
+  (r) => !titleMatchesName(r.church.name, r.title),
+);
+if (unrelated.length) {
+  console.log(`\n■ title이 교회명과 겹치지 않음 — 눈으로 확인 (${unrelated.length}건)\n`);
+  console.log("  정상 응답이지만 title에 교회명이 없다. 영문 title을 쓰는 교회일 수도,");
+  console.log("  위에서 잡지 못한 새 유형의 안내 페이지일 수도 있다.");
+  console.log("  새 안내 페이지를 찾으면 scripts/lib/page-title.mts의 PLACEHOLDER에 추가한다.\n");
+  unrelated.forEach((r) =>
+    console.log(
+      `  ${r.church.name}`.padEnd(24) + `${r.title ?? "(title 없음)"}\n    ${r.church.homepage}`,
+    ),
+  );
+}
+
 console.log("\n※ 이 스크립트는 보고만 한다. data/churches.json은 수정하지 않는다.");
+console.log("※ 안내 페이지 판정도 후보 제시까지다. dead-links.json은 사람이 채운다.");

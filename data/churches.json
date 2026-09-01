@@ -372,7 +372,8 @@
     "lng": 126.964454,
     "subRegion": "종로구",
     "denomination": "고려개혁",
-    "phone": "02-733-5252"
+    "phone": "02-733-5252",
+    "homepage": "https://asheep.org/"
   },
   {
     "id": "열린교회-종로구",
@@ -558,14 +559,14 @@
     "homepage": "http://cafe.daum.net/007bell"
   },
   {
-    "id": "주님의-교회",
-    "name": "주님의 교회",
+    "id": "세종개혁교회",
+    "name": "세종개혁교회",
     "region": "세종",
-    "address": "세종특별자치시 마음로 70 (고운동)",
+    "address": "세종특별자치시 마음로 74 (고운동)",
     "pastor": "조한수",
     "source": "자체 수집",
-    "lat": 36.505044,
-    "lng": 127.234397,
+    "lat": 36.505279,
+    "lng": 127.234076,
     "denomination": "독립개혁장로회",
     "phone": "010-5568-4718",
     "homepage": "http://cafe.daum.net/churchinsejong"
@@ -580,8 +581,7 @@
     "lat": 36.505858,
     "lng": 127.233987,
     "denomination": "대신수호",
-    "phone": "010-5050-5105",
-    "homepage": "http://sejonglogos.modoo.at"
+    "phone": "010-5050-5105"
   },
   {
     "id": "삼송제일교회-고양시",
@@ -744,15 +744,15 @@
     "phone": "031-212-4184"
   },
   {
-    "id": "우리개혁교회-안산시",
-    "name": "우리개혁교회",
-    "region": "경기",
-    "address": "경기도 안산시 상록구 충장로 568-1 (월피동)",
+    "id": "서울개혁교회-동작구",
+    "name": "서울개혁교회",
+    "region": "서울",
+    "address": "서울특별시 동작구 보라매로5가길 16 (신대방동, 보라매아카데미타워)",
     "pastor": "김태호",
     "source": "자체 수집",
-    "lat": 37.32894,
-    "lng": 126.850417,
-    "subRegion": "안산시",
+    "lat": 37.491275,
+    "lng": 126.924095,
+    "subRegion": "동작구",
     "denomination": "합동사당총신",
     "phone": "010-4100-7909",
     "homepage": "https://mahanaimjjang.wixsite.com/seoulreformedchurch"
@@ -1045,7 +1045,7 @@
     "subRegion": "광양시",
     "denomination": "합신개혁",
     "phone": "070-8612-4955",
-    "homepage": "http://cafe.daum.net/Sansu"
+    "homepage": "https://gwrech.com/"
   },
   {
     "id": "목포장로교회-목포시",

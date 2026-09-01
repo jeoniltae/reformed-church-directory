@@ -87,6 +87,14 @@
       "checkedAt": "2026-08-31",
       "foundBy": "사람 확인 (docs/교단리서치/독립 교단 조사.md) 후 실측",
       "note": "**`npm run check:homepages`가 잡지 못하는 유형이다.** 현재 스크립트는 DNS 실패만 dead로 판정하는데 이 URL은 200을 돌려준다. 세종말씀교회의 modoo.at에 이은 두 번째 사례이며, 판정 개선은 docs/checklist.md의 홈페이지 생존 확인 절에 항목으로 있다."
+    },
+    {
+      "church": "세종말씀교회",
+      "url": "http://sejonglogos.modoo.at",
+      "reason": "호스팅 서비스 종료 — 네이버 modoo!가 2025년 6월 종료했다. HTTP 200에 title이 `네이버 modoo!`인 안내 페이지만 뜬다",
+      "checkedAt": "2026-08-31",
+      "foundBy": "사람 확인 (docs/교단리서치/세종말씀교회_소속교단_확인보고서.md) 후 실측",
+      "note": "**`check:homepages`가 못 잡는 유형의 세 번째 사례다**(앞선 둘은 선실교회 cafe24, 그리고 이 건을 2026-08-17에 처음 발견하고도 근거가 부족해 미뤄뒀던 것이다). 세 건 모두 `DNS는 살아 있고 200을 주지만 내용은 호스팅·플랫폼 안내 페이지`라는 같은 형태다. 판정 로직에 title·본문 검사를 넣을 근거가 이제 충분하다 — docs/checklist.md의 홈페이지 생존 확인 절 참조."
     }
   ]
 }

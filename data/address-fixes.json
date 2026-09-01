@@ -188,7 +188,9 @@
       "phoneCorrected": "041-675-1329",
       "pastorHint": "가재기",
       "pastorCorrected": "",
-      "note": ""
+      "homepageHint": "http://jooklimch.hompee.com/",
+      "homepageCorrected": "http://thevine21.hompee.com/kt/intro/index?menuId=101515&topMenuId=1&menuType=27&newmenuAt=0",
+      "note": "홈페이지가 포도나무선교회 사이트 안의 교회 소개 페이지로 옮겨졌다. 원본 `jooklimch.hompee.com`은 HTTP 200에 title이 `홈피닷컴 :: Not Found,`인 안내 페이지다(2026-09-01 check:homepages 개선으로 검출). **사용자가 알려준 `https://www.thevine21...` 형태는 TLS 인증서 오류가 난다**(ERR_TLS_CERT_ALTNAME_INVALID — 인증서가 www 호스트를 포함하지 않는다). `http://` + www 없는 형태만 정상이라 그쪽을 넣었다. **주의할 점 둘.** ①이 도메인은 옥토교회의 홈페이지와 같다 — 두 교회가 같은 포도나무선교회 사이트를 쓰며, 그 선교회는 교단이 아니라 초교파 네트워크다(`합동진리` 행 참조). ②사이트 title이 `포도나무선교회`라 교회명과 겹치지 않으므로 앞으로 check:homepages의 `title 불일치` 목록에 계속 뜬다. 죽은 링크가 아니라 알려진 상태다. 쿼리스트링의 menuId가 바뀌면 링크가 깨질 수 있다."
     },
     {
       "id": "합정동교회-마포구",
@@ -213,6 +215,58 @@
       "homepageHint": "http://www.tbch.or.kr/",
       "homepageCorrected": "http://ytbch.79.ypage.kr",
       "note": "홈페이지가 이전했다. 원본 `tbch.or.kr`은 도메인이 사라져 dead-links.json에 올라가 있고(2026-08-06) 그 기록은 유지한다 — 새 주소 `ytbch.79.ypage.kr`은 실측으로 살아 있음을 확인했다(HTTP 200, title `복용교회`). **같은 URL의 복구가 아니라 다른 주소로의 이전이라 dead-links에서 지우는 것으로는 풀리지 않아** homepageCorrected 필드를 새로 만들었다. 담임목사와 홈페이지 모두 근거는 docs/교단리서치/계신총회_소속교회_확인보고서.md이며, **교단 확인 과정에서 부수적으로 나온 표기라 합정동교회 건보다 근거가 약하다.**"
+    },
+    {
+      "id": "진리사랑교회-안양시",
+      "church": "진리사랑교회",
+      "original": "경기도 안양시 동안구 211번길16 삼희월드프라자 9층",
+      "corrected": "",
+      "phoneHint": "010-8356-1699",
+      "phoneCorrected": "",
+      "pastorHint": "박병준",
+      "pastorCorrected": "",
+      "homepageHint": "http://truthlove.hompee.com/",
+      "homepageCorrected": "https://truthlove.kr/",
+      "note": "홈페이지가 홈피닷컴에서 자체 도메인으로 이전했다. 원본은 HTTP 200에 title이 `홈피닷컴 :: Not Found,`인 안내 페이지다(2026-09-01 check:homepages 개선으로 검출). 새 주소는 같은 판정 함수로 확인했다(HTTP 200, title `진리사랑교회`)."
+    },
+    {
+      "id": "성가교회-마포구",
+      "church": "성가교회",
+      "original": "서울시 마포구 현석동 220 밤섬현대아파트상가 2층",
+      "corrected": "",
+      "phoneHint": "02-718-9898",
+      "phoneCorrected": "",
+      "pastorHint": "박혁",
+      "pastorCorrected": "",
+      "homepageHint": "http://sungga1.onmam.com/",
+      "homepageCorrected": "http://sungga.or.kr/",
+      "note": "홈페이지가 온맘에서 자체 도메인으로 이전했다. 원본은 HTTP 200에 title이 `온맘 홈피 중지`인 안내 페이지다(2026-09-01 check:homepages 개선으로 검출). 새 주소는 같은 판정 함수로 확인했다(HTTP 200, title `성가교회`)."
+    },
+    {
+      "id": "세움교회-동작구",
+      "church": "세움교회",
+      "original": "서울시 동작구 상도2동 454번지",
+      "corrected": "",
+      "phoneHint": "02-7760-6442",
+      "phoneCorrected": "",
+      "pastorHint": "정요석",
+      "pastorCorrected": "",
+      "homepageHint": "http://www.seum.seoul.kr/",
+      "homepageCorrected": "https://seum.onmam.com/",
+      "note": "**원본은 죽은 정도가 아니라 무관한 곳으로 연결됐다** — `seum.seoul.kr`이 HTTP 200에 title `한국릴레이부품(주) Welcomes you to visit !`을 돌려준다. 도메인이 다른 사업체에 넘어간 것으로, 디렉토리가 이용자를 엉뚱한 회사로 보내던 상태였다. 2026-09-01 check:homepages 개선의 `title 불일치` 목록이 잡아냈다(안내 페이지 패턴으로는 잡을 수 없는 유형이라 사람이 볼 목록에 남긴 것이 효과를 봤다). 새 주소는 같은 판정 함수로 확인했다(HTTP 200, title `세움교회`). 참고로 성가교회의 죽은 주소와 같은 온맘 플랫폼이지만 이쪽은 정상 운영 중이다 — 플랫폼 이름만으로 죽음을 판정하면 안 되는 이유다. docs/교단리서치/개혁 교단 조사.md가 \"우리 데이터의 홈페이지는 검색 결과에 없고 다른 주소가 나옴\"이라고 적었던 바로 그 건이다."
+    },
+    {
+      "id": "중심교회-은평구",
+      "church": "중심교회",
+      "original": "서울시은평구 녹번동 98-3",
+      "corrected": "",
+      "phoneHint": "02-353-6265",
+      "phoneCorrected": "",
+      "pastorHint": "서문강",
+      "pastorCorrected": "",
+      "homepageHint": "http://joongsim.hompee.org/",
+      "homepageCorrected": "http://www.joongsimch.org/",
+      "note": "홈페이지가 홈피닷컴에서 자체 도메인으로 이전했다. **원본은 `check:homepages` 개선(2026-09-01)이 처음 잡아낸 안내 페이지 유형이다** — `joongsim.hompee.org`가 HTTP 200을 주면서 title이 `홈피닷컴 :: Not Found,`인 호스팅 안내 페이지다. 새 주소는 같은 판정 함수로 확인했다(HTTP 200, title `중심교회`, 안내 페이지 아님). **dead-links.json에는 넣지 않았다** — homepageCorrected가 죽은 링크 판정 뒤에 얹혀 원본이 출력에 닿지 않으므로 기능상 불필요하고, 원본이 죽었다는 사실은 이 note가 남긴다. 주소는 그대로라 normalize:addresses 재실행이 필요 없다."
     },
     {
       "id": "양의문교회-종로구",

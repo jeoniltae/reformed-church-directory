@@ -2,7 +2,12 @@
 
 import { describe, expect, it } from "vitest";
 import type { Church } from "@/types/church";
-import { collectRegionCounts, collectRegions, filterChurches } from "./search";
+import {
+  collectDenominationGroups,
+  collectRegionCounts,
+  collectRegions,
+  filterChurches,
+} from "./search";
 
 const churches: Church[] = [
   {
@@ -13,6 +18,7 @@ const churches: Church[] = [
     address: "서울 강동구 강일동 69",
     pastor: "이승구",
     denomination: "합신",
+    denominationGroup: "합신 계열",
     source: "자체 수집",
   },
   {
@@ -23,9 +29,11 @@ const churches: Church[] = [
     address: "서울특별시 광진구 천호대로132길 8 (구의동)",
     pastor: "손재익",
     denomination: "고신",
+    denominationGroup: "고신·고려 계열",
     source: "자체 수집",
   },
   {
+    // 교단이 없는 6건을 대표한다 — 묶음 필터에서 빠지는 것이 정상이다
     id: "새언약교회-김포시",
     name: "새 언약 교회",
     region: "경기",
@@ -77,6 +85,69 @@ describe("filterChurches", () => {
 
   it("일치하는 교회가 없으면 빈 배열이다", () => {
     expect(filterChurches(churches, { q: "없는교회" })).toEqual([]);
+  });
+
+  it("교단 묶음으로 거른다", () => {
+    expect(
+      filterChurches(churches, { denominationGroup: "합신 계열" }).map(
+        (c) => c.id,
+      ),
+    ).toEqual(["언약교회-강동구"]);
+  });
+
+  it("교단이 없는 교회는 어느 묶음에도 걸리지 않는다", () => {
+    // `전체`에서만 보인다. `교단 없음` 칩을 만들지 않기로 한 결정과 짝이다
+    const groups = ["합신 계열", "고신·고려 계열", "기타"];
+    for (const denominationGroup of groups) {
+      expect(
+        filterChurches(churches, { denominationGroup }).map((c) => c.id),
+      ).not.toContain("새언약교회-김포시");
+    }
+    expect(filterChurches(churches, {})).toHaveLength(3);
+  });
+
+  it("검색어·지역·교단이 함께 적용된다", () => {
+    expect(
+      filterChurches(churches, {
+        q: "언약",
+        region: "서울",
+        denominationGroup: "합신 계열",
+      }).map((c) => c.id),
+    ).toEqual(["언약교회-강동구"]);
+    // 지역은 맞지만 묶음이 다르면 걸러진다
+    expect(
+      filterChurches(churches, {
+        region: "서울",
+        denominationGroup: "대신 계열",
+      }),
+    ).toEqual([]);
+  });
+});
+
+describe("collectDenominationGroups", () => {
+  it("등장하는 묶음만 건수 내림차순으로 돌려준다", () => {
+    // 표본은 1건씩이라 동수다. 순서가 아니라 구성만 본다
+    expect(collectDenominationGroups(churches).sort()).toEqual(
+      ["고신·고려 계열", "합신 계열"].sort(),
+    );
+  });
+
+  it("교단이 없는 교회는 세지 않는다 — `교단 없음` 칩을 만들지 않기 위해서다", () => {
+    expect(collectDenominationGroups(churches)).toHaveLength(2);
+    expect(collectDenominationGroups(churches)).not.toContain(undefined);
+  });
+
+  it("건수 내림차순이다", () => {
+    const many = [
+      ...churches,
+      { ...churches[1], id: "다른교회-성북구" },
+      { ...churches[1], id: "또다른교회-성북구" },
+    ];
+    expect(collectDenominationGroups(many)[0]).toBe("고신·고려 계열");
+  });
+
+  it("빈 목록에는 빈 배열이다", () => {
+    expect(collectDenominationGroups([])).toEqual([]);
   });
 });
 

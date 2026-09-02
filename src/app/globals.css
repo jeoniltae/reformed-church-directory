@@ -228,6 +228,90 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 /*
+  가로 스크롤 필터 줄의 스크롤바를 감춘다.
+  모바일에서는 원래 오버레이라 안 보이는데 데스크톱에서는 줄마다 막대가 그어져,
+  필터가 두 줄이 되자 그 막대 두 개가 가장 큰 시각적 잡음이 됐다.
+  칩이 버튼이라 키보드 탭 이동으로 스크롤되므로 접근성은 유지된다.
+*/
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/*
+  가로 스크롤 줄의 넘치는 끝을 흐린다 — 칩이 가장자리로 갈수록 사라져
+  "옆에 더 있다"가 스크롤바 없이도 읽힌다.
+
+  **양쪽을 항상 흐리면 안 된다.** 맨 왼쪽에 있는데 왼쪽이 흐리면 갈 곳이
+  없는데 있는 것처럼 보이고, 기본 선택인 `전체` 칩이 뿌옇게 나온다.
+  그래서 스크롤 위치에 애니메이션을 묶어 **갈 수 있는 쪽만** 흐린다.
+
+  자바스크립트가 없다. 스크롤 이벤트를 듣지 않으므로 끊기지 않는다.
+
+  **prefers-reduced-motion 가드를 두지 않았다.** 이건 스크롤 위치를 나타내는
+  상태 표시이지 스스로 움직이는 모션이 아니다. 손가락을 떼면 멈춘다.
+*/
+@property --fade-left {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --fade-right {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+/*
+  애니메이션을 하나로 둔다. 처음엔 좌우를 각각 애니메이션 둘로 나누고
+  `animation-range`로 구간을 지정했는데, 목록 파싱이 어긋나 스크롤 0에서
+  왼쪽 페이드가 켜졌다(`--fade-left`가 28px로 계산됐다). 구간을 keyframe
+  퍼센트로 옮기니 `animation-range`가 통째로 필요 없어졌다.
+*/
+@keyframes scroll-fade {
+  0% {
+    --fade-left: 0px;
+    --fade-right: var(--fade-size);
+  }
+  8%,
+  92% {
+    --fade-left: var(--fade-size);
+    --fade-right: var(--fade-size);
+  }
+  100% {
+    --fade-left: var(--fade-size);
+    --fade-right: 0px;
+  }
+}
+
+/*
+  미지원 브라우저에서는 페이드 없이 지금 그대로 동작한다.
+  타임라인이 없으면 `both`가 시작 상태를 붙들어 오른쪽이 늘 흐려지므로
+  @supports로 통째로 가둔다.
+*/
+@supports (animation-timeline: scroll()) {
+  .scroll-fade {
+    --fade-size: 28px;
+
+    /* 스크롤이 없는 넓은 화면에서는 타임라인이 비활성이라 두 값 모두 0이 된다 */
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 var(--fade-left),
+      #000 calc(100% - var(--fade-right)),
+      transparent 100%
+    );
+
+    animation: scroll-fade linear both;
+    animation-timeline: scroll(self inline);
+  }
+}
+
+/*
   화면 전환 — 하단 탭바 고정.
   탭바에 이름을 주면 루트 스냅샷에서 분리돼 내용만 밀리고 탭바는 제자리에 남는다.
   이름은 문서 전체에서 유일해야 하므로 탭바 하나에만 쓴다.

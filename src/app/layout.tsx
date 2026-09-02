@@ -13,10 +13,23 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+/**
+ * canonical·OG의 기준이 되는 절대 주소.
+ *
+ * **`NEXT_PUBLIC_SITE_URL` 하나만 보면 배포 직후 canonical이 전부
+ * `http://localhost:3000/...`으로 나간다** — 89개 페이지가 그렇게 구워지는 것을
+ * 클린 빌드로 확인했다. 도메인을 붙이기 전 프리뷰 단계에서도 값이 맞도록
+ * Vercel이 빌드 시점에 넣어주는 주소를 중간 폴백으로 둔다.
+ */
+function siteUrl(): string {
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+  const vercel =
+    process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+  return vercel ? `https://${vercel}` : "http://localhost:3000";
+}
+
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
-  ),
+  metadataBase: new URL(siteUrl()),
   title: {
     default: "개혁주의 교회 디렉토리",
     template: "%s · 개혁주의 교회 디렉토리",

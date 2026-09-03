@@ -96,6 +96,7 @@ export default function Home() {
         삭제를 원하시면{" "}
         <Link
           href="/report"
+          transitionTypes={NAV_FORWARD}
           className="text-foreground underline underline-offset-2"
         >
           제보
@@ -103,6 +104,7 @@ export default function Home() {
         해 주세요.{" "}
         <Link
           href="/privacy"
+          transitionTypes={NAV_FORWARD}
           className="text-foreground underline underline-offset-2"
         >
           개인정보 처리방침

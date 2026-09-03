@@ -2,7 +2,10 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import { PageTransition } from "@/components/shared/PageTransition";
+import {
+  NAV_FORWARD,
+  PageTransition,
+} from "@/components/shared/PageTransition";
 import { ReportForm } from "@/features/reports/components/ReportForm";
 
 export const metadata: Metadata = {
@@ -38,6 +41,7 @@ export default function ReportPage() {
             이 폼도 그런 항목을 묻지 않습니다. 자세한 내용은{" "}
             <Link
               href="/privacy"
+              transitionTypes={NAV_FORWARD}
               className="text-foreground underline underline-offset-2"
             >
               개인정보 처리방침

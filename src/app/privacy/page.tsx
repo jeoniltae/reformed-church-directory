@@ -54,6 +54,7 @@ const SECTIONS = [
         <li>
           <Link
             href="/report"
+            transitionTypes={NAV_BACK}
             className="text-foreground underline underline-offset-2"
           >
             제보 폼
@@ -72,6 +73,7 @@ const SECTIONS = [
         본인 또는 소속 교회에 관한 정보가 사실과 다르거나 삭제를 원하시면{" "}
         <Link
           href="/report"
+          transitionTypes={NAV_BACK}
           className="text-foreground underline underline-offset-2"
         >
           제보 폼
@@ -101,6 +103,7 @@ const SECTIONS = [
         이 방침이나 실린 정보에 대해 궁금한 점이 있으면{" "}
         <Link
           href="/report"
+          transitionTypes={NAV_BACK}
           className="text-foreground underline underline-offset-2"
         >
           제보 폼

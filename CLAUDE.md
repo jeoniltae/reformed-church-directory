@@ -132,7 +132,7 @@ npm run import:source        # 위 결과를 모아 data/churches.json 생성
     ├── dead-links.json    #   홈페이지 생존 확인 결과
     ├── geocode.json       #   지오코딩 중간 산출물
     ├── reports/           #   스크립트 점검 리포트
-    ├── excluded.json      # [WIP] 삭제 요청받은 교회 — 크롤러가 항상 제외
+    ├── excluded.json      #   삭제 요청받은 교회 — import-source.mts가 항상 제외
     └── raw/               #   내려받은 원본(KML 등), git 제외
 ```
 

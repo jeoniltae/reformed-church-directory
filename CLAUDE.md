@@ -158,7 +158,7 @@ npm run import:source        # 위 결과를 모아 data/churches.json 생성
 - **`PageTransition`은 각 `page.tsx`가 감싼다. `layout.tsx`로 올리면 전환이 통째로 죽는다** — `enter`/`exit`는 래퍼가 마운트·언마운트될 때만 발동하는데 레이아웃의 래퍼는 계속 살아 있다.
 - **탭바의 `vt-tab-bar` 클래스를 지우지 않는다.** 지우면 탭바가 내용과 함께 화면 밖으로 밀린다.
 - **이전 화면에 페이드아웃을 걸지 않는다.** `::view-transition-old(.nav-*)`는 `display: none`이다. 60px 슬라이드로는 이전 화면이 화면 밖으로 못 나가서, 투명해지는 동안 계속 보인다 — 실기기에서 잔상으로 드러났다. `opacity`만 지우면 불투명한 채 남아 더 나빠진다.
-- **방향 문자열을 직접 쓰지 않는다.** `PageTransition`의 `NAV_FORWARD`·`NAV_BACK` 상수를 쓴다. 오타가 나도 에러가 없고 애니메이션만 조용히 죽는다.
+- **방향 문자열을 직접 쓰지 않는다.** `PageTransition`의 `NAV_FORWARD`·`NAV_BACK` 상수를 쓴다. 오타가 나도 에러가 없고 애니메이션만 조용히 죽는다. **`transitionTypes`를 아예 안 붙여도 같은 증상이다** — `enter`/`exit`의 `default: "none"`으로 떨어져 타입 없는 이동과 똑같이 처리된다. 탭바 밖에서 새 `<Link>`를 추가할 때(제보·개인정보 처리방침 화면 진입 링크에서 실제로 빠뜨렸다, 2026-09-03) 빼먹기 쉽다.
 - **속도 조절은 `--nav-slide-duration` 한 줄이다.** `animation` 단축 속성 안에서 `var()`로 쓰이므로 값이 사라지면 선언 전체가 무효가 되어 전환이 없어진다. 바꾼 뒤 `getAnimations()`로 실제 지속시간을 확인할 것.
 
 미지원 브라우저에서는 전환 없이 정상 동작한다. 브라우저 뒤로가기·스와이프에는 방향이 실리지 않는다(Next 문서 명시).

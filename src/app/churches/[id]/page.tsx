@@ -10,7 +10,11 @@ import {
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { NAV_BACK, PageTransition } from "@/components/shared/PageTransition";
+import {
+  NAV_BACK,
+  NAV_FORWARD,
+  PageTransition,
+} from "@/components/shared/PageTransition";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { getAllChurchIds, getChurchById } from "@/features/churches/data";
@@ -165,8 +169,15 @@ export default async function ChurchDetailPage({
         <div className="mt-8 border-t border-border pt-5 text-t2 text-muted-foreground">
           <p>출처: {church.source}</p>
           <p className="mt-1">
-            정보가 사실과 다르거나 삭제를 원하시면 알려주세요. 요청 창구는 준비
-            중입니다.
+            정보가 사실과 다르거나 삭제를 원하시면{" "}
+            <Link
+              href={`/report?church=${encodeURIComponent(church.id)}`}
+              transitionTypes={NAV_FORWARD}
+              className="rounded-lg text-foreground underline outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+            >
+              알려주세요
+            </Link>
+            .
           </p>
         </div>
 

@@ -92,8 +92,21 @@ export default function Home() {
       </ul>
 
       <p className="mt-8 border-t border-border py-6 text-t2 text-muted-foreground">
-        교회 정보는 자체 수집 자료를 정리한 것입니다. 정보 수정·삭제 요청 창구는
-        준비 중입니다.
+        교회 정보는 자체 수집 자료를 정리한 것입니다. 정보가 사실과 다르거나
+        삭제를 원하시면{" "}
+        <Link
+          href="/report"
+          className="text-foreground underline underline-offset-2"
+        >
+          제보
+        </Link>
+        해 주세요.{" "}
+        <Link
+          href="/privacy"
+          className="text-foreground underline underline-offset-2"
+        >
+          개인정보 처리방침
+        </Link>
       </p>
       </main>
     </PageTransition>

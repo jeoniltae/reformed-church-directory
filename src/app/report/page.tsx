@@ -1,6 +1,7 @@
 // 제보 화면 — 정보 수정·삭제 요청을 GitHub Issues로 받는다
 
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PageTransition } from "@/components/shared/PageTransition";
 import { ReportForm } from "@/features/reports/components/ReportForm";
 
@@ -34,7 +35,14 @@ export default function ReportPage() {
             <span className="text-foreground">
               연락처·이메일이나 개인적인 사정은 적지 말아 주세요.
             </span>{" "}
-            이 폼도 그런 항목을 묻지 않습니다.
+            이 폼도 그런 항목을 묻지 않습니다. 자세한 내용은{" "}
+            <Link
+              href="/privacy"
+              className="text-foreground underline underline-offset-2"
+            >
+              개인정보 처리방침
+            </Link>
+            에 있습니다.
           </p>
         </div>
 

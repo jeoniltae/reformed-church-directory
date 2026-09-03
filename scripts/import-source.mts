@@ -18,6 +18,7 @@ const OUTPUT = "data/churches.json";
 const DEAD_LINKS = "data/dead-links.json";
 const GEOCODE = "data/geocode.json";
 const DENOMINATIONS = "data/denominations.json";
+const EXCLUDED = "data/excluded.json";
 const SOURCE = "자체 수집";
 
 // 생존 확인에서 죽은 것으로 판정된 URL. 원본 CSV를 고치지 않으므로
@@ -26,6 +27,16 @@ const deadLinks = new Set<string>(
   (JSON.parse(readFileSync(DEAD_LINKS, "utf8")) as { links: { url: string }[] }).links.map(
     (l) => l.url,
   ),
+);
+
+// 삭제 요청받은 교회. churches.json에서 지우기만 하면 원본 CSV에서
+// 다음 변환 때 되살아나므로, 입구인 여기서 항상 걸러낸다.
+const excluded = new Set<string>(
+  (
+    JSON.parse(readFileSync(EXCLUDED, "utf8")) as {
+      churches: { id: string }[];
+    }
+  ).churches.map((c) => c.id),
 );
 
 // 도로명주소 API 조회 결과. status가 'ok'인 건만 주소를 교체한다.
@@ -67,9 +78,15 @@ let normalizedAddresses = 0;
 let withCoords = 0;
 let grouped = 0;
 let renamedDenoms = 0;
+let excludedCount = 0;
 const unmappedDenoms: string[] = [];
 
 for (const row of rows) {
+  if (excluded.has(row.id)) {
+    excludedCount++;
+    continue;
+  }
+
   if (row.fixed.address) fixedCount.address++;
   if (row.fixed.phone) fixedCount.phone++;
   if (row.fixed.pastor) fixedCount.pastor++;
@@ -152,6 +169,7 @@ for (const row of rows) {
 writeFileSync(OUTPUT, JSON.stringify(churches, null, 2) + "\n", "utf8");
 
 console.log(`${churches.length}건 → ${OUTPUT}`);
+console.log(`삭제 요청으로 제외: ${excludedCount}건 / ${excluded.size}건 등록 (${EXCLUDED})`);
 console.log(`버린 열: ${droppedColumns.length ? droppedColumns.join(", ") : "없음"}`);
 console.log(
   `죽은 링크로 비운 homepage: ${droppedLinks}건 (등록 ${deadLinks.size}건, ${DEAD_LINKS})`,
@@ -172,6 +190,11 @@ for (const u of unmappedDenoms) {
 if (droppedLinks !== deadLinks.size) {
   warnings.push(
     `dead-links.json의 URL ${deadLinks.size - droppedLinks}건이 원본과 매칭되지 않았다 — 오타 또는 원본 변경`,
+  );
+}
+if (excludedCount !== excluded.size) {
+  warnings.push(
+    `excluded.json의 id ${excluded.size - excludedCount}건이 원본과 매칭되지 않았다 — id 오타 또는 이미 원본에서 빠짐`,
   );
 }
 if (warnings.length) {

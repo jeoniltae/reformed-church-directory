@@ -7,9 +7,16 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  /* Geist는 라틴 전용이라 한글은 뒤의 OS 기본 폰트로 넘어간다. 웹폰트는 추가하지 않는다 */
-  --font-sans: var(--font-geist-sans), "Pretendard Variable", Pretendard,
-    -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  /*
+    Pretendard를 맨 앞에 둔다. font-family 폴백은 글자 단위로 동작해서
+    Geist가 앞에 있으면 라틴·숫자만 Geist로 그려지고 한글만 Pretendard로 넘어가
+    "010-1234-5678" 같은 숫자+한글 혼합 텍스트에서 숫자 굵기·폭이 어긋나 보였다
+    (2026-09-03, 실측으로 확인). Pretendard가 한글·라틴·숫자를 전부 커버하므로
+    앞에 두면 혼합 텍스트가 한 폰트로 통일된다. Geist·시스템 폰트는 Pretendard
+    로드 실패 시에만 쓰이는 방어선으로 남긴다.
+  */
+  --font-sans: var(--font-pretendard), var(--font-geist-sans), -apple-system,
+    "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
 

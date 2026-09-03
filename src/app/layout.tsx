@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { BottomTabBar } from "@/components/shared/BottomTabBar";
 import "./globals.css";
 
@@ -11,6 +12,18 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+// Geist는 라틴 전용이라 한글 글리프가 없다. `pretendard` npm 패키지의 Variable
+// woff2를 직접 자체 호스팅한다 — 외부 CDN 요청을 만들지 않는다는 이 프로젝트의
+// 기존 방침(분석 도구·쿠키 없음)과 같은 이유다. weight 45–920은 패키지가
+// 선언한 실제 가변 축 범위이고, Tailwind의 font-medium/semibold/bold(500/600/700)가
+// 이 범위 안에서 그대로 보간된다.
+const pretendard = localFont({
+  src: "../../node_modules/pretendard/dist/web/variable/woff2/PretendardVariable.woff2",
+  variable: "--font-pretendard",
+  weight: "45 920",
+  display: "swap",
 });
 
 /**
@@ -46,7 +59,7 @@ export default function RootLayout({
   return (
     <html
       lang="ko"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${pretendard.variable} h-full antialiased`}
     >
       {/* pb-16은 고정된 하단 탭바가 마지막 콘텐츠를 가리지 않게 하는 여백이다 */}
       <body className="min-h-full flex flex-col pb-16">

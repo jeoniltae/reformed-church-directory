@@ -52,7 +52,7 @@ UI는 모바일 우선 반응형 웹으로 제작한다.
 
 #### 사용자 제보
 
-- **확정: GitHub Issues로 받는다.** Server Action에서 Issues API로 이슈를 생성한다. [미구현]
+- **확정: GitHub Issues로 받는다.** Server Action에서 Issues API로 이슈를 생성한다. **구현 완료 (2026-09-03, `/report`)** — 실제 제출로 확인했다.
 - 관리자 화면을 따로 만들지 않는다. GitHub Issues가 검토 화면이고, 반영은 `data/churches.json` 수정 커밋으로 한다.
 - 로그인 불필요. 스팸이 실제로 문제가 되면 그때 Turnstile을 붙인다.
 - 환경변수 `GITHUB_TOKEN`, `GITHUB_REPO` 사용 (`.env.example` 참고).
@@ -111,11 +111,11 @@ npm run import:source        # 위 결과를 모아 data/churches.json 생성
 ├── src/
 │   ├── app/               # Next.js App Router (페이지 & 레이아웃)
 │   ├── components/
-│   │   ├── ui/            # shadcn/ui 기본 컴포넌트 (button, input, badge)
-│   │   └── shared/        # 프로젝트 공통 컴포넌트 (BottomTabBar)
+│   │   ├── ui/            # shadcn/ui 기본 컴포넌트 (button, input, badge, textarea)
+│   │   └── shared/        # 프로젝트 공통 컴포넌트 (BottomTabBar, PageTransition)
 │   ├── features/          # 기능별 모듈
 │   │   ├── churches/      # 교회 검색·조회 — data.ts, search.ts, components/
-│   │   └── reports/       # [WIP] 교회 정보 제보 (폼, Server Action → GitHub Issues)
+│   │   └── reports/       # 교회 정보 제보 (폼, Server Action → GitHub Issues)
 │   ├── lib/               # 유틸리티 (cn(), church-utils, json-ld)
 │   └── types/             # 전역 TypeScript 타입
 ├── scripts/               # 데이터 정비 스크립트 — 오프라인 배치, 앱 런타임과 분리
@@ -130,6 +130,7 @@ npm run import:source        # 위 결과를 모아 data/churches.json 생성
     ├── churches.json      #   커밋 대상 (89건)
     ├── address-fixes.json #   주소 수동 교정 표
     ├── dead-links.json    #   홈페이지 생존 확인 결과
+    ├── denominations.json #   교단 표기 판정표 — 배지 19종·묶음 6종. 앱 번들에는 안 들어간다
     ├── geocode.json       #   지오코딩 중간 산출물
     ├── reports/           #   스크립트 점검 리포트
     ├── excluded.json      #   삭제 요청받은 교회 — import-source.mts가 항상 제외
@@ -148,6 +149,8 @@ npm run import:source        # 위 결과를 모아 data/churches.json 생성
 | `/churches` | Static | 검색·목록. `?region=`은 클라이언트에서 읽는다 (아래 "상태 관리") |
 | `/churches/[id]` | SSG | 교회 상세 89건. `generateStaticParams`로 빌드 시점에 전량 생성 |
 | `/map` | Static | 준비 중 안내. 좌표·지도 SDK 확보 전까지 자리만 지킨다 |
+| `/report` | Static | 제보 폼. 상세에서 `?church=<id>`로 대상을 넘겨받는다 (클라이언트에서 읽는다) |
+| `/privacy` | Static | 개인정보 처리방침. 공개에 따르는 의무이며 `/report`·홈 footer에서 링크한다 |
 
 **상단 헤더가 없다.** 전역 이동은 `src/components/shared/BottomTabBar.tsx`(홈·검색·지도)가 전담하고, `layout.tsx`는 탭바와 `pb-16` 여백만 얹는다. 사이트명은 화면에 노출되지 않고 `metadata.title.template`으로 문서 제목에만 남는다. **헤더를 다시 만들지 않는다** — 시안이 정한 구조다.
 
@@ -372,13 +375,15 @@ npm run import:source        # 위 결과를 모아 data/churches.json 생성
 
 ## SEO 운영 가이드
 
-> **아직 대부분 미구현이다.** `src/app/sitemap.ts`, `src/app/robots.ts`, `src/app/manifest.ts`, `public/llms.txt`는 **미생성**이다. 아래에서 "구현할 때의 방침"은 계획이지 현황이 아니다. 작업 목록은 `docs/ui-checklist.md`의 SEO 섹션에 있다.
+> **⚠️ 지금 사이트는 검색에 잡히지 않는다.** `src/app/robots.ts`가 **존재하며 전면 차단(`disallow: "/"`) 중이다.** 미생성이 아니라 의도적으로 닫아둔 것이고, 공개(6번) 때 통째로 교체한다. `src/app/sitemap.ts`·`src/app/manifest.ts`·`public/llms.txt`는 아직 **미생성**이다. 아래 "구현할 때의 방침"은 계획이지 현황이 아니다. 작업 목록은 `docs/ui-checklist.md`의 SEO 섹션(6-0 ~ 6-7)에 있다.
 
 ### 현재 구현된 것
 
 - `src/app/layout.tsx` — `metadataBase`, `title`(`default` + `template`), `description`뿐이다. **OG·Twitter·검색엔진 인증은 아직 없다.**
-- `/churches`, `/map` — 각 `page.tsx`에 `metadata`(title/description/canonical)를 직접 선언했다.
+- `/churches`, `/map`, `/report`, `/privacy` — 각 `page.tsx`에 `metadata`(title/description/canonical)를 직접 선언했다.
 - `/churches/[id]` — `generateMetadata`로 교회명·지역 기반 title/description/canonical을 만든다.
+- **홈(`/`)만 `metadata`가 없다.** layout의 기본값을 상속받아 canonical이 붙지 않는다 — 공개 전에 채운다.
+- `src/app/robots.ts` — **전면 차단.** 위 경고 참고.
 - `src/lib/json-ld.ts` — **`churchJsonLd()`만 있다.** 상세 페이지에서만 쓰고 전역 적용은 아직 없다. `organizationJsonLd`·`websiteJsonLd`·`breadcrumbJsonLd`는 미작성이다.
 - `src/app/not-found.tsx` — 없는 교회 id 접근 시. 상세의 `notFound()` 호출과 짝이다.
 
@@ -398,13 +403,15 @@ npm run import:source        # 위 결과를 모아 data/churches.json 생성
 3. **새 동적 라우트** → `generateMetadata` + 해당 JSON-LD 헬퍼
 4. **새 핵심 정적 페이지(about/vision류)** → `breadcrumbJsonLd()`로 BreadcrumbList 적용
 
-### AI 크롤러 정책 — 미구현
+### 크롤러 정책 — 미적용 (robots.ts가 아직 전면 차단이다)
 
-- `src/app/robots.ts`를 만들 때 GPTBot, ClaudeBot, PerplexityBot, Google-Extended 등 주요 AI 크롤러를 명시적으로 allow한다. 학습용/검색용 구분 없이 전부 허용(최대 노출 우선, 2026-06-19 결정).
+- `src/app/robots.ts`를 **교체할 때** GPTBot, ClaudeBot, PerplexityBot, Google-Extended 등 주요 AI 크롤러를 명시적으로 allow한다. 학습용/검색용 구분 없이 전부 허용(최대 노출 우선, 2026-06-19 결정).
+- **국내 검색엔진 크롤러도 명시한다** — `Yeti`(네이버)·`Daumoa`(다음). "교회 찾기"는 생활·지역 쿼리라 네이버 비중이 크고, 네이버는 크롤러 허용과 별개로 **서치어드바이저 소유확인·사이트맵 수동 제출**이 따로 필요하다 (2026-09-04 추가).
 - `public/llms.txt` — AI 검색·답변 엔진을 위한 사이트 개요 및 핵심 섹션 링크(llmstxt.org 표준 포맷). 개별 교회 URL은 나열하지 않는다(sitemap.xml의 역할).
 
 ### 접근 제한으로 사이트맵/llms.txt에서 제외할 경로
 
 - 현재 없음. 로그인 기능이 없고 전체 공개 조회 사이트이므로 접근 제한 라우트가 존재하지 않는다.
 - 추후 관리자 페이지(`/admin` 등)가 생기면 이 섹션에 추가하고 사이트맵·llms.txt에서 제외한다.
-- `/map`은 준비 중 안내 화면이라 검색 노출 가치가 없다. sitemap을 만들 때 포함 여부를 판단한다.
+- **`/map`은 sitemap에서 제외하고 `index: false`를 준다** (2026-09-04 결정). 준비 중 안내만 있는 화면이라 검색 노출 가치가 없고, 내용 없는 페이지는 soft 404로 판정될 위험이 있다. 실제 지도가 붙는 7단계에서 이 결정을 뒤집는다.
+- `/report`·`/privacy`는 sitemap에 넣는다. 검색 유입 가치는 낮지만 색인돼도 무해하고, 삭제 요청 창구가 검색으로 발견되는 편이 낫다.

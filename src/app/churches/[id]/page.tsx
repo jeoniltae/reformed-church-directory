@@ -17,18 +17,22 @@ import {
 } from "@/components/shared/PageTransition";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
-import { getAllChurchIds, getChurchById } from "@/features/churches/data";
+import {
+  getAllChurchIds,
+  getAllChurches,
+  getChurchById,
+} from "@/features/churches/data";
+import {
+  hasRegionLanding,
+  slugFromGroup,
+} from "@/features/churches/landing";
+import { decodeRouteParam } from "@/lib/church-utils";
 import { churchJsonLd, toJsonLdScript } from "@/lib/json-ld";
 import { cn } from "@/lib/utils";
 import type { Church } from "@/types/church";
 
 export function generateStaticParams() {
   return getAllChurchIds().map((id) => ({ id }));
-}
-
-/** 교회명에 한글이 섞여 URL이 인코딩된 채 들어올 수 있다. `%`가 없으면 그대로 통과한다 */
-function decodeId(raw: string): string {
-  return raw.includes("%") ? decodeURIComponent(raw) : raw;
 }
 
 /**
@@ -48,7 +52,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const church = getChurchById(decodeId((await params).id));
+  const church = getChurchById(decodeRouteParam((await params).id));
   if (!church) return {};
 
   const place = church.subRegion
@@ -66,8 +70,18 @@ export default async function ChurchDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const church = getChurchById(decodeId((await params).id));
+  const church = getChurchById(decodeRouteParam((await params).id));
   if (!church) notFound();
+
+  // 이 교회가 속한 랜딩으로 가는 역링크. 크롤러에게는 상세 89개가 지역·교단으로 묶이는
+  // 구조를 알리는 신호이고, 사람에게는 "같은 지역 다른 교회"로 넘어가는 길이다.
+  // **랜딩이 있는 것만 건다** — 임계값 미만 지역으로 링크하면 얇은 페이지가 크롤에 노출된다
+  const regionHref = hasRegionLanding(getAllChurches(), church.region)
+    ? `/region/${church.region}`
+    : undefined;
+  const groupSlug = church.denominationGroup
+    ? slugFromGroup(church.denominationGroup)
+    : undefined;
 
   return (
     <PageTransition>
@@ -164,6 +178,38 @@ export default async function ChurchDetailPage({
             </a>
           )}
         </div>
+
+        {(regionHref || groupSlug) && (
+          <nav className="mt-8 border-t border-border pt-5">
+            <h2 className="text-t4 font-semibold text-foreground">
+              비슷한 교회 찾기
+            </h2>
+            <ul className="mt-2 flex flex-wrap gap-2">
+              {regionHref && (
+                <li>
+                  <Link
+                    href={regionHref}
+                    transitionTypes={NAV_BACK}
+                    className="inline-block rounded-lg bg-muted px-3 py-1.5 text-t4 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+                  >
+                    {church.region} 교회
+                  </Link>
+                </li>
+              )}
+              {groupSlug && church.denominationGroup && (
+                <li>
+                  <Link
+                    href={`/denomination/${groupSlug}`}
+                    transitionTypes={NAV_BACK}
+                    className="inline-block rounded-lg bg-muted px-3 py-1.5 text-t4 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+                  >
+                    {church.denominationGroup}
+                  </Link>
+                </li>
+              )}
+            </ul>
+          </nav>
+        )}
 
         {/* 공개에 따르는 의무 — 출처를 밝히고 수정·삭제 요청 창구를 안내한다 */}
         <div className="mt-8 border-t border-border pt-5 text-t2 text-muted-foreground">

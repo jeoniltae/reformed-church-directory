@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { NAV_FORWARD } from "@/components/shared/PageTransition";
 import { cn } from "@/lib/utils";
+import { LANDING_MIN } from "../landing";
 import type { RegionCount } from "../search";
 
 const TILE =
@@ -41,7 +42,12 @@ export function RegionTiles({ regions, restCount }: RegionTilesProps) {
     ...regions.map(({ region, count }) => ({
       label: region,
       count,
-      href: `/churches?region=${encodeURIComponent(region)}`,
+      // 랜딩이 있는 지역은 고유 주소로 보낸다 — 크롤러가 따라갈 수 있는 유일한 길이다.
+      // 임계값 미만 지역은 랜딩을 색인 대상으로 만들지 않기로 했으므로 기존 칩 필터로 보낸다
+      href:
+        count >= LANDING_MIN
+          ? `/region/${region}`
+          : `/churches?region=${encodeURIComponent(region)}`,
     })),
     { label: "그 외 지역", count: restCount, href: "/churches" },
   ];

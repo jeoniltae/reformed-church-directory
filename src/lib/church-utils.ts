@@ -119,6 +119,17 @@ export function normalizeUrl(raw: string): string {
   return /^https?:\/\//i.test(v) ? v : `http://${v}`;
 }
 
+/**
+ * 라우트 파라미터의 퍼센트 인코딩을 푼다.
+ *
+ * 이 사이트의 주소는 한글이라(`/churches/언약교회-강동구`, `/region/서울`) 브라우저가
+ * 인코딩한 채로 넘어올 수 있다. **`%`가 없으면 그대로 통과시킨다** — 이미 풀린 값을
+ * 다시 디코딩하면 `%`가 든 이름에서 터진다.
+ */
+export function decodeRouteParam(raw: string): string {
+  return raw.includes("%") ? decodeURIComponent(raw) : raw;
+}
+
 /** 교회명과 시군구로 URL 식별자를 만든다 */
 export function toChurchId(name: string, subRegion?: string): string {
   const slug = (s: string) =>

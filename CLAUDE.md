@@ -379,7 +379,7 @@ npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32�
 
 ## SEO 운영 가이드
 
-> **⚠️ 지금 사이트는 검색에 잡히지 않는다.** `src/app/robots.ts`가 **존재하며 전면 차단(`disallow: "/"`) 중이다.** 미생성이 아니라 의도적으로 닫아둔 것이고, 공개(6번) 때 통째로 교체한다. `src/app/sitemap.ts`·`public/llms.txt`는 아직 **미생성**이다. 작업 목록은 `docs/ui-checklist.md`의 SEO 섹션(6-0 ~ 6-7)에 있고, **6-0(도메인)·6-1(랜딩)·6-2(메타데이터)는 완료**다.
+> **⚠️ 검색 개방은 프로덕션 배포와 동시에 일어난다.** `src/app/robots.ts`는 `VERCEL_ENV === "production"`일 때만 열리고 그 외(로컬·프리뷰)에서는 전면 차단이다. **main에 push하는 순간이 곧 공개다.** `public/llms.txt`는 아직 미생성이다. 작업 목록은 `docs/ui-checklist.md`의 SEO 섹션(6-0 ~ 6-7)에 있고, **6-0(도메인)·6-1(랜딩)·6-2(메타데이터)·6-3(구조화 데이터)·6-4(크롤 기반) 코드는 완료**다.
 
 ### 현재 구현된 것
 
@@ -388,7 +388,8 @@ npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32�
 - `/churches/[id]`·`/region/[region]`·`/denomination/[group]` — `generateMetadata`로 데이터 기반 title/description/canonical을 만든다.
 - **OG 이미지는 코드로 굽는다.** `src/app/opengraph-image.tsx`(기본)와 `src/app/churches/[id]/opengraph-image.tsx`(89장). 껍데기·팔레트·로고는 `src/lib/og-layout.tsx`가 공유하고, 폰트 로딩은 `src/lib/og.ts`에 있다.
 - `src/app/manifest.ts` · `icon.png` · `apple-icon.png` · `favicon.ico` — 아이콘은 전부 `icon.png` 하나에서 파생된다.
-- `src/app/robots.ts` — **전면 차단.** 위 경고 참고.
+- `src/app/robots.ts` — 프로덕션에서만 개방, 그 외는 전면 차단. 위 경고 참고.
+- `src/app/sitemap.ts` — 경로 목록은 `src/lib/indexable-paths.ts`가 만든다(105개). **`lastModified`·`priority`·`changeFrequency`를 넣지 않는다** — 넣을 만한 값이 없거나 무시되는 값이다.
 - `src/lib/json-ld.ts` — `siteJsonLd()`(Organization+WebSite를 `@graph`로 묶어 `layout.tsx`에서 전역 삽입) · `breadcrumbJsonLd()` · `churchCollectionJsonLd()`(랜딩) · `churchJsonLd()`(상세). 문서에 심는 것은 `src/components/shared/JsonLd.tsx`가 전담한다.
 - `src/app/not-found.tsx` — 없는 교회 id 접근 시. 상세의 `notFound()` 호출과 짝이다.
 

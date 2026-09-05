@@ -20,23 +20,29 @@ export const OG_CONTENT_TYPE = "image/png";
  */
 const FONT_DIR = "node_modules/pretendard/dist/web/static/woff";
 
-function loadFont(file: string) {
-  return readFileSync(join(process.cwd(), FONT_DIR, file));
+const WEIGHTS = [
+  [400, "Regular"],
+  [500, "Medium"],
+  [700, "Bold"],
+  [800, "ExtraBold"],
+] as const;
+
+/**
+ * 한 번 읽어 재사용한다. **교회 상세 OG가 89장이라 매번 읽으면 같은 파일을
+ * 89번씩 다시 연다** — 굵기 4종이면 한 장당 4.4MB다.
+ */
+let cached: ReturnType<typeof read> | undefined;
+
+function read() {
+  return WEIGHTS.map(([weight, name]) => ({
+    name: "Pretendard",
+    data: readFileSync(join(process.cwd(), FONT_DIR, `Pretendard-${name}.woff`)),
+    weight,
+    style: "normal" as const,
+  }));
 }
 
 export function ogFonts() {
-  return [
-    {
-      name: "Pretendard",
-      data: loadFont("Pretendard-Regular.woff"),
-      weight: 400 as const,
-      style: "normal" as const,
-    },
-    {
-      name: "Pretendard",
-      data: loadFont("Pretendard-Bold.woff"),
-      weight: 700 as const,
-      style: "normal" as const,
-    },
-  ];
+  cached ??= read();
+  return cached;
 }

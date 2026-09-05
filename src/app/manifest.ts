@@ -17,7 +17,14 @@ export default function manifest(): MetadataRoute.Manifest {
     display: "standalone",
     background_color: "#ffffff",
     theme_color: BRAND_NAVY,
-    // icons는 아이콘 파일(6-2-8)이 준비되면 채운다. 지금 없는 경로를 적으면
-    // 매니페스트를 읽는 쪽에서 404가 난다 — 비워두면 favicon으로 폴백한다
+    /**
+     * **쿼리 없는 경로를 쓴다.** Next는 `<link rel="icon">`에 캐시 무효화용 해시를
+     * 붙여(`/icon.png?icon.xxxx.png`) 내보내지만, 해시 없는 경로도 그대로 200이다
+     * (2026-09-05 실측). 매니페스트에 해시를 박으면 로고를 바꿀 때마다 값이 달라진다.
+     *
+     * 512 한 장만 선언한다. 안드로이드가 필요한 크기로 줄여 쓰고, iOS는 매니페스트가
+     * 아니라 `apple-icon.png`(`apple-touch-icon`)를 본다.
+     */
+    icons: [{ src: "/icon.png", sizes: "512x512", type: "image/png" }],
   };
 }

@@ -389,14 +389,16 @@ npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32�
 - **OG 이미지는 코드로 굽는다.** `src/app/opengraph-image.tsx`(기본)와 `src/app/churches/[id]/opengraph-image.tsx`(89장). 껍데기·팔레트·로고는 `src/lib/og-layout.tsx`가 공유하고, 폰트 로딩은 `src/lib/og.ts`에 있다.
 - `src/app/manifest.ts` · `icon.png` · `apple-icon.png` · `favicon.ico` — 아이콘은 전부 `icon.png` 하나에서 파생된다.
 - `src/app/robots.ts` — **전면 차단.** 위 경고 참고.
-- `src/lib/json-ld.ts` — **`churchJsonLd()`만 있다.** 상세 페이지에서만 쓰고 전역 적용은 아직 없다. `organizationJsonLd`·`websiteJsonLd`·`breadcrumbJsonLd`는 미작성이다.
+- `src/lib/json-ld.ts` — `siteJsonLd()`(Organization+WebSite를 `@graph`로 묶어 `layout.tsx`에서 전역 삽입) · `breadcrumbJsonLd()` · `churchCollectionJsonLd()`(랜딩) · `churchJsonLd()`(상세). 문서에 심는 것은 `src/components/shared/JsonLd.tsx`가 전담한다.
 - `src/app/not-found.tsx` — 없는 교회 id 접근 시. 상세의 `notFound()` 호출과 짝이다.
 
 ### 구현할 때의 방침
 
 - **sitemap**: `src/app/sitemap.ts`가 `data/churches.json`을 읽어 자동 생성한다. 크롤러로 교회가 늘어도 별도 작업이 없어야 한다.
 - **교회 상세**: `generateMetadata`가 교회명·지역으로 title/description/canonical을 만든다.
-- **JSON-LD**: `src/lib/json-ld.ts`에 `organizationJsonLd`·`websiteJsonLd`·`breadcrumbJsonLd`를 두고 `layout.tsx`에서 전역 적용한다.
+- **JSON-LD**: 데이터를 만드는 곳은 `src/lib/json-ld.ts`, 문서에 심는 곳은 `src/components/shared/JsonLd.tsx` 하나다. **`dangerouslySetInnerHTML`을 페이지에서 직접 쓰지 않는다** — `<` 이스케이프를 빠뜨린 곳이 생기면 데이터에 `</script>`가 섞였을 때 문서가 그 자리에서 깨진다.
+- **JSON-LD의 URL은 절대 경로여야 하고 `new URL()`로 만든다.** canonical은 `metadataBase`가 절대화해 주지만 JSON-LD는 직접 만들어야 한다. **canonical과 같은 percent-encoding으로 나가야** 같은 페이지를 가리키는 두 주소가 생기지 않는다(이 사이트는 경로에 한글이 들어간다).
+- **`SearchAction`을 넣지 않는다.** 사이트 내 검색이 클라이언트 전용이라 결과를 가리키는 URL이 없다 — 없는 기능을 있다고 신고하는 셈이 된다.
 - **교회 상세 구조화 데이터는 `@type: "Church"`에 `geo`를 넣는다** (2026-08-12 결정, 구현 완료). schema.org에 `Place > CivicStructure > PlaceOfWorship > Church`로 실재하는 타입이다. **`LocalBusiness`를 쓰지 않는다** — 교회를 사업체로 표기하게 되어 사실과 어긋난다. `src/lib/json-ld.ts`의 `churchJsonLd()`.
 - 좌표가 이 `geo` 때문에 필요해졌다. 그래서 좌표 확보가 지도(5단계)가 아니라 상세 페이지의 선행 조건이었다 — 나중에 넣으면 89개 정적 페이지를 다시 구워야 한다.
 - **없는 값은 키 자체를 넣지 않는다.** 빈 문자열은 "값이 있는데 비어 있다"로 읽힌다. 좌표 없는 21건에는 `geo`가 없다.

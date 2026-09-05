@@ -1,6 +1,7 @@
 // 홈 — 수록 현황, 지역 타일, 교회 미리보기를 얹은 랜딩 화면
 
 import { Search } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   NAV_FORWARD,
@@ -10,6 +11,15 @@ import { ChurchRow } from "@/features/churches/components/ChurchRow";
 import { RegionTiles } from "@/features/churches/components/RegionTiles";
 import { getAllChurches } from "@/features/churches/data";
 import { collectRegionCounts } from "@/features/churches/search";
+
+/**
+ * **`title`을 쓰지 않는다.** 여기서 선언하면 `layout.tsx`의 template이 걸려
+ * `홈 · 개혁주의 교회 디렉토리`가 된다. 홈의 제목은 사이트명 그 자체여야 하므로
+ * layout의 `default`를 그대로 상속받는다. canonical만 채우면 된다.
+ */
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 /** 홈 타일에 세울 지역 수. 나머지는 `그 외 지역` 한 칸으로 모은다 */
 const TILE_REGIONS = 5;

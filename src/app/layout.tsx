@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { BottomTabBar } from "@/components/shared/BottomTabBar";
+import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -44,11 +45,36 @@ function siteUrl(): string {
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
   title: {
-    default: "개혁주의 교회 디렉토리",
-    template: "%s · 개혁주의 교회 디렉토리",
+    default: SITE_NAME,
+    template: `%s · ${SITE_NAME}`,
   },
-  description:
-    "국내 개혁주의 교단 교회를 교회명·지역·교단·담임목사 기준으로 찾아보세요.",
+  description: SITE_DESCRIPTION,
+  // OG 이미지는 `app/opengraph-image.tsx`가 자동으로 붙는다. 여기 images를 또 쓰면
+  // 두 벌이 나가므로 쓰지 않는다. 교회 상세는 자기 opengraph-image로 덮어쓴다
+  openGraph: {
+    type: "website",
+    locale: "ko_KR",
+    siteName: SITE_NAME,
+    url: "/",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+  },
+  twitter: { card: "summary_large_image" },
+  /**
+   * **`robots.ts`의 전면 차단과 다른 층위다.** robots.txt는 "긁지 마라"이고
+   * 이 메타는 "긁었으면 색인해도 된다"이다. 지금은 크롤 자체가 막혀 있어 이 값이
+   * 읽히지 않지만, 6-4-7에서 문을 열면 그날부터 바로 유효해진다.
+   */
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({

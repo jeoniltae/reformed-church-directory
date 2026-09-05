@@ -18,6 +18,7 @@ import {
   NAV_FORWARD,
   PageTransition,
 } from "@/components/shared/PageTransition";
+import { JsonLd } from "@/components/shared/JsonLd";
 import { ChurchCard } from "@/features/churches/components/ChurchCard";
 import { getAllChurches } from "@/features/churches/data";
 import {
@@ -28,6 +29,7 @@ import {
 } from "@/features/churches/landing";
 import { filterChurches } from "@/features/churches/search";
 import { decodeRouteParam } from "@/lib/church-utils";
+import { breadcrumbJsonLd, churchCollectionJsonLd } from "@/lib/json-ld";
 
 /**
  * 임계값을 채운 지역만 미리 굽는다.
@@ -80,9 +82,28 @@ export default async function RegionLandingPage({
     },
   );
 
+  const title = `${region} 개혁주의 교회`;
+  const summary = regionSummary(region, churches);
+
   return (
     <PageTransition>
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 pt-8 pb-8">
+        <JsonLd
+          data={churchCollectionJsonLd({
+            name: title,
+            description: summary,
+            path: `/region/${region}`,
+            churches,
+          })}
+        />
+        <JsonLd
+          data={breadcrumbJsonLd([
+            { name: "홈", path: "/" },
+            { name: "교회 찾기", path: "/churches" },
+            { name: title, path: `/region/${region}` },
+          ])}
+        />
+
         <Link
           href="/churches"
           transitionTypes={NAV_BACK}
@@ -91,13 +112,9 @@ export default async function RegionLandingPage({
           전체 교회 목록
         </Link>
 
-        <h1 className="mt-2 text-t8 font-bold text-foreground">
-          {region} 개혁주의 교회
-        </h1>
+        <h1 className="mt-2 text-t8 font-bold text-foreground">{title}</h1>
         {/* 목록만 있으면 얇다. 교단 구성을 문장으로 덧붙여 무엇을 모아둔 곳인지 밝힌다 */}
-        <p className="mt-1 text-t4 text-muted-foreground">
-          {regionSummary(region, churches)}
-        </p>
+        <p className="mt-1 text-t4 text-muted-foreground">{summary}</p>
 
         <ul className="mt-5 flex flex-col gap-2">
           {churches.map((church) => (

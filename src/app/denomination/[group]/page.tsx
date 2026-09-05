@@ -12,6 +12,7 @@ import {
   NAV_FORWARD,
   PageTransition,
 } from "@/components/shared/PageTransition";
+import { JsonLd } from "@/components/shared/JsonLd";
 import { ChurchCard } from "@/features/churches/components/ChurchCard";
 import { getAllChurches } from "@/features/churches/data";
 import {
@@ -23,6 +24,7 @@ import {
 } from "@/features/churches/landing";
 import { filterChurches } from "@/features/churches/search";
 import { decodeRouteParam } from "@/lib/church-utils";
+import { breadcrumbJsonLd, churchCollectionJsonLd } from "@/lib/json-ld";
 
 export function generateStaticParams() {
   return landingGroups().map(({ slug }) => ({ group: slug }));
@@ -68,9 +70,28 @@ export default async function GroupLandingPage({
     .map(({ value }) => value)
     .filter((region) => hasRegionLanding(all, region));
 
+  const title = `${group} 교회`;
+  const summary = groupSummary(group, churches);
+
   return (
     <PageTransition>
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 pt-8 pb-8">
+        <JsonLd
+          data={churchCollectionJsonLd({
+            name: title,
+            description: summary,
+            path: `/denomination/${slug}`,
+            churches,
+          })}
+        />
+        <JsonLd
+          data={breadcrumbJsonLd([
+            { name: "홈", path: "/" },
+            { name: "교회 찾기", path: "/churches" },
+            { name: title, path: `/denomination/${slug}` },
+          ])}
+        />
+
         <Link
           href="/churches"
           transitionTypes={NAV_BACK}
@@ -79,10 +100,8 @@ export default async function GroupLandingPage({
           전체 교회 목록
         </Link>
 
-        <h1 className="mt-2 text-t8 font-bold text-foreground">{group} 교회</h1>
-        <p className="mt-1 text-t4 text-muted-foreground">
-          {groupSummary(group, churches)}
-        </p>
+        <h1 className="mt-2 text-t8 font-bold text-foreground">{title}</h1>
+        <p className="mt-1 text-t4 text-muted-foreground">{summary}</p>
 
         <ul className="mt-5 flex flex-col gap-2">
           {churches.map((church) => (

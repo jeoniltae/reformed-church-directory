@@ -1,5 +1,7 @@
 // 사이트 정체성 상수 — layout·manifest·OG 이미지가 같은 값을 보게 하는 단일 출처
 
+import type { Metadata } from "next";
+
 export const SITE_NAME = "개혁주의 교회 디렉토리";
 
 export const SITE_DESCRIPTION =
@@ -13,6 +15,42 @@ export const SITE_DESCRIPTION =
  * 고쳐야 한다** — 화면은 토큰을 따라가지만 OG 이미지와 매니페스트는 여기를 따라간다.
  */
 export const BRAND_NAVY = "#0b3c67";
+
+/**
+ * 검색엔진 소유확인 토큰.
+ *
+ * **비밀이 아니다.** HTML에 그대로 실리는 공개 값이라 저장소에 두는 것이 맞고,
+ * 환경변수로 감쌀 이유가 없다. 발급 절차는 `docs/ui-checklist.md`의 6-5에 있다.
+ *
+ * **빈 값은 태그를 만들지 않는다** — 내용 없는 `<meta>`를 내보내면 검증이 실패한다.
+ */
+export const SEARCH_VERIFICATION = {
+  /** Google Search Console — `google-site-verification` */
+  google: "",
+  /** 네이버 서치어드바이저 — `naver-site-verification` */
+  naver: "",
+  /** Bing Webmaster Tools — `msvalidate.01`. **GSC에서 가져오기를 쓰면 필요 없다** */
+  bing: "",
+};
+
+/**
+ * 위 토큰을 Next의 `metadata.verification` 모양으로 바꾼다.
+ * 값이 채워진 것만 넣고, 하나도 없으면 블록 자체를 만들지 않는다.
+ */
+export function verificationMetadata(): Metadata["verification"] | undefined {
+  const { google, naver, bing } = SEARCH_VERIFICATION;
+
+  // 네이버·Bing은 Next에 전용 키가 없어 `other`로 직접 이름을 적는다
+  const other: Record<string, string> = {};
+  if (naver) other["naver-site-verification"] = naver;
+  if (bing) other["msvalidate.01"] = bing;
+
+  const verification: Metadata["verification"] = {};
+  if (google) verification.google = google;
+  if (Object.keys(other).length) verification.other = other;
+
+  return Object.keys(verification).length ? verification : undefined;
+}
 
 /**
  * canonical·OG·JSON-LD의 기준이 되는 절대 주소.

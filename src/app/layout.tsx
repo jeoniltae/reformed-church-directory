@@ -4,7 +4,12 @@ import localFont from "next/font/local";
 import { BottomTabBar } from "@/components/shared/BottomTabBar";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { siteJsonLd } from "@/lib/json-ld";
-import { SITE_DESCRIPTION, SITE_NAME, siteUrl } from "@/lib/site";
+import {
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  siteUrl,
+  verificationMetadata,
+} from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -62,6 +67,8 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  // 구글·네이버·Bing 소유확인. 토큰이 비어 있으면 태그가 나가지 않는다 (`site.ts`)
+  verification: verificationMetadata(),
 };
 
 export default function RootLayout({

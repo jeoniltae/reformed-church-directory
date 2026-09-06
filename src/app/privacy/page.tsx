@@ -48,8 +48,18 @@ const SECTIONS = [
       <ul className="list-disc space-y-1 pl-5">
         <li>로그인 기능이 없어 계정·비밀번호를 만들지 않습니다.</li>
         <li>
-          쿠키나 방문 분석 도구를 쓰지 않습니다. 방문 기록을 별도로 남기지
-          않습니다.
+          <strong className="font-medium text-foreground">
+            쿠키를 사용하지 않습니다.
+          </strong>{" "}
+          브라우저에 무엇을 저장하거나 방문자를 식별해 추적하지 않습니다.
+        </li>
+        <li>
+          다만 어떤 화면이 얼마나 열렸는지 알기 위해{" "}
+          <strong className="font-medium text-foreground">
+            방문 수와 페이지뷰를 익명으로 집계
+          </strong>
+          합니다(Vercel Web Analytics). 쿠키 없이 동작하며 개인을 식별하는 정보는
+          저장하지 않습니다.
         </li>
         <li>
           <Link

@@ -137,6 +137,19 @@ export function churchJsonLd(church: Church) {
     "@context": "https://schema.org",
     "@type": "Church",
     name: church.name,
+    /**
+     * 교회별 OG 이미지를 그대로 쓴다.
+     *
+     * **사진이 아니라는 점은 분명하다.** 다만 이 사이트는 앞으로도 교회 사진을
+     * 가질 수 없다 — 사람 사진은 수집 금지고 건물 사진·로고는 저작권 영역이다
+     * (`CLAUDE.md` "개별 홈페이지 크롤 가드"·"저작권 경계선"). 그래서 선택지는
+     * 영원히 비워두거나 이미 만들어 둔 이 카드를 쓰거나 둘뿐이고, 카드에는 그
+     * 교회의 이름·교단·지역·담임목사가 사실대로 들어 있다.
+     *
+     * 리치 검색결과 테스트가 유일하게 남긴 경고(`'image' 누락, 선택사항`)를 없앤다.
+     * **쿼리 없는 경로로 넣는다** — Next가 붙이는 해시는 빌드마다 달라진다.
+     */
+    image: abs(`/churches/${church.id}/opengraph-image`),
     address: {
       "@type": "PostalAddress",
       streetAddress: church.address,

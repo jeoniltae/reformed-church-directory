@@ -26,9 +26,9 @@ export const BRAND_NAVY = "#0b3c67";
  */
 export const SEARCH_VERIFICATION = {
   /** Google Search Console — `google-site-verification` */
-  google: "",
+  google: "Ml6OE2KNBmj8WQESQfLc1QClPbHPJOFOL9Q_Uw4BAtU",
   /** 네이버 서치어드바이저 — `naver-site-verification` */
-  naver: "",
+  naver: "de19774648d9ac3d20eac19da0eebe3f5f843ff1",
   /** Bing Webmaster Tools — `msvalidate.01`. **GSC에서 가져오기를 쓰면 필요 없다** */
   bing: "",
 };

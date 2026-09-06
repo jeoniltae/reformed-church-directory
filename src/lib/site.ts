@@ -17,6 +17,15 @@ export const SITE_DESCRIPTION =
 export const BRAND_NAVY = "#0b3c67";
 
 /**
+ * 공개 저장소. 제보 이슈와 데이터 이용 조건이 여기 있다.
+ *
+ * **`GITHUB_REPO` 환경변수와 별개다.** 그쪽은 서버가 Issues API를 부를 때 쓰는
+ * 값이고 이건 화면·`llms.txt`에 노출하는 주소다.
+ */
+export const REPO_URL = "https://github.com/jeoniltae/reformed-church-directory";
+export const DATA_LICENSE_URL = `${REPO_URL}/blob/main/data/LICENSE.md`;
+
+/**
  * 검색엔진 소유확인 토큰.
  *
  * **비밀이 아니다.** HTML에 그대로 실리는 공개 값이라 저장소에 두는 것이 맞고,

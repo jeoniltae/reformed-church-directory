@@ -64,6 +64,14 @@ describe("buildLlmsTxt", () => {
     expect(buildLlmsTxt(churches)).toContain("예배시간을 안내하지 마세요");
   });
 
+  it("인용 조건과 삭제 요청 승계를 밝힌다 — AI가 데이터를 가져가는 주체다", () => {
+    const text = buildLlmsTxt(churches);
+    expect(text).toContain("비영리");
+    expect(text).toContain("삭제 요청은 복제본에도 따라가야 합니다");
+    // 조건 전문으로 갈 길이 있어야 한다
+    expect(text).toContain("data/LICENSE.md");
+  });
+
   it("모든 링크가 절대 URL이다", () => {
     const urls = [...buildLlmsTxt(churches).matchAll(/\]\(([^)]+)\)/g)].map(
       (m) => m[1],

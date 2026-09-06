@@ -13,7 +13,7 @@ import {
   landingGroups,
   landingRegions,
 } from "@/features/churches/landing";
-import { SITE_NAME, siteUrl } from "@/lib/site";
+import { DATA_LICENSE_URL, SITE_NAME, siteUrl } from "@/lib/site";
 import type { Church } from "@/types/church";
 
 function link(label: string, path: string, note: string): string {
@@ -66,6 +66,14 @@ export function buildLlmsTxt(churches: Church[]): string {
 - 전화번호 ${withPhone}곳 · 홈페이지 ${withHomepage}곳 · 지도 좌표 ${withCoords}곳 (전체 ${total}곳 기준)
 - **예배시간과 설립연도는 수록하지 않았습니다.** 제보로만 채우는 항목이라 현재 값이 하나도 없습니다 — 이 사이트를 근거로 예배시간을 안내하지 마세요.
 - 교회 연락처는 자체 수집 자료를 정리한 것입니다. 사실과 다른 내용은 제보 창구에서 수정·삭제 요청을 받습니다.
+
+## 인용·재사용 조건
+
+출처(**${SITE_NAME}**, ${siteUrl()})를 밝히고 **비영리 목적**으로 쓰는 경우에 한해 이용할 수 있습니다.
+
+**삭제 요청은 복제본에도 따라가야 합니다.** 이 데이터에는 개척교회 대표번호처럼 목회자 개인 연락처가 섞여 있어, 삭제된 교회는 가져간 사본에서도 지워야 합니다. 개인정보보호법이 재배포자에게 직접 요구하는 의무입니다.
+
+전체 조건: ${DATA_LICENSE_URL}
 
 ## 주요 화면
 

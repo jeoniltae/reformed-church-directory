@@ -3,6 +3,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { NAV_BACK, PageTransition } from "@/components/shared/PageTransition";
+import { DATA_LICENSE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "개인정보 처리방침",
@@ -107,7 +108,37 @@ const SECTIONS = [
     ),
   },
   {
-    title: "6. 문의",
+    title: "6. 이 사이트의 정보를 인용·재사용하려면",
+    body: (
+      <>
+        <p>
+          교회 데이터는 공개 저장소에 있고 이용 조건이 정해져 있습니다. 출처를
+          밝히고 비영리 목적으로 쓰는 경우에 한해 자유롭게 이용할 수 있습니다.
+        </p>
+        <p className="mt-2">
+          <strong className="font-medium text-foreground">
+            다만 삭제 요청은 복제본에도 따라가야 합니다.
+          </strong>{" "}
+          저희가 지운 교회는 가져가신 사본에서도 지워야 합니다. 이는 이용 조건이기
+          이전에 개인정보보호법이 재배포자에게 직접 요구하는 의무이며, 저희가
+          허락했다는 사실이 면책 사유가 되지 않습니다.
+        </p>
+        <p className="mt-2">
+          {/* 저장소 밖으로 나가는 링크다. 내부 이동이 아니므로 화면 전환을 걸지 않는다 */}
+          <a
+            href={DATA_LICENSE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-foreground underline underline-offset-2"
+          >
+            전체 이용 조건 보기
+          </a>
+        </p>
+      </>
+    ),
+  },
+  {
+    title: "7. 문의",
     body: (
       <p>
         이 방침이나 실린 정보에 대해 궁금한 점이 있으면{" "}

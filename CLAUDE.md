@@ -152,9 +152,13 @@ npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32�
 | `/` | Static | 랜딩 — 수록 현황 카드, 지역 타일 6칸, 교회 미리보기 5건 |
 | `/churches` | Static | 검색·목록. `?region=`은 클라이언트에서 읽는다 (아래 "상태 관리") |
 | `/churches/[id]` | SSG | 교회 상세 89건. `generateStaticParams`로 빌드 시점에 전량 생성 |
-| `/map` | Static | 준비 중 안내. 좌표·지도 SDK 확보 전까지 자리만 지킨다 |
+| `/region/[region]` | SSG | 지역 랜딩 7개(3곳 이상만). **임계값 미만 지역도 주소로 열리지만 미리 굽지도 sitemap에 넣지도 않는다** |
+| `/denomination/[group]` | SSG | 교단 랜딩 5개(`기타` 제외). slug는 `고신·고려 계열` → `고신고려` |
+| `/map` | Static | 준비 중 안내. 좌표·지도 SDK 확보 전까지 자리만 지킨다. **`noindex` + sitemap 제외** |
 | `/report` | Static | 제보 폼. 상세에서 `?church=<id>`로 대상을 넘겨받는다 (클라이언트에서 읽는다) |
 | `/privacy` | Static | 개인정보 처리방침. 공개에 따르는 의무이며 `/report`·홈 footer에서 링크한다 |
+
+**⚠️ 라우트 폴더명에 한글을 쓰지 않는다.** `/지역/[region]`으로 만들었더니 prerender 단계에서 `InvalidCharacterError`로 빌드가 죽었다(2026-09-05 실측) — Next의 세그먼트 캐시가 경로를 base64로 인코딩하는데 `btoa`는 Latin-1만 받는다. **한글 파라미터 값은 멀쩡하다**(`/churches/언약교회-강동구`가 그렇게 동작한다). 그래서 정적 세그먼트만 ASCII로 두고, 검색에 실제로 쓰이는 지역명은 주소에 한글로 남겼다. **`/지역/`으로 되돌리지 않는다.**
 
 **상단 헤더가 없다.** 전역 이동은 `src/components/shared/BottomTabBar.tsx`(홈·검색·지도)가 전담하고, `layout.tsx`는 탭바와 `pb-16` 여백만 얹는다. 사이트명은 화면에 노출되지 않고 `metadata.title.template`으로 문서 제목에만 남는다. **헤더를 다시 만들지 않는다** — 시안이 정한 구조다.
 
@@ -379,11 +383,13 @@ npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32�
 
 ## SEO 운영 가이드
 
-> **⚠️ 검색 개방은 프로덕션 배포와 동시에 일어난다.** `src/app/robots.ts`는 `VERCEL_ENV === "production"`일 때만 열리고 그 외(로컬·프리뷰)에서는 전면 차단이다. **main에 push하는 순간이 곧 공개다.** `public/llms.txt`는 아직 미생성이다. 작업 목록은 `docs/ui-checklist.md`의 SEO 섹션(6-0 ~ 6-7)에 있고, **6-0(도메인)·6-1(랜딩)·6-2(메타데이터)·6-3(구조화 데이터)·6-4(크롤 기반) 코드는 완료**다.
+> **⚠️ 이 사이트는 공개돼 있다 (2026-09-06).** `https://www.refchurch.kr`에서 검색엔진이 수집 중이고 구글·네이버·Bing에 등록·사이트맵 제출까지 끝났다. **이제 URL을 바꾸면 색인된 주소가 깨진다** — 라우트 구조를 손대기 전에 리다이렉트를 함께 생각할 것.
+>
+> `src/app/robots.ts`는 `VERCEL_ENV === "production"`일 때만 열리고 로컬·프리뷰에서는 전면 차단이다(프리뷰 중복 색인 방지). **`dev` 브랜치 push로는 열리지 않는다.** 남은 작업은 `public/llms.txt`(6-6)와 측정(6-7)뿐이며, 목록은 `docs/ui-checklist.md`의 SEO 섹션에 있다.
 
 ### 현재 구현된 것
 
-- `src/app/layout.tsx` — `metadataBase`, `title`(`default` + `template`), `description`, `openGraph`, `twitter`, `robots`. **검색엔진 소유확인(`verification`)만 아직 없다** — 6-5에서 채운다.
+- `src/app/layout.tsx` — `metadataBase`, `title`(`default` + `template`), `description`, `openGraph`, `twitter`, `robots`, `verification`. 소유확인 토큰은 `src/lib/site.ts`의 `SEARCH_VERIFICATION`에 모여 있다 — **공개 값이라 환경변수로 감싸지 않고, 빈 값은 태그를 만들지 않는다.**
 - 모든 화면에 `metadata`(title/description/canonical)가 있다. 홈은 `title`을 일부러 비워 layout의 `default`를 상속받는다 — 넣으면 template이 걸려 `홈 · 개혁주의 교회 디렉토리`가 된다.
 - `/churches/[id]`·`/region/[region]`·`/denomination/[group]` — `generateMetadata`로 데이터 기반 title/description/canonical을 만든다.
 - **OG 이미지는 코드로 굽는다.** `src/app/opengraph-image.tsx`(기본)와 `src/app/churches/[id]/opengraph-image.tsx`(89장). 껍데기·팔레트·로고는 `src/lib/og-layout.tsx`가 공유하고, 폰트 로딩은 `src/lib/og.ts`에 있다.
@@ -411,11 +417,13 @@ npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32�
 3. **새 동적 라우트** → `generateMetadata` + 해당 JSON-LD 헬퍼
 4. **새 핵심 정적 페이지(about/vision류)** → `breadcrumbJsonLd()`로 BreadcrumbList 적용
 
-### 크롤러 정책 — 미적용 (robots.ts가 아직 전면 차단이다)
+### 크롤러 정책 — 적용됨 (2026-09-06)
 
-- `src/app/robots.ts`를 **교체할 때** GPTBot, ClaudeBot, PerplexityBot, Google-Extended 등 주요 AI 크롤러를 명시적으로 allow한다. 학습용/검색용 구분 없이 전부 허용(최대 노출 우선, 2026-06-19 결정).
-- **국내 검색엔진 크롤러도 명시한다** — `Yeti`(네이버)·`Daumoa`(다음). "교회 찾기"는 생활·지역 쿼리라 네이버 비중이 크고, 네이버는 크롤러 허용과 별개로 **서치어드바이저 소유확인·사이트맵 수동 제출**이 따로 필요하다 (2026-09-04 추가).
-- `public/llms.txt` — AI 검색·답변 엔진을 위한 사이트 개요 및 핵심 섹션 링크(llmstxt.org 표준 포맷). 개별 교회 URL은 나열하지 않는다(sitemap.xml의 역할).
+- **AI 크롤러를 명시적으로 allow한다** — GPTBot, ClaudeBot, PerplexityBot, Google-Extended. 학습용/검색용 구분 없이 전부 허용(최대 노출 우선, 2026-06-19 결정).
+- **국내 검색엔진 크롤러도 명시한다** — `Yeti`(네이버)·`Daumoa`(다음). "교회 찾기"는 생활·지역 쿼리라 네이버 비중이 크고, 네이버는 크롤러 허용과 별개로 **서치어드바이저 소유확인·사이트맵 수동 제출**이 따로 필요하다.
+- ⚠️ **robots.txt는 가장 구체적인 그룹 하나만 적용한다.** 위 크롤러들은 각자 그룹을 갖고 있어, `User-agent: *`에 `Disallow`를 추가해도 그 제한을 물려받지 않는다 — **`*`를 제한할 일이 생기면 이 목록도 함께 고쳐야 한다.**
+- **다음(카카오) 검색등록은 하지 않았다 (2026-09-06 결정).** `Daumoa` 허용으로 대체한다. 신청 창구는 `register.search.daum.net`이고, 다음에 등록하면 네이트에도 함께 나간다 — 그쪽 유입이 필요해지면 그때 신청한다.
+- `public/llms.txt` — AI 검색·답변 엔진을 위한 사이트 개요 및 핵심 섹션 링크(llmstxt.org 표준 포맷). 개별 교회 URL은 나열하지 않는다(sitemap.xml의 역할). **미생성.**
 
 ### 접근 제한으로 사이트맵/llms.txt에서 제외할 경로
 

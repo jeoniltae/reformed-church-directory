@@ -26,6 +26,17 @@ export const REPO_URL = "https://github.com/jeoniltae/reformed-church-directory"
 export const DATA_LICENSE_URL = `${REPO_URL}/blob/main/data/LICENSE.md`;
 
 /**
+ * 문의용 별칭 주소.
+ *
+ * **개인 메일을 직접 싣지 않는다.** 공개 페이지의 평문 주소는 스팸 수집 봇이 긁어가고
+ * 한 번 노출되면 되돌릴 수 없다. 도메인 별칭을 개인 메일로 포워딩해 두면 스팸이
+ * 심해질 때 **별칭만 버리면 된다.**
+ *
+ * `/privacy`의 문의 절에서만 쓴다 — 모든 화면에 노출하면 수집 봇에 그만큼 더 걸린다.
+ */
+export const CONTACT_EMAIL = "contact@refchurch.kr";
+
+/**
  * 검색엔진 소유확인 토큰.
  *
  * **비밀이 아니다.** HTML에 그대로 실리는 공개 값이라 저장소에 두는 것이 맞고,

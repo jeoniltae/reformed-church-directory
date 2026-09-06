@@ -130,6 +130,16 @@ describe("churchCollectionJsonLd", () => {
 });
 
 describe("churchJsonLd", () => {
+  it("교회별 OG 이미지를 image로 넣는다 — 리치 결과의 유일한 경고였다", () => {
+    expect(churchJsonLd(withCoords).image).toBe(
+      `${SITE}/churches/%EC%96%B8%EC%95%BD%EA%B5%90%ED%9A%8C-%EA%B0%95%EB%8F%99%EA%B5%AC/opengraph-image`,
+    );
+  });
+
+  it("image 경로에 빌드마다 바뀌는 해시를 붙이지 않는다", () => {
+    expect(churchJsonLd(bare).image).not.toContain("?");
+  });
+
   it("좌표가 있으면 geo를 넣는다", () => {
     expect(churchJsonLd(withCoords)).toMatchObject({
       "@type": "Church",

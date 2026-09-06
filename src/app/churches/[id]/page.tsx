@@ -10,12 +10,9 @@ import {
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { DataNotice } from "@/components/shared/DataNotice";
 import { JsonLd } from "@/components/shared/JsonLd";
-import {
-  NAV_BACK,
-  NAV_FORWARD,
-  PageTransition,
-} from "@/components/shared/PageTransition";
+import { NAV_BACK, PageTransition } from "@/components/shared/PageTransition";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -213,20 +210,7 @@ export default async function ChurchDetailPage({
         )}
 
         {/* 공개에 따르는 의무 — 출처를 밝히고 수정·삭제 요청 창구를 안내한다 */}
-        <div className="mt-8 border-t border-border pt-5 text-t2 text-muted-foreground">
-          <p>출처: {church.source}</p>
-          <p className="mt-1">
-            정보가 사실과 다르거나 삭제를 원하시면{" "}
-            <Link
-              href={`/report?church=${encodeURIComponent(church.id)}`}
-              transitionTypes={NAV_FORWARD}
-              className="rounded-lg text-foreground underline outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-            >
-              알려주세요
-            </Link>
-            .
-          </p>
-        </div>
+        <DataNotice source={church.source} churchId={church.id} />
 
         {/* 검색엔진이 이 교회를 장소로 이해하게 한다. geo(좌표)가 여기 들어간다 */}
         <JsonLd data={churchJsonLd(church)} />

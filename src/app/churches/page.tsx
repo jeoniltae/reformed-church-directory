@@ -1,6 +1,7 @@
 // 교회 목록·검색 화면 — 전량을 클라이언트에 넘겨 입력 즉시 필터링한다
 
 import type { Metadata } from "next";
+import { DataNotice } from "@/components/shared/DataNotice";
 import { PageTransition } from "@/components/shared/PageTransition";
 import { ChurchDirectory } from "@/features/churches/components/ChurchDirectory";
 import { getAllChurches } from "@/features/churches/data";
@@ -25,6 +26,7 @@ export default function ChurchesPage() {
           국내 개혁주의 교회 {churches.length}곳을 수록했습니다.
         </p>
         <ChurchDirectory churches={churches} />
+        <DataNotice />
       </main>
     </PageTransition>
   );

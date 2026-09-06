@@ -2,6 +2,7 @@
   "name": "reformed-church-directory",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "next dev",

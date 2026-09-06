@@ -3,6 +3,7 @@
 import { Search } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { DataNotice } from "@/components/shared/DataNotice";
 import {
   NAV_FORWARD,
   PageTransition,
@@ -101,25 +102,10 @@ export default function Home() {
         ))}
       </ul>
 
-      <p className="mt-8 border-t border-border py-6 text-t2 text-muted-foreground">
-        교회 정보는 자체 수집 자료를 정리한 것입니다. 정보가 사실과 다르거나
-        삭제를 원하시면{" "}
-        <Link
-          href="/report"
-          transitionTypes={NAV_FORWARD}
-          className="text-foreground underline underline-offset-2"
-        >
-          제보
-        </Link>
-        해 주세요.{" "}
-        <Link
-          href="/privacy"
-          transitionTypes={NAV_FORWARD}
-          className="text-foreground underline underline-offset-2"
-        >
-          개인정보 처리방침
-        </Link>
-      </p>
+      <DataNotice />
+
+      {/* 고정 탭바가 마지막 줄을 가리지 않게 하는 여백. layout의 pb-16과 함께 작동한다 */}
+      <div className="h-6" />
       </main>
     </PageTransition>
   );

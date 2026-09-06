@@ -85,7 +85,10 @@ npm run check:homepages      # 홈페이지 생존 확인 → data/dead-links.js
 npm run normalize:addresses  # 도로명주소 검색 API로 주소 진단 → data/geocode.json
 npm run geocode:coords       # 좌표제공 API로 좌표 채움 → data/geocode.json
 npm run import:source        # 위 결과를 모아 data/churches.json 생성
+npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32·48)
 ```
+
+`icons:favicon`은 데이터와 무관하다. **로고(`src/app/icon.png`)를 바꿨을 때만 돌린다.** `icon.png`는 브라우저 탭·매니페스트·OG 이미지의 로고 마크에 모두 쓰이므로, 한 파일만 갈아끼우고 이 명령을 돌리면 전부 따라온다.
 
 **순서가 있다.** `normalize:addresses` → `geocode:coords` → `import:source`. 앞의 둘은 `data/geocode.json`만 갱신하고 `churches.json`은 건드리지 않는다. **주소를 재조회하면 좌표도 무효가 되므로** `normalize:addresses`를 다시 돌렸으면 `geocode:coords`도 다시 돌린다. 둘 다 `.env.local`의 승인키가 필요하다(`JUSO_SEARCH_KEY`·`JUSO_COORD_KEY`, API별로 키가 다르다).
 
@@ -125,6 +128,7 @@ npm run import:source        # 위 결과를 모아 data/churches.json 생성
 │   ├── check-homepages.mts
 │   ├── normalize-addresses.mts
 │   ├── geocode-coords.mts
+│   ├── make-favicon.mts   #   icon.png → favicon.ico (sharp, devDependency)
 │   └── collect-kosin.ts   # [WIP] 고신 교회 데이터 수집
 └── data/                  # 앱이 직접 읽는 유일한 데이터 소스
     ├── churches.json      #   커밋 대상 (89건)
@@ -375,23 +379,27 @@ npm run import:source        # 위 결과를 모아 data/churches.json 생성
 
 ## SEO 운영 가이드
 
-> **⚠️ 지금 사이트는 검색에 잡히지 않는다.** `src/app/robots.ts`가 **존재하며 전면 차단(`disallow: "/"`) 중이다.** 미생성이 아니라 의도적으로 닫아둔 것이고, 공개(6번) 때 통째로 교체한다. `src/app/sitemap.ts`·`src/app/manifest.ts`·`public/llms.txt`는 아직 **미생성**이다. 아래 "구현할 때의 방침"은 계획이지 현황이 아니다. 작업 목록은 `docs/ui-checklist.md`의 SEO 섹션(6-0 ~ 6-7)에 있다.
+> **⚠️ 검색 개방은 프로덕션 배포와 동시에 일어난다.** `src/app/robots.ts`는 `VERCEL_ENV === "production"`일 때만 열리고 그 외(로컬·프리뷰)에서는 전면 차단이다. **main에 push하는 순간이 곧 공개다.** `public/llms.txt`는 아직 미생성이다. 작업 목록은 `docs/ui-checklist.md`의 SEO 섹션(6-0 ~ 6-7)에 있고, **6-0(도메인)·6-1(랜딩)·6-2(메타데이터)·6-3(구조화 데이터)·6-4(크롤 기반) 코드는 완료**다.
 
 ### 현재 구현된 것
 
-- `src/app/layout.tsx` — `metadataBase`, `title`(`default` + `template`), `description`뿐이다. **OG·Twitter·검색엔진 인증은 아직 없다.**
-- `/churches`, `/map`, `/report`, `/privacy` — 각 `page.tsx`에 `metadata`(title/description/canonical)를 직접 선언했다.
-- `/churches/[id]` — `generateMetadata`로 교회명·지역 기반 title/description/canonical을 만든다.
-- **홈(`/`)만 `metadata`가 없다.** layout의 기본값을 상속받아 canonical이 붙지 않는다 — 공개 전에 채운다.
-- `src/app/robots.ts` — **전면 차단.** 위 경고 참고.
-- `src/lib/json-ld.ts` — **`churchJsonLd()`만 있다.** 상세 페이지에서만 쓰고 전역 적용은 아직 없다. `organizationJsonLd`·`websiteJsonLd`·`breadcrumbJsonLd`는 미작성이다.
+- `src/app/layout.tsx` — `metadataBase`, `title`(`default` + `template`), `description`, `openGraph`, `twitter`, `robots`. **검색엔진 소유확인(`verification`)만 아직 없다** — 6-5에서 채운다.
+- 모든 화면에 `metadata`(title/description/canonical)가 있다. 홈은 `title`을 일부러 비워 layout의 `default`를 상속받는다 — 넣으면 template이 걸려 `홈 · 개혁주의 교회 디렉토리`가 된다.
+- `/churches/[id]`·`/region/[region]`·`/denomination/[group]` — `generateMetadata`로 데이터 기반 title/description/canonical을 만든다.
+- **OG 이미지는 코드로 굽는다.** `src/app/opengraph-image.tsx`(기본)와 `src/app/churches/[id]/opengraph-image.tsx`(89장). 껍데기·팔레트·로고는 `src/lib/og-layout.tsx`가 공유하고, 폰트 로딩은 `src/lib/og.ts`에 있다.
+- `src/app/manifest.ts` · `icon.png` · `apple-icon.png` · `favicon.ico` — 아이콘은 전부 `icon.png` 하나에서 파생된다.
+- `src/app/robots.ts` — 프로덕션에서만 개방, 그 외는 전면 차단. 위 경고 참고.
+- `src/app/sitemap.ts` — 경로 목록은 `src/lib/indexable-paths.ts`가 만든다(105개). **`lastModified`·`priority`·`changeFrequency`를 넣지 않는다** — 넣을 만한 값이 없거나 무시되는 값이다.
+- `src/lib/json-ld.ts` — `siteJsonLd()`(Organization+WebSite를 `@graph`로 묶어 `layout.tsx`에서 전역 삽입) · `breadcrumbJsonLd()` · `churchCollectionJsonLd()`(랜딩) · `churchJsonLd()`(상세). 문서에 심는 것은 `src/components/shared/JsonLd.tsx`가 전담한다.
 - `src/app/not-found.tsx` — 없는 교회 id 접근 시. 상세의 `notFound()` 호출과 짝이다.
 
 ### 구현할 때의 방침
 
 - **sitemap**: `src/app/sitemap.ts`가 `data/churches.json`을 읽어 자동 생성한다. 크롤러로 교회가 늘어도 별도 작업이 없어야 한다.
 - **교회 상세**: `generateMetadata`가 교회명·지역으로 title/description/canonical을 만든다.
-- **JSON-LD**: `src/lib/json-ld.ts`에 `organizationJsonLd`·`websiteJsonLd`·`breadcrumbJsonLd`를 두고 `layout.tsx`에서 전역 적용한다.
+- **JSON-LD**: 데이터를 만드는 곳은 `src/lib/json-ld.ts`, 문서에 심는 곳은 `src/components/shared/JsonLd.tsx` 하나다. **`dangerouslySetInnerHTML`을 페이지에서 직접 쓰지 않는다** — `<` 이스케이프를 빠뜨린 곳이 생기면 데이터에 `</script>`가 섞였을 때 문서가 그 자리에서 깨진다.
+- **JSON-LD의 URL은 절대 경로여야 하고 `new URL()`로 만든다.** canonical은 `metadataBase`가 절대화해 주지만 JSON-LD는 직접 만들어야 한다. **canonical과 같은 percent-encoding으로 나가야** 같은 페이지를 가리키는 두 주소가 생기지 않는다(이 사이트는 경로에 한글이 들어간다).
+- **`SearchAction`을 넣지 않는다.** 사이트 내 검색이 클라이언트 전용이라 결과를 가리키는 URL이 없다 — 없는 기능을 있다고 신고하는 셈이 된다.
 - **교회 상세 구조화 데이터는 `@type: "Church"`에 `geo`를 넣는다** (2026-08-12 결정, 구현 완료). schema.org에 `Place > CivicStructure > PlaceOfWorship > Church`로 실재하는 타입이다. **`LocalBusiness`를 쓰지 않는다** — 교회를 사업체로 표기하게 되어 사실과 어긋난다. `src/lib/json-ld.ts`의 `churchJsonLd()`.
 - 좌표가 이 `geo` 때문에 필요해졌다. 그래서 좌표 확보가 지도(5단계)가 아니라 상세 페이지의 선행 조건이었다 — 나중에 넣으면 89개 정적 페이지를 다시 구워야 한다.
 - **없는 값은 키 자체를 넣지 않는다.** 빈 문자열은 "값이 있는데 비어 있다"로 읽힌다. 좌표 없는 21건에는 `geo`가 없다.

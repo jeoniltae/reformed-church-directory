@@ -11,6 +11,15 @@ export const metadata: Metadata = {
   title: "지도",
   description: "개혁주의 교회 지도는 준비 중입니다.",
   alternates: { canonical: "/map" },
+  /**
+   * **색인하지 않는다 (2026-09-04 결정).** "준비 중" 안내만 있어 검색 노출 가치가
+   * 없고, 내용 없는 페이지는 soft 404로 판정될 위험이 있다. sitemap에서도 빠져 있다
+   * (`src/lib/indexable-paths.ts`).
+   *
+   * `follow`는 남긴다 — 크롤러가 여기서 목록 화면으로 넘어가는 길은 막지 않는다.
+   * **실제 지도가 붙는 7단계에서 이 블록과 sitemap 제외를 함께 푼다.**
+   */
+  robots: { index: false, follow: true },
 };
 
 export default function MapPage() {

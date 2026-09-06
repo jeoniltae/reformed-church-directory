@@ -10,6 +10,7 @@ import {
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { JsonLd } from "@/components/shared/JsonLd";
 import {
   NAV_BACK,
   NAV_FORWARD,
@@ -27,7 +28,7 @@ import {
   slugFromGroup,
 } from "@/features/churches/landing";
 import { decodeRouteParam } from "@/lib/church-utils";
-import { churchJsonLd, toJsonLdScript } from "@/lib/json-ld";
+import { breadcrumbJsonLd, churchJsonLd } from "@/lib/json-ld";
 import { cn } from "@/lib/utils";
 import type { Church } from "@/types/church";
 
@@ -227,12 +228,18 @@ export default async function ChurchDetailPage({
           </p>
         </div>
 
-        <script
-          type="application/ld+json"
-          // 검색엔진이 이 교회를 장소로 이해하게 한다. geo(좌표)가 여기 들어간다
-          dangerouslySetInnerHTML={{
-            __html: toJsonLdScript(churchJsonLd(church)),
-          }}
+        {/* 검색엔진이 이 교회를 장소로 이해하게 한다. geo(좌표)가 여기 들어간다 */}
+        <JsonLd data={churchJsonLd(church)} />
+        {/* 이동 경로는 내부 링크와 같은 모양이어야 한다 — 랜딩이 없는 지역이면 그 칸을 뺀다 */}
+        <JsonLd
+          data={breadcrumbJsonLd([
+            { name: "홈", path: "/" },
+            { name: "교회 찾기", path: "/churches" },
+            ...(regionHref
+              ? [{ name: `${church.region} 개혁주의 교회`, path: regionHref }]
+              : []),
+            { name: church.name, path: `/churches/${church.id}` },
+          ])}
         />
       </main>
     </PageTransition>

@@ -12,7 +12,8 @@
     "import:source": "node scripts/import-source.mts",
     "check:homepages": "node scripts/check-homepages.mts",
     "normalize:addresses": "node --env-file=.env.local scripts/normalize-addresses.mts",
-    "geocode:coords": "node --env-file=.env.local scripts/geocode-coords.mts"
+    "geocode:coords": "node --env-file=.env.local scripts/geocode-coords.mts",
+    "icons:favicon": "node scripts/make-favicon.mts"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
@@ -37,6 +38,7 @@
     "eslint-config-next": "16.2.12",
     "fast-xml-parser": "^5.10.1",
     "proj4": "^2.21.0",
+    "sharp": "^0.35.4",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^4.1.10"

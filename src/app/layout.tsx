@@ -2,6 +2,14 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { BottomTabBar } from "@/components/shared/BottomTabBar";
+import { JsonLd } from "@/components/shared/JsonLd";
+import { siteJsonLd } from "@/lib/json-ld";
+import {
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  siteUrl,
+  verificationMetadata,
+} from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -26,29 +34,41 @@ const pretendard = localFont({
   display: "swap",
 });
 
-/**
- * canonical·OG의 기준이 되는 절대 주소.
- *
- * **`NEXT_PUBLIC_SITE_URL` 하나만 보면 배포 직후 canonical이 전부
- * `http://localhost:3000/...`으로 나간다** — 89개 페이지가 그렇게 구워지는 것을
- * 클린 빌드로 확인했다. 도메인을 붙이기 전 프리뷰 단계에서도 값이 맞도록
- * Vercel이 빌드 시점에 넣어주는 주소를 중간 폴백으로 둔다.
- */
-function siteUrl(): string {
-  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
-  const vercel =
-    process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
-  return vercel ? `https://${vercel}` : "http://localhost:3000";
-}
-
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
   title: {
-    default: "개혁주의 교회 디렉토리",
-    template: "%s · 개혁주의 교회 디렉토리",
+    default: SITE_NAME,
+    template: `%s · ${SITE_NAME}`,
   },
-  description:
-    "국내 개혁주의 교단 교회를 교회명·지역·교단·담임목사 기준으로 찾아보세요.",
+  description: SITE_DESCRIPTION,
+  // OG 이미지는 `app/opengraph-image.tsx`가 자동으로 붙는다. 여기 images를 또 쓰면
+  // 두 벌이 나가므로 쓰지 않는다. 교회 상세는 자기 opengraph-image로 덮어쓴다
+  openGraph: {
+    type: "website",
+    locale: "ko_KR",
+    siteName: SITE_NAME,
+    url: "/",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+  },
+  twitter: { card: "summary_large_image" },
+  /**
+   * **`robots.ts`의 전면 차단과 다른 층위다.** robots.txt는 "긁지 마라"이고
+   * 이 메타는 "긁었으면 색인해도 된다"이다. 지금은 크롤 자체가 막혀 있어 이 값이
+   * 읽히지 않지만, 6-4-7에서 문을 열면 그날부터 바로 유효해진다.
+   */
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  // 구글·네이버·Bing 소유확인. 토큰이 비어 있으면 태그가 나가지 않는다 (`site.ts`)
+  verification: verificationMetadata(),
 };
 
 export default function RootLayout({
@@ -65,6 +85,8 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col pb-16">
         {/* 전환 래퍼는 여기가 아니라 각 page.tsx에 있다 (PageTransition 주석 참고).
             탭바는 그 경계 밖이라 내용만 밀리고 탭바는 제자리에 남는다 */}
+        {/* 사이트 신원(Organization·WebSite)은 모든 화면에 실린다 */}
+        <JsonLd data={siteJsonLd()} />
         {children}
         <BottomTabBar />
       </body>

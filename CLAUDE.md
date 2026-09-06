@@ -18,6 +18,7 @@ UI는 모바일 우선 반응형 웹으로 제작한다.
 - 작업 결정 기록: `docs/context-notes.md`
 - 체크리스트 — 개발환경·데이터 수집: `docs/checklist.md`
 - 체크리스트 — 앱 UI·지도·SEO·배포: `docs/ui-checklist.md`
+- 공개 이후 SEO 측정 기록: `docs/seo-측정.md`
 - 보유 데이터 필드 조사 결과: `docs/field-inventory.md`
 
 `coding-guidelines.md`를 제외한 `docs/` 문서는 git에서 제외된 로컬 문서다.
@@ -385,7 +386,7 @@ npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32�
 
 > **⚠️ 이 사이트는 공개돼 있다 (2026-09-06).** `https://www.refchurch.kr`에서 검색엔진이 수집 중이고 구글·네이버·Bing에 등록·사이트맵 제출까지 끝났다. **이제 URL을 바꾸면 색인된 주소가 깨진다** — 라우트 구조를 손대기 전에 리다이렉트를 함께 생각할 것.
 >
-> `src/app/robots.ts`는 `VERCEL_ENV === "production"`일 때만 열리고 로컬·프리뷰에서는 전면 차단이다(프리뷰 중복 색인 방지). **`dev` 브랜치 push로는 열리지 않는다.** 남은 작업은 `public/llms.txt`(6-6)와 측정(6-7)뿐이며, 목록은 `docs/ui-checklist.md`의 SEO 섹션에 있다.
+> `src/app/robots.ts`는 `VERCEL_ENV === "production"`일 때만 열리고 로컬·프리뷰에서는 전면 차단이다(프리뷰 중복 색인 방지). **`dev` 브랜치 push로는 열리지 않는다.** 6-0 ~ 6-6이 끝났고 **남은 것은 측정(6-7)뿐**이다 — 목록은 `docs/ui-checklist.md`의 SEO 섹션에 있다.
 
 ### 현재 구현된 것
 
@@ -422,8 +423,10 @@ npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32�
 - **AI 크롤러를 명시적으로 allow한다** — GPTBot, ClaudeBot, PerplexityBot, Google-Extended. 학습용/검색용 구분 없이 전부 허용(최대 노출 우선, 2026-06-19 결정).
 - **국내 검색엔진 크롤러도 명시한다** — `Yeti`(네이버)·`Daumoa`(다음). "교회 찾기"는 생활·지역 쿼리라 네이버 비중이 크고, 네이버는 크롤러 허용과 별개로 **서치어드바이저 소유확인·사이트맵 수동 제출**이 따로 필요하다.
 - ⚠️ **robots.txt는 가장 구체적인 그룹 하나만 적용한다.** 위 크롤러들은 각자 그룹을 갖고 있어, `User-agent: *`에 `Disallow`를 추가해도 그 제한을 물려받지 않는다 — **`*`를 제한할 일이 생기면 이 목록도 함께 고쳐야 한다.**
-- **다음(카카오) 검색등록은 하지 않았다 (2026-09-06 결정).** `Daumoa` 허용으로 대체한다. 신청 창구는 `register.search.daum.net`이고, 다음에 등록하면 네이트에도 함께 나간다 — 그쪽 유입이 필요해지면 그때 신청한다.
-- `public/llms.txt` — AI 검색·답변 엔진을 위한 사이트 개요 및 핵심 섹션 링크(llmstxt.org 표준 포맷). 개별 교회 URL은 나열하지 않는다(sitemap.xml의 역할). **미생성.**
+- ⚠️ **`Daumoa`를 열어두는 것만으로는 다음 검색에 잡히지 않는다.** 다른 프로젝트에서 robots.txt 허용만으로 몇 달을 기다렸으나 노출되지 않은 것을 확인했다(2026-09-06). **`register.search.daum.net`에 검색등록을 따로 신청해야 한다** — 소유확인 없이 사람이 검토하는 폼이고 반영에 3~15일 걸린다. 다음에 등록하면 네이트에도 함께 나간다.
+- **`/llms.txt`** — AI 검색·답변 엔진을 위한 사이트 개요(llmstxt.org 포맷). **개별 교회 URL은 나열하지 않는다** — 지역·교단 랜딩까지만 링크하고 개별 페이지는 sitemap이 맡는다.
+  - **`public/`의 정적 파일이 아니라 `src/app/llms.txt/route.ts`다.** 수록 건수·지역 목록·교단별 개수가 전부 데이터에서 나오므로 손으로 쓰면 확장할 때 거짓말이 된다. 본문 생성은 `src/lib/llms-txt.ts`.
+  - **없는 것을 밝히는 문서다.** 예배시간·설립연도가 0건이라는 사실과 수록 범위의 한계를 명시해, AI가 이 사이트를 근거로 없는 값을 안내하거나 여기 없는 교회를 부정하지 않게 한다.
 
 ### 접근 제한으로 사이트맵/llms.txt에서 제외할 경로
 

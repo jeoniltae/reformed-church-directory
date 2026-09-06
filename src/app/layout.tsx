@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
@@ -89,6 +90,17 @@ export default function RootLayout({
         <JsonLd data={siteJsonLd()} />
         {children}
         <BottomTabBar />
+        {/*
+          Vercel Web Analytics — 방문 수·페이지뷰만 익명으로 센다.
+
+          **쿠키도 localStorage도 쓰지 않는다.** 그래서 동의 배너가 필요 없고,
+          `/privacy`의 "쿠키를 쓰지 않는다"도 여전히 사실이다. 다만 **"분석 도구를
+          쓰지 않는다"는 더 이상 사실이 아니므로 그 문구를 함께 고쳤다** —
+          방침 문서와 실제 동작이 어긋나면 안 된다.
+
+          프로덕션 배포에서만 데이터를 보낸다. 로컬에서는 아무것도 전송하지 않는다.
+        */}
+        <Analytics />
       </body>
     </html>
   );

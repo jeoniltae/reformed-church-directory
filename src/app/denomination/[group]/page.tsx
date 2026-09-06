@@ -12,6 +12,7 @@ import {
   NAV_FORWARD,
   PageTransition,
 } from "@/components/shared/PageTransition";
+import { DataNotice } from "@/components/shared/DataNotice";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { ChurchCard } from "@/features/churches/components/ChurchCard";
 import { getAllChurches } from "@/features/churches/data";
@@ -150,6 +151,8 @@ export default async function GroupLandingPage({
             </ul>
           </nav>
         )}
+
+        <DataNotice />
       </main>
     </PageTransition>
   );

@@ -4,27 +4,25 @@
 import { House, Map as MapIcon, Search } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { NAV_BACK, NAV_FORWARD } from "@/components/shared/PageTransition";
+import { isCurrentTab, tabDirection } from "@/components/shared/tab-nav";
 import { cn } from "@/lib/utils";
 
 const TABS = [
   { href: "/", label: "홈", icon: House },
-  { href: "/churches", label: "검색", icon: Search },
+  // 지역·교단 랜딩은 교회 목록이므로 `검색`의 갈래로 본다 (`tab-nav.ts` 참고)
+  {
+    href: "/churches",
+    label: "검색",
+    icon: Search,
+    owns: ["/region", "/denomination"],
+  },
   { href: "/map", label: "지도", icon: MapIcon },
 ] as const;
 
-/** `/`는 완전 일치로만 판정한다. 접두사로 보면 모든 경로가 홈이 된다 */
-function isCurrentTab(href: string, pathname: string): boolean {
-  return href === "/" ? pathname === "/" : pathname.startsWith(href);
-}
-
 export function BottomTabBar() {
   const pathname = usePathname();
-  // 탭 순서(홈 0 · 검색 1 · 지도 2)를 좌우 방향으로 읽는다.
-  // 어느 탭에도 속하지 않는 경로면 -1이 되고, 그때는 방향을 붙이지 않는다
-  const currentIndex = TABS.findIndex(({ href }) =>
-    isCurrentTab(href, pathname),
-  );
+  // 판정과 방향 계산은 `tab-nav.ts`에 있다 — 틀리면 조용히 전환이 사라지는 자리라 테스트로 고정했다
+  const currentIndex = TABS.findIndex((tab) => isCurrentTab(tab, pathname));
 
   return (
     <nav
@@ -34,16 +32,10 @@ export function BottomTabBar() {
       className="vt-tab-bar fixed inset-x-0 bottom-0 z-10 border-t border-border bg-background"
     >
       <ul className="mx-auto flex w-full max-w-2xl">
-        {TABS.map(({ href, label, icon: Icon }, index) => {
-          const active = isCurrentTab(href, pathname);
-          // 오른쪽 탭으로 가면 전진, 왼쪽 탭으로 가면 후퇴.
-          // 현재 탭을 다시 누르거나 위치를 모를 때는 방향이 없다
-          const direction =
-            currentIndex === -1 || index === currentIndex
-              ? undefined
-              : index > currentIndex
-                ? NAV_FORWARD
-                : NAV_BACK;
+        {TABS.map((tab, index) => {
+          const { href, label, icon: Icon } = tab;
+          const active = isCurrentTab(tab, pathname);
+          const direction = tabDirection(currentIndex, index);
 
           return (
             <li key={href} className="flex-1">

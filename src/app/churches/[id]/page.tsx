@@ -15,6 +15,7 @@ import { JsonLd } from "@/components/shared/JsonLd";
 import { NAV_BACK, PageTransition } from "@/components/shared/PageTransition";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { ChurchNotice } from "@/features/churches/components/ChurchNotice";
 import {
   getAllChurchIds,
   getAllChurches,
@@ -35,7 +36,8 @@ export function generateStaticParams() {
 
 /**
  * 카카오맵 웹 링크. SDK도 앱 키도 필요 없어 지금 바로 쓸 수 있다.
- * 좌표가 없는 21건은 주소 검색으로 대체하므로 89건 전부 길찾기가 가능하다.
+ * 좌표가 없는 1건은 주소 검색으로 대체하므로 89건 전부 길찾기가 가능하다.
+ * **그 1건은 주소 자체가 불완전하다** — 그래서 `notice`가 미리 알린다.
  */
 function directionsUrl(church: Church): string {
   if (church.lat !== undefined && church.lng !== undefined) {
@@ -96,7 +98,7 @@ export default async function ChurchDetailPage({
 
         {/*
           지도 자리. 실제 지도는 5단계(Kakao 지도 SDK 앱 키)에서 이 박스를 교체한다.
-          좌표 유무로 구분하지 않는다 — 지금은 지도가 없어 68건과 21건이 똑같이 보인다.
+          좌표 유무로 구분하지 않는다 — 지금은 지도가 없어 88건과 1건이 똑같이 보인다.
         */}
         <div className="mt-3 flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-lg bg-muted">
           <MapPin aria-hidden className="size-6 text-muted-foreground" />
@@ -112,6 +114,13 @@ export default async function ChurchDetailPage({
           </h1>
           {/* 지역은 따로 적지 않는다 — 한국 주소는 항상 시도로 시작해 그대로 중복이다 */}
           <p className="mt-1 text-t4 text-muted-foreground">{church.address}</p>
+          {/*
+            안내는 주소 바로 밑에 둔다. 이 안내가 한정하는 대상이 주소이고,
+            헛걸음을 막으려면 아래 길찾기 버튼을 누르기 전에 읽혀야 한다.
+            연락처가 붙는 경우 교회 전화 버튼과 떨어뜨려 두는 효과도 있다 —
+            번호 둘이 붙어 있으면 어디로 걸어야 하는지 헷갈린다.
+          */}
+          {church.notice && <ChurchNotice notice={church.notice} />}
         </div>
 
         {/* 교단과 주소는 위 헤더에만 둔다. 여기 또 넣으면 같은 화면에 두 번 나온다 */}

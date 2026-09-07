@@ -1069,7 +1069,14 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "070-8774-9332",
-    "homepage": "http://cafe.daum.net/gsjsrc/"
+    "homepage": "http://cafe.daum.net/gsjsrc/",
+    "notice": {
+      "message": "정확한 주소를 확인하지 못했습니다. 표시된 주소만으로는 찾아가기 어려울 수 있습니다.",
+      "contact": {
+        "label": "소속 노회(예장 합동 군산남노회)",
+        "phone": "063-445-5645"
+      }
+    }
   },
   {
     "id": "내흥교회-군산시",

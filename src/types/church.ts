@@ -28,4 +28,17 @@ export interface Church {
   sns?: string[];
   /** 상세 페이지 출처 표기에 사용한다 */
   source: string;
+  /**
+   * 이 교회 데이터에 **알려진 한계**가 있을 때 상세 화면에 띄우는 안내.
+   *
+   * 원본은 `data/notices.json`이고 `import-source`가 얹는다. 앱은 구워진 값만 읽는다.
+   * 여기 값이 있다는 것은 "우리가 확인하지 못했다"는 뜻이지 교회에 문제가 있다는
+   * 뜻이 아니다 — 문구도 화면도 그 구분을 지켜야 한다.
+   */
+  notice?: {
+    /** 무엇을 확인하지 못했는지 한 문장. 화면에 그대로 나간다 */
+    message: string;
+    /** 이용자가 대신 확인할 수 있는 창구가 **실제로 있을 때만** 넣는다 */
+    contact?: { label: string; phone: string };
+  };
 }

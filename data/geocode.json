@@ -3,16 +3,36 @@
   "checkedAt": "2026-09-07",
   "entries": [
     {
-      "id": "언약교회-강동구",
+      "id": "언약교회-하남시",
       "name": "언약교회",
       "original": {
-        "address": "서울 강동구 강일동 69",
-        "region": "서울",
-        "subRegion": "강동구"
+        "address": "경기 하남시 하남대로 412",
+        "region": "경기",
+        "subRegion": "하남시"
       },
-      "totalCount": 0,
-      "status": "notFound",
-      "reason": "검색 결과 없음"
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 하남시 하남대로 412 (하산곡동)",
+        "jibunAddr": "경기도 하남시 하산곡동 315-4",
+        "zipNo": "13025",
+        "siNm": "경기도",
+        "sggNm": "하남시",
+        "coordParams": {
+          "admCd": "4145010200",
+          "rnMgtSn": "414502202001",
+          "udrtYn": "0",
+          "buldMnnm": "412",
+          "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 37.511378,
+          "lng": 127.226301,
+          "entX": 975811.3704994668,
+          "entY": 1945823.771535067
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
     },
     {
       "id": "갈보리교회-관악구",
@@ -339,13 +359,13 @@
       "id": "성가교회-마포구",
       "name": "성가교회",
       "original": {
-        "address": "서울시 마포구 현석동 220 밤섬현대아파트상가 2층",
+        "address": "서울 마포구 신수로3길 23",
         "region": "서울",
         "subRegion": "마포구"
       },
-      "totalCount": 2,
+      "totalCount": 1,
       "matched": {
-        "roadAddr": "서울특별시 마포구 신수로3길 19 (현석동)",
+        "roadAddr": "서울특별시 마포구 신수로3길 23 (현석동, 밤섬현대아파트)",
         "jibunAddr": "서울특별시 마포구 현석동 220 밤섬현대아파트",
         "zipNo": "04092",
         "siNm": "서울특별시",
@@ -354,13 +374,18 @@
           "admCd": "1144011200",
           "rnMgtSn": "114404139383",
           "udrtYn": "0",
-          "buldMnnm": "19",
+          "buldMnnm": "23",
           "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 37.542895,
+          "lng": 126.93281,
+          "entX": 949894.5449134668,
+          "entY": 1949436.3764367336
         }
       },
-      "status": "multiple",
-      "reason": "후보 2건 — 어느 것인지 확인 필요",
-      "keywordUsed": "서울시 마포구 현석동 220"
+      "status": "ok",
+      "reason": "정상"
     },
     {
       "id": "서교장로교회-마포구",
@@ -1812,14 +1837,14 @@
       "id": "안산회복의교회-안산시",
       "name": "안산회복의교회",
       "original": {
-        "address": "경기도 안산시 상록구 본오1동 904",
+        "address": "경기 안산시 상록구 샘골로 86",
         "region": "경기",
         "subRegion": "안산시"
       },
-      "totalCount": 18,
+      "totalCount": 1,
       "matched": {
-        "roadAddr": "경기도 안산시 상록구 샘골로 78 (본오동)",
-        "jibunAddr": "경기도 안산시 상록구 본오동 904-13",
+        "roadAddr": "경기도 안산시 상록구 샘골로 86 (본오동)",
+        "jibunAddr": "경기도 안산시 상록구 본오동 904",
         "zipNo": "15554",
         "siNm": "경기도",
         "sggNm": "안산시 상록구",
@@ -1827,12 +1852,18 @@
           "admCd": "4127110400",
           "rnMgtSn": "412713190036",
           "udrtYn": "0",
-          "buldMnnm": "78",
+          "buldMnnm": "86",
           "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 37.291409,
+          "lng": 126.863046,
+          "entX": 943543.0152210335,
+          "entY": 1921575.2529980666
         }
       },
-      "status": "multiple",
-      "reason": "후보 18건 — 어느 것인지 확인 필요"
+      "status": "ok",
+      "reason": "정상"
     },
     {
       "id": "안산푸른교회-안산시",
@@ -1966,11 +1997,11 @@
       "id": "하늘마을장로교회-용인시",
       "name": "하늘마을장로교회",
       "original": {
-        "address": "경기도 용인시 수지구 동천동 862 현대홈타운 2차 아파트 단지상가",
+        "address": "경기 용인시 수지구 동천로63번길 10",
         "region": "경기",
         "subRegion": "용인시"
       },
-      "totalCount": 2,
+      "totalCount": 1,
       "matched": {
         "roadAddr": "경기도 용인시 수지구 동천로63번길 10 (동천동, 동천마을현대2차홈타운)",
         "jibunAddr": "경기도 용인시 수지구 동천동 862 동천마을현대2차홈타운",
@@ -1983,11 +2014,16 @@
           "udrtYn": "0",
           "buldMnnm": "10",
           "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 37.339306,
+          "lng": 127.09672,
+          "entX": 964277.7524020001,
+          "entY": 1926774.9860280002
         }
       },
-      "status": "multiple",
-      "reason": "후보 2건 — 어느 것인지 확인 필요",
-      "keywordUsed": "경기도 용인시 수지구 동천동 862"
+      "status": "ok",
+      "reason": "정상"
     },
     {
       "id": "선실교회-의왕시",
@@ -2058,54 +2094,65 @@
       "id": "소식교회-일산시",
       "name": "소식교회",
       "original": {
-        "address": "경기도 일산시",
+        "address": "경기 고양시 일산동구 고풍로 40",
         "region": "경기",
         "subRegion": "일산시"
       },
-      "totalCount": 7,
+      "totalCount": 1,
       "matched": {
-        "roadAddr": "경기도 고양시 일산서구 일청로59번길 20-1 (일산동, 일산시티타운)",
-        "jibunAddr": "경기도 고양시 일산서구 일산동 584-43 일산시티타운",
-        "zipNo": "10346",
+        "roadAddr": "경기도 고양시 일산동구 고풍로 40 (풍동)",
+        "jibunAddr": "경기도 고양시 일산동구 풍동 1292-2",
+        "zipNo": "10307",
         "siNm": "경기도",
-        "sggNm": "고양시 일산서구",
+        "sggNm": "고양시 일산동구",
         "coordParams": {
-          "admCd": "4128710100",
-          "rnMgtSn": "412874382125",
+          "admCd": "4128510700",
+          "rnMgtSn": "412853193006",
           "udrtYn": "0",
-          "buldMnnm": "20",
-          "buldSlno": "1"
+          "buldMnnm": "40",
+          "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 37.662617,
+          "lng": 126.796129,
+          "entX": 937919.5950543666,
+          "entY": 1962800.7750994
         }
       },
-      "status": "multiple",
-      "reason": "후보 7건 — 어느 것인지 확인 필요"
+      "status": "ok",
+      "reason": "정상"
     },
     {
       "id": "현산교회-일산시",
       "name": "현산교회",
       "original": {
-        "address": "경기도 고양시 일산서구 탄현동 1585 탄현마을 풍림상가 201",
+        "address": "경기 고양시 일산동구 하늘마을로 57-7",
         "region": "경기",
         "subRegion": "일산시"
       },
-      "totalCount": 2,
+      "totalCount": 1,
       "matched": {
-        "roadAddr": "경기도 고양시 일산서구 현중로 8 (탄현동)",
-        "jibunAddr": "경기도 고양시 일산서구 탄현동 1585 탄현마을16단지",
-        "zipNo": "10345",
+        "roadAddr": "경기도 고양시 일산동구 하늘마을로 57-7 (중산동)",
+        "jibunAddr": "경기도 고양시 일산동구 중산동 1730 현산교회",
+        "zipNo": "10335",
         "siNm": "경기도",
-        "sggNm": "고양시 일산서구",
+        "sggNm": "고양시 일산동구",
         "coordParams": {
-          "admCd": "4128710300",
-          "rnMgtSn": "412873194024",
+          "admCd": "4128510200",
+          "rnMgtSn": "412853193038",
           "udrtYn": "0",
-          "buldMnnm": "8",
-          "buldSlno": "0"
+          "buldMnnm": "57",
+          "buldSlno": "7"
+        },
+        "coord": {
+          "lat": 37.683444,
+          "lng": 126.788488,
+          "entX": 937263.1244675333,
+          "entY": 1965116.4817574667
         }
       },
-      "status": "multiple",
-      "reason": "후보 2건 — 어느 것인지 확인 필요",
-      "keywordUsed": "경기도 고양시 일산서구 탄현동 1585"
+      "status": "ok",
+      "reason": "정상"
     },
     {
       "id": "더불어사는교회-평택시",
@@ -2458,11 +2505,11 @@
       "id": "옥토교회-정읍시",
       "name": "옥토교회",
       "original": {
-        "address": "전북 정읍시 상동 253-8",
+        "address": "전북 정읍시 학산로 127-2",
         "region": "전북",
         "subRegion": "정읍시"
       },
-      "totalCount": 2,
+      "totalCount": 1,
       "matched": {
         "roadAddr": "전북특별자치도 정읍시 학산로 127-2 (상동)",
         "jibunAddr": "전북특별자치도 정읍시 상동 253-8 쿠치Pczone",
@@ -2475,10 +2522,16 @@
           "udrtYn": "0",
           "buldMnnm": "127",
           "buldSlno": "2"
+        },
+        "coord": {
+          "lat": 35.557259,
+          "lng": 126.871816,
+          "entX": 943068.1076299667,
+          "entY": 1729210.2577570002
         }
       },
-      "status": "multiple",
-      "reason": "후보 2건 — 어느 것인지 확인 필요"
+      "status": "ok",
+      "reason": "정상"
     },
     {
       "id": "광양개혁교회-광양시",
@@ -2548,27 +2601,33 @@
       "id": "필그림교회-천안시",
       "name": "필그림교회",
       "original": {
-        "address": "충남 천안시 두정동 두정프라자 4층",
+        "address": "충남 천안시 서북구 두정역서5길 4",
         "region": "충남",
         "subRegion": "천안시"
       },
-      "totalCount": 13,
+      "totalCount": 1,
       "matched": {
-        "roadAddr": "충청남도 천안시 서북구 노태산로 10 (두정동)",
-        "jibunAddr": "충청남도 천안시 서북구 두정동 611 한양프라자",
-        "zipNo": "31099",
+        "roadAddr": "충청남도 천안시 서북구 두정역서5길 4 (두정동)",
+        "jibunAddr": "충청남도 천안시 서북구 두정동 1612 두정프라자",
+        "zipNo": "31103",
         "siNm": "충청남도",
         "sggNm": "천안시 서북구",
         "coordParams": {
           "admCd": "4413310400",
-          "rnMgtSn": "441333250015",
+          "rnMgtSn": "441334550143",
           "udrtYn": "0",
-          "buldMnnm": "10",
+          "buldMnnm": "4",
           "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 36.837559,
+          "lng": 127.145983,
+          "entX": 968434.0164806999,
+          "entY": 1871095.935125567
         }
       },
-      "status": "multiple",
-      "reason": "후보 13건 — 어느 것인지 확인 필요"
+      "status": "ok",
+      "reason": "정상"
     },
     {
       "id": "죽림교회-태안군",
@@ -2795,5 +2854,5 @@
       "reason": "정상"
     }
   ],
-  "coordsCheckedAt": "2026-09-07T13:21:33.202Z"
+  "coordsCheckedAt": "2026-09-07T14:02:35.564Z"
 }

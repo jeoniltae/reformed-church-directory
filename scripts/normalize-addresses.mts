@@ -2,6 +2,7 @@
 
 import { writeFileSync } from "node:fs";
 import { normalizeRegion, toAddressKeyword } from "../src/lib/church-utils.ts";
+import { pickExactMatch } from "./lib/address-match.mts";
 import { readSource, type SourceRow } from "./lib/source.mts";
 
 // 커밋 대상이다. import-source가 이 파일을 읽어 정규화된 주소를 반영하고,
@@ -61,7 +62,9 @@ async function search(keyword: string): Promise<{ total: number; juso: Juso[] } 
   const url = `${ENDPOINT}?${new URLSearchParams({
     confmKey: KEY!,
     currentPage: "1",
-    countPerPage: "10",
+    // 후보를 전부 받아야 그중 원본과 일치하는 것을 찾을 수 있다. 10이면 38건짜리
+    // 조회에서 정답이 11번째일 때 아예 손에 들어오지 않는다 (100까지 받는 것을 실호출로 확인).
+    countPerPage: "100",
     keyword,
     resultType: "json", // 기본값이 xml이라 반드시 지정한다
   })}`;
@@ -97,7 +100,12 @@ function classify(church: SourceRow, r: { total: number; juso: Juso[] }): Entry 
     return { ...base, status: "notFound", reason: "검색 결과 없음" };
   }
 
-  const j = r.juso[0];
+  // 후보가 여럿이면 원본과 글자 그대로 일치하는 것을 먼저 찾는다.
+  // 후보 대부분은 부번 변형(`115-9`·`8-2`)이라 본번이 정확히 맞는 것은 보통 하나뿐이다.
+  // **유일할 때만 잡히므로 사람 판단을 대신하지 않는다** — 한 지번에 건물이 둘이면
+  // 둘 다 걸려 null이 되고 지금까지처럼 multiple로 남는다.
+  const exact = r.juso.length > 1 ? pickExactMatch(church.rawAddress, r.juso) : null;
+  const j = exact ?? r.juso[0];
   const matched = {
     roadAddr: j.roadAddr,
     jibunAddr: j.jibunAddr,
@@ -114,7 +122,7 @@ function classify(church: SourceRow, r: { total: number; juso: Juso[] }): Entry 
   };
 
   // 판정 순서가 곧 우선순위다. 먼저 걸리는 것이 사람에게 보고된다.
-  if (r.total > 1) {
+  if (r.total > 1 && !exact) {
     return { ...base, matched, status: "multiple", reason: `후보 ${r.total}건 — 어느 것인지 확인 필요` };
   }
   if (j.hstryYn === "1") {
@@ -129,7 +137,12 @@ function classify(church: SourceRow, r: { total: number; juso: Juso[] }): Entry 
       reason: `지역 어긋남 — 보유 '${church.region}' vs API '${apiRegion}'`,
     };
   }
-  return { ...base, matched, status: "ok", reason: "정상" };
+  return {
+    ...base,
+    matched,
+    status: "ok",
+    reason: exact ? `후보 ${r.total}건 중 원본과 정확히 일치하는 1건` : "정상",
+  };
 }
 
 // 원본 주소로 조회한다. churches.json의 주소는 이미 정규화됐을 수 있어 쓰면 결과가 흔들린다.
@@ -194,7 +207,21 @@ console.log(
   (Object.keys(LABEL) as Status[]).map((s) => `${LABEL[s]} ${by(s).length}`).join(" · "),
 );
 console.log(`(검색어를 다듬어 찾아낸 것 ${trimmed}건)`);
+
+// 새로 생긴 자동 판정이라 조용히 넘기지 않고 전부 보여준다.
+// 사람이 눈으로 훑을 수 있어야 "자동은 어디까지"라는 경계가 유지된다.
+const autoResolved = entries.filter((e) => e.status === "ok" && (e.totalCount ?? 0) > 1);
+console.log(`(다중 후보에서 정확 일치로 확정한 것 ${autoResolved.length}건)`);
 console.log("=".repeat(60));
+
+if (autoResolved.length) {
+  console.log(`\n■ 정확 일치로 확정 (${autoResolved.length}건) — 후보가 여럿이었으나 원본과 글자까지 같은 것이 하나뿐이었다\n`);
+  for (const e of autoResolved) {
+    console.log(`  ${e.name} (${e.original.subRegion ?? e.original.region}) · 후보 ${e.totalCount}건`);
+    console.log(`    보유: ${e.original.address}`);
+    console.log(`    확정: ${e.matched?.roadAddr}`);
+  }
+}
 
 for (const s of ["apiError", "notFound", "multiple", "historical", "regionMismatch"] as Status[]) {
   const list = by(s);
@@ -212,7 +239,7 @@ writeFileSync(
   OUTPUT,
   JSON.stringify(
     {
-      note: "도로명주소 검색 API 조회 결과. import-source가 status가 'ok'인 건만 address를 roadAddr로 교체한다. 다중 후보·검색 실패는 1순위가 맞다는 보장이 없어 원본을 유지한다. 좌표 단계는 coordParams를 그대로 쓴다.",
+      note: "도로명주소 검색 API 조회 결과. import-source가 status가 'ok'인 건만 address를 roadAddr로 교체한다. 후보가 여럿이어도 원본과 글자까지 일치하는 것이 유일하면 ok로 확정한다(totalCount>1이면서 ok인 건이 그것이다). 그런 후보가 없거나 둘 이상이면 1순위가 맞다는 보장이 없어 multiple로 두고 원본을 유지한다. 좌표 단계는 coordParams를 그대로 쓴다.",
       checkedAt: new Date().toISOString().slice(0, 10),
       entries,
     },

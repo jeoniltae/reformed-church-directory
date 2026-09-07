@@ -35,6 +35,13 @@
   --text-t9--line-height: 2rem;
   --text-t10: 1.75rem;
   --text-t10--line-height: 2.25rem;
+
+  /*
+    로고 락업의 영문 표기 자간. OG 이미지(`og-layout.tsx`)가 14px에 3px를 주는데,
+    화면에서는 12px이라 같은 인상을 내려면 비율로 옮겨야 한다.
+    **임의값(`tracking-[0.14em]`)을 쓰지 않으려고 토큰으로 둔다** — 하드코딩 금지 규칙.
+  */
+  --tracking-lockup: 0.14em;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -60,6 +67,7 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-brand-accent: var(--brand-accent);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -83,6 +91,15 @@
   /* 브랜드 — 잉크 네이비. 흰 텍스트 대비 10.82:1 (AAA) */
   --primary: oklch(0.35 0.09 250);
   --primary-foreground: oklch(0.985 0 0);
+  /*
+    브랜드 강세 — 청록. 홈 제목의 지역 롤링에만 쓴다 (2026-09-08).
+    로고 락업이 상단을 무겁게 만들어 롤링이 묻히는 것을 되찾는 색이다.
+    흰 배경 대비 5.82:1 — 24px 굵은 글자라 기준은 3:1이지만 본문 기준(4.5:1)도 넘긴다.
+
+    **`--accent`를 이 역할로 재정의하지 않았다.** 그쪽은 shadcn이 hover 배경으로
+    쓰는 토큰이라 색을 넣으면 버튼·드롭다운의 hover가 전부 청록이 된다.
+  */
+  --brand-accent: oklch(0.48 0.12 195);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -120,6 +137,8 @@
   /* 브랜드 — 어두운 텍스트 대비 8.04:1 (AAA). 토글은 없어 현재 비활성 */
   --primary: oklch(0.73 0.1 250);
   --primary-foreground: oklch(0.17 0.03 250);
+  /* 강세 — 배경 대비 8.99:1 (AAA). primary(8.32:1)와 무게를 맞췄다. 토글은 없어 현재 비활성 */
+  --brand-accent: oklch(0.74 0.11 195);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);

@@ -2,6 +2,7 @@
 
 import { Search } from "lucide-react";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { DataNotice } from "@/components/shared/DataNotice";
 import {
@@ -12,6 +13,7 @@ import { ChurchRow } from "@/features/churches/components/ChurchRow";
 import { RegionTiles } from "@/features/churches/components/RegionTiles";
 import { getAllChurches } from "@/features/churches/data";
 import { collectRegionCounts } from "@/features/churches/search";
+import { SITE_NAME } from "@/lib/site";
 
 /**
  * **`title`을 쓰지 않는다.** 여기서 선언하면 `layout.tsx`의 template이 걸려
@@ -38,17 +40,57 @@ export default function Home() {
   return (
     <PageTransition>
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 pt-8">
-      <p className="text-t4 text-muted-foreground">국내 개혁주의 교회</p>
+      {/*
+        로고 락업 — eyebrow(`국내 개혁주의 교회`)를 대신한다 (2026-09-08).
+
+        **상단 헤더가 없어 사이트명이 나올 자리가 여기뿐이다.** 그리고 공유 미리보기
+        (OG 이미지)에는 같은 락업이 이미 있어서, 링크를 타고 들어온 사람이 화면에서
+        같은 로고를 다시 보게 된다 — 그 어긋남을 없애는 것이 이 변경의 목적이다.
+
+        **마크는 `/icon.png`다** — 파비콘·매니페스트·OG와 같은 파일이라 로고를 바꿀 때
+        여전히 `icon.png` 하나만 갈아끼우면 된다. **쿼리 없는 경로를 쓴다**(Next가
+        붙이는 해시는 빌드마다 달라진다).
+      */}
+      <div className="flex items-center gap-2.5">
+        <Image
+          src="/icon.png"
+          alt=""
+          width={32}
+          height={32}
+          priority
+          className="rounded-lg"
+        />
+        <span className="flex flex-col">
+          <span className="text-t5 font-semibold text-primary">{SITE_NAME}</span>
+          {/*
+            같은 이름의 영문 표기라 스크린리더가 연달아 두 번 읽지 않도록 감춘다.
+            아래 롤링을 aria-hidden으로 감춘 것과 같은 이유다.
+          */}
+          <span
+            aria-hidden
+            className="text-t2 font-medium tracking-lockup text-muted-foreground"
+          >
+            REFORMED CHURCH DIRECTORY
+          </span>
+        </span>
+      </div>
+
       {/*
         롤링은 장식이라 aria-hidden으로 감추고, 제목이 완결된 문장으로 읽히도록
         보이지 않는 대체 문구를 둔다. 스크린리더는 지역이 바뀔 때마다 읽지 않는다.
         globals.css의 키프레임이 6칸 고정이라 TILE_REGIONS와 짝이다.
+
+        **락업이 eyebrow보다 무거워 제목까지 여백을 늘렸다**(mt-2 → mt-6).
       */}
-      <h1 className="mt-2 text-t9 font-bold text-foreground">
+      <h1 className="mt-6 text-t9 font-bold text-foreground">
         오늘,{" "}
         {/* `에서`는 굴러가지 않는다. 감추는 범위는 롤링 상자가 아니라 이 구절 전체다 */}
         <span aria-hidden>
-          <span className="region-roll">
+          {/*
+            롤링에만 브랜드 강세색을 준다. 락업이 상단을 무겁게 만들어 움직임이
+            묻히는데, 청록이 그걸 되찾는다 — 색이 곧 "여기가 바뀐다"는 신호다.
+          */}
+          <span className="region-roll text-brand-accent">
             {topRegions.map(({ region }) => (
               <span key={region}>{region}</span>
             ))}

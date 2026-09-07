@@ -19,6 +19,7 @@ const DEAD_LINKS = "data/dead-links.json";
 const GEOCODE = "data/geocode.json";
 const DENOMINATIONS = "data/denominations.json";
 const EXCLUDED = "data/excluded.json";
+const NOTICES = "data/notices.json";
 const SOURCE = "자체 수집";
 
 // 생존 확인에서 죽은 것으로 판정된 URL. 원본 CSV를 고치지 않으므로
@@ -55,6 +56,19 @@ const geocode = new Map<string, Geo>(
   ]),
 );
 
+// 교회별 '알려진 한계' 안내. 사람이 쓴 문구를 그대로 얹는다 — 여기서 문구를
+// 만들어내지 않는다. 화면에 나가는 말이므로 원본은 사람이 손대는 파일에 둔다.
+type NoticeRow = {
+  id: string;
+  message: string;
+  contact?: { label: string; phone: string };
+};
+const notices = new Map<string, NoticeRow>(
+  (JSON.parse(readFileSync(NOTICES, "utf8")) as { notices: NoticeRow[] }).notices.map(
+    (n) => [n.id, n],
+  ),
+);
+
 // 교단 표기 판정표. 매핑표는 여기서만 읽고 앱 번들에는 들어가지 않는다.
 const denominations = buildDenominationIndex(
   JSON.parse(readFileSync(DENOMINATIONS, "utf8")) as DenominationTable,
@@ -79,6 +93,7 @@ let withCoords = 0;
 let grouped = 0;
 let renamedDenoms = 0;
 let excludedCount = 0;
+let noticed = 0;
 const unmappedDenoms: string[] = [];
 
 for (const row of rows) {
@@ -162,6 +177,19 @@ for (const row of rows) {
   if (row.homepageCorrected) {
     church.homepage = normalizeUrl(row.homepageCorrected);
   }
+  // 안내는 맨 뒤에 얹는다 — 위에서 채운 값들을 두고 "이건 확인 못 했다"고 말하는 층이다
+  const notice = notices.get(row.id);
+  if (notice) {
+    church.notice = { message: notice.message };
+    if (notice.contact) {
+      church.notice.contact = {
+        label: notice.contact.label,
+        // 교회 전화와 같은 표기로 통일한다. 화면에서 나란히 보이는 값이다
+        phone: normalizePhone(notice.contact.phone),
+      };
+    }
+    noticed++;
+  }
 
   churches.push(church);
 }
@@ -181,6 +209,7 @@ console.log(
   `도로명주소로 정규화: ${normalizedAddresses}건 / ${geocode.size}건 조회  (${GEOCODE})`,
 );
 console.log(`좌표 반영: ${withCoords}건 / ${churches.length}건`);
+console.log(`알려진 한계 안내: ${noticed}건 / ${notices.size}건 등록 (${NOTICES})`);
 console.log(
   `교단 정규화: 묶음 ${grouped}건 · 표기 교체 ${renamedDenoms}건 · 미등록 ${unmappedDenoms.length}건  (${DENOMINATIONS})`,
 );
@@ -195,6 +224,13 @@ if (droppedLinks !== deadLinks.size) {
 if (excludedCount !== excluded.size) {
   warnings.push(
     `excluded.json의 id ${excluded.size - excludedCount}건이 원본과 매칭되지 않았다 — id 오타 또는 이미 원본에서 빠짐`,
+  );
+}
+// **교회가 개명·이전하면 id가 바뀌어 안내가 조용히 사라진다.** 그 교회 데이터가
+// 여전히 불완전한데 안내만 없어지는 것이 가장 나쁜 결과라 경고로 잡는다.
+if (noticed !== notices.size) {
+  warnings.push(
+    `notices.json의 id ${notices.size - noticed}건이 매칭되지 않았다 — id 오타이거나 교회가 개명·이전해 id가 바뀌었다`,
   );
 }
 if (warnings.length) {

@@ -50,3 +50,27 @@ export function pickExactMatch<T extends AddressCandidate>(
   );
   return hits.length === 1 ? hits[0] : null;
 }
+
+/**
+ * 후보의 건물명에 교회명이 들어 있는 것을 찾는다.
+ *
+ * 도로명주소 API가 주소 뒤에 붙여 주는 건물명은 등록된 공식 명칭이다.
+ * 거기 교회 이름이 그대로 박혀 있으면 **주소 문자열 비교보다 강한 신호다** —
+ * 주소가 같은 건물이 여럿일 때 그중 어느 것이 이 교회인지를 직접 알려주기 때문이다.
+ * 실측: `서울특별시 서초구 잠원동 60-3 신반포중앙교회` (후보 6건 중 1건).
+ *
+ * 여기서도 **유일할 때만** 돌려준다.
+ */
+export function pickByChurchName<T extends AddressCandidate>(
+  name: string,
+  candidates: readonly T[],
+): T | null {
+  // 너무 짧은 이름은 무관한 건물명에 우연히 걸릴 수 있어 아예 시도하지 않는다
+  const needle = name.replace(/\s+/g, "");
+  if (needle.length < 3) return null;
+
+  const hits = candidates.filter((c) =>
+    [c.jibunAddr, c.roadAddr].some((addr) => addr.replace(/\s+/g, "").includes(needle)),
+  );
+  return hits.length === 1 ? hits[0] : null;
+}

@@ -2,7 +2,7 @@
 
 import { writeFileSync } from "node:fs";
 import { normalizeRegion, toAddressKeyword } from "../src/lib/church-utils.ts";
-import { pickExactMatch } from "./lib/address-match.mts";
+import { pickByChurchName, pickExactMatch } from "./lib/address-match.mts";
 import { readSource, type SourceRow } from "./lib/source.mts";
 
 // 커밋 대상이다. import-source가 이 파일을 읽어 정규화된 주소를 반영하고,
@@ -100,12 +100,24 @@ function classify(church: SourceRow, r: { total: number; juso: Juso[] }): Entry 
     return { ...base, status: "notFound", reason: "검색 결과 없음" };
   }
 
-  // 후보가 여럿이면 원본과 글자 그대로 일치하는 것을 먼저 찾는다.
-  // 후보 대부분은 부번 변형(`115-9`·`8-2`)이라 본번이 정확히 맞는 것은 보통 하나뿐이다.
-  // **유일할 때만 잡히므로 사람 판단을 대신하지 않는다** — 한 지번에 건물이 둘이면
-  // 둘 다 걸려 null이 되고 지금까지처럼 multiple로 남는다.
-  const exact = r.juso.length > 1 ? pickExactMatch(church.rawAddress, r.juso) : null;
-  const j = exact ?? r.juso[0];
+  // 후보가 여럿이면 두 가지로 좁힌다. 둘 다 **유일할 때만** 잡히므로 사람 판단을
+  // 대신하지 않는다 — 한 지번에 건물이 둘이면 둘 다 걸려 multiple로 남는다.
+  //
+  // 건물명을 먼저 보는 이유: 주소가 같은 건물이 여럿일 때 어느 것이 이 교회인지는
+  // 주소로는 알 수 없고 건물명만 알려준다(신반포중앙교회는 `잠원동 60-3`이 건물명
+  // 없이 두 번 나와 주소로는 못 가른다). 주소 일치는 그다음이며, 후보 대부분이
+  // 부번 변형(`115-9`·`8-2`)이라 본번이 맞는 것은 보통 하나뿐이다.
+  let picked: Juso | null = null;
+  let pickedBy = "";
+  if (r.juso.length > 1) {
+    picked = pickByChurchName(church.name, r.juso);
+    if (picked) pickedBy = "건물명이 교회명과";
+    else {
+      picked = pickExactMatch(church.rawAddress, r.juso);
+      if (picked) pickedBy = "원본 주소와 정확히";
+    }
+  }
+  const j = picked ?? r.juso[0];
   const matched = {
     roadAddr: j.roadAddr,
     jibunAddr: j.jibunAddr,
@@ -122,7 +134,7 @@ function classify(church: SourceRow, r: { total: number; juso: Juso[] }): Entry 
   };
 
   // 판정 순서가 곧 우선순위다. 먼저 걸리는 것이 사람에게 보고된다.
-  if (r.total > 1 && !exact) {
+  if (r.total > 1 && !picked) {
     return { ...base, matched, status: "multiple", reason: `후보 ${r.total}건 — 어느 것인지 확인 필요` };
   }
   if (j.hstryYn === "1") {
@@ -141,7 +153,7 @@ function classify(church: SourceRow, r: { total: number; juso: Juso[] }): Entry 
     ...base,
     matched,
     status: "ok",
-    reason: exact ? `후보 ${r.total}건 중 원본과 정확히 일치하는 1건` : "정상",
+    reason: picked ? `후보 ${r.total}건 중 ${pickedBy} 일치하는 1건` : "정상",
   };
 }
 
@@ -211,13 +223,13 @@ console.log(`(검색어를 다듬어 찾아낸 것 ${trimmed}건)`);
 // 새로 생긴 자동 판정이라 조용히 넘기지 않고 전부 보여준다.
 // 사람이 눈으로 훑을 수 있어야 "자동은 어디까지"라는 경계가 유지된다.
 const autoResolved = entries.filter((e) => e.status === "ok" && (e.totalCount ?? 0) > 1);
-console.log(`(다중 후보에서 정확 일치로 확정한 것 ${autoResolved.length}건)`);
+console.log(`(다중 후보에서 자동 확정한 것 ${autoResolved.length}건)`);
 console.log("=".repeat(60));
 
 if (autoResolved.length) {
-  console.log(`\n■ 정확 일치로 확정 (${autoResolved.length}건) — 후보가 여럿이었으나 원본과 글자까지 같은 것이 하나뿐이었다\n`);
+  console.log(`\n■ 자동 확정 (${autoResolved.length}건) — 후보가 여럿이었으나 건물명 또는 주소가 유일하게 일치했다\n`);
   for (const e of autoResolved) {
-    console.log(`  ${e.name} (${e.original.subRegion ?? e.original.region}) · 후보 ${e.totalCount}건`);
+    console.log(`  ${e.name} (${e.original.subRegion ?? e.original.region}) · ${e.reason}`);
     console.log(`    보유: ${e.original.address}`);
     console.log(`    확정: ${e.matched?.roadAddr}`);
   }

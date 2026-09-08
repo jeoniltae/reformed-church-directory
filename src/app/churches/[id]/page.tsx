@@ -100,7 +100,9 @@ export default async function ChurchDetailPage({
             className="-ml-2 inline-flex items-center gap-1 rounded-lg px-2 py-2 text-t4 text-muted-foreground outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
           >
             <ChevronLeft aria-hidden className="size-4" />
-            목록으로
+            {/* 목적지의 h1·metadata.title·breadcrumb와 같은 이름을 쓴다 (2026-09-08).
+                예전에는 상세가 `목록으로`, 랜딩이 `전체 교회 목록`이라 한 곳을 세 이름으로 불렀다 */}
+            교회 찾기
           </Link>
           <SiteMark />
         </div>

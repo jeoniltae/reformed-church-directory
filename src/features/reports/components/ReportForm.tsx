@@ -140,11 +140,16 @@ export function ReportForm() {
         </ul>
       )}
 
+      {/*
+        이 화면의 주 액션이라 교회 상세의 길찾기·전화와 같은 무게로 둔다
+        (h-12 · t5 · semibold, 2026-09-09). **손가락 기준 44px도 여기서 넘긴다** —
+        `size="lg"`는 base-nova에서 h-9(36px)라 그것만으로는 못 미친다.
+      */}
       <Button
         type="submit"
         size="lg"
         disabled={pending || over}
-        className="w-full text-t5"
+        className="h-12 w-full text-t5 font-semibold"
       >
         {pending ? "보내는 중…" : "보내기"}
       </Button>

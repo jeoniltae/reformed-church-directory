@@ -9,6 +9,7 @@ import {
   NAV_FORWARD,
   PageTransition,
 } from "@/components/shared/PageTransition";
+import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import { ChurchRow } from "@/features/churches/components/ChurchRow";
 import { RegionTiles } from "@/features/churches/components/RegionTiles";
 import { getAllChurches } from "@/features/churches/data";
@@ -144,6 +145,8 @@ export default function Home() {
         ))}
       </ul>
 
+      {/* 목록이 있는 화면에만 붙인다. 짧은 화면에서는 임계값에 못 닿아 뜨지 않는다 */}
+      <ScrollToTop />
       <DataNotice />
 
       {/* 고정 탭바가 마지막 줄을 가리지 않게 하는 여백. layout의 pb-16과 함께 작동한다 */}

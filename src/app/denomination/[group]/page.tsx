@@ -15,6 +15,7 @@ import {
 } from "@/components/shared/PageTransition";
 import { DataNotice } from "@/components/shared/DataNotice";
 import { JsonLd } from "@/components/shared/JsonLd";
+import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import { SiteMark } from "@/components/shared/SiteMark";
 import { ChurchCard } from "@/features/churches/components/ChurchCard";
 import { getAllChurches } from "@/features/churches/data";
@@ -68,10 +69,10 @@ export default async function GroupLandingPage({
   if (!churches.length) notFound();
 
   const otherGroups = landingGroups().filter((g) => g.slug !== slug);
-  // 이 교단이 있는 지역 중 랜딩이 있는 곳만 링크한다 — 임계값 미만 지역으로는 링크하지
-  // 않는다. 링크를 걸면 크롤러가 얇은 페이지까지 따라가 임계값을 둔 의미가 없어진다
   // 상단 요약과 아래 지역 링크가 같은 집계를 쓴다 — 두 곳이 다른 숫자를 말하면 안 된다
   const regionCounts = countBy(churches, "region");
+  // 이 교단이 있는 지역 중 랜딩이 있는 곳만 링크한다 — 임계값 미만 지역으로는 링크하지
+  // 않는다. 링크를 걸면 크롤러가 얇은 페이지까지 따라가 임계값을 둔 의미가 없어진다
   const regionLinks = regionCounts
     .map(({ value }) => value)
     .filter((region) => hasRegionLanding(all, region));
@@ -171,6 +172,8 @@ export default async function GroupLandingPage({
           </nav>
         )}
 
+        {/* 목록이 있는 화면에만 붙인다. 짧은 화면에서는 임계값에 못 닿아 뜨지 않는다 */}
+        <ScrollToTop />
         <DataNotice />
       </main>
     </PageTransition>

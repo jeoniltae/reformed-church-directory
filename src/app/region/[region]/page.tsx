@@ -21,6 +21,7 @@ import {
 } from "@/components/shared/PageTransition";
 import { DataNotice } from "@/components/shared/DataNotice";
 import { JsonLd } from "@/components/shared/JsonLd";
+import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import { SiteMark } from "@/components/shared/SiteMark";
 import { ChurchCard } from "@/features/churches/components/ChurchCard";
 import { getAllChurches } from "@/features/churches/data";
@@ -200,6 +201,8 @@ export default async function RegionLandingPage({
           </nav>
         )}
 
+        {/* 목록이 있는 화면에만 붙인다. 짧은 화면에서는 임계값에 못 닿아 뜨지 않는다 */}
+        <ScrollToTop />
         <DataNotice />
       </main>
     </PageTransition>

@@ -3,6 +3,7 @@
 import type { Metadata } from "next";
 import { DataNotice } from "@/components/shared/DataNotice";
 import { PageTransition } from "@/components/shared/PageTransition";
+import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import { SiteMark } from "@/components/shared/SiteMark";
 import { ChurchDirectory } from "@/features/churches/components/ChurchDirectory";
 import { getAllChurches } from "@/features/churches/data";
@@ -48,6 +49,8 @@ export default function ChurchesPage() {
           · {regions.length}개 지역
         </p>
         <ChurchDirectory churches={churches} />
+        {/* 목록이 있는 화면에만 붙인다. 짧은 화면에서는 임계값에 못 닿아 뜨지 않는다 */}
+        <ScrollToTop />
         <DataNotice />
       </main>
     </PageTransition>

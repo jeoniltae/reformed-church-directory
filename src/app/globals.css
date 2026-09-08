@@ -423,8 +423,79 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 /*
+  교회 목록 필터 재배열 — `/churches`에서 지역·교단 칩을 누를 때.
+
+  살아남은 카드는 새 자리로 미끄러지고(group), 빠지는 카드는 줄며 사라지고(old),
+  새 카드는 자라난다(new). 이름은 `ChurchDirectory`가 교회마다 붙인다.
+
+  **화면 전환(320ms)보다 짧다.** 칩은 연타하는 조작이라 그만큼 길면 걸리적거리고,
+  다음 탭이 앞 애니메이션을 계속 자르게 된다. 200ms 언저리가 상한이다.
+*/
+::view-transition-group(.card-move) {
+  animation-duration: 220ms;
+}
+
+::view-transition-old(.card-exit) {
+  animation: 140ms ease-in both card-out;
+}
+
+::view-transition-new(.card-enter) {
+  animation: 200ms ease-out both card-in;
+}
+
+@keyframes card-out {
+  to {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+/*
+  필터 결과 안내 — 조건이 바뀌면 한 줄이 통째로 굴러 넘어간다.
+
+  홈 제목의 지역 롤링(`region-roll`)과 같은 어휘다. 저쪽도 글자를 한 줄씩 굴린다.
+  **다만 무한 반복이 아니라 한 번만 돈다** — 저쪽은 장식이고 이쪽은 값이 바뀌었다는
+  신호라, 계속 움직이면 신호가 아니라 소음이 된다.
+
+  **`key`로 다시 마운트해서는 이 효과가 안 나온다.** 그러면 새 줄이 올라오기만 하고
+  옛 줄은 그냥 사라져 slideUp이 된다. 옛 줄이 위로 빠져나가는 모습이 있어야 롤로
+  읽히는데, 그 옛 화면을 들고 있는 것은 브라우저의 View Transition 스냅샷뿐이다.
+*/
+::view-transition-old(.note-roll) {
+  animation: 200ms ease-in both note-roll-out;
+}
+
+::view-transition-new(.note-roll) {
+  animation: 240ms ease-out both note-roll-in;
+}
+
+@keyframes note-roll-out {
+  to {
+    opacity: 0;
+    translate: 0 -70%;
+  }
+}
+
+@keyframes note-roll-in {
+  from {
+    opacity: 0;
+    translate: 0 70%;
+  }
+}
+
+/*
   방향 슬라이드는 화면을 가로지르는 물리적 이동이라 모션 민감성을 가장 흔하게 자극한다.
   지속시간을 0으로 만들면 브라우저 기본 동작(즉시 교체)으로 떨어진다.
+
+  **위 `::view-transition-*(*)`가 목록 필터 애니메이션까지 함께 덮는다** — 카드와
+  결과 안내 쪽에 가드를 따로 두지 않는 이유다. 둘 다 View Transition이라 여기서 한 번에 꺼진다.
 */
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(*),

@@ -1,7 +1,13 @@
 "use client";
 // 교회 목록 화면의 컨테이너 — 검색어·지역 상태를 들고 검색바·지역칩·카드 목록을 조합한다
 
-import { useMemo, useState, useSyncExternalStore } from "react";
+import {
+  startTransition,
+  useMemo,
+  useState,
+  useSyncExternalStore,
+  ViewTransition,
+} from "react";
 import { Button } from "@/components/ui/button";
 import type { Church } from "@/types/church";
 import {
@@ -54,6 +60,38 @@ export function ChurchDirectory({ churches }: { churches: Church[] }) {
    */
   const [expanded, setExpanded] = useState(false);
 
+  /**
+   * 카드마다 붙일 `view-transition-name`.
+   *
+   * **필터가 바뀌어도 같은 교회는 같은 이름을 가져야** 브라우저가 "같은 카드가
+   * 자리를 옮겼다"고 알아보고 미끄러뜨린다. 그래서 필터 결과의 순번이 아니라
+   * **원본 배열의 순번**으로 만든다.
+   *
+   * **id를 그대로 쓰지 않는 이유** — id가 `언약교회-하남시`처럼 한글이다.
+   * CSS 식별자에 한글이 못 쓰이는 것은 아니지만, 이 프로젝트는 경로 한글 때문에
+   * 이미 두 번 발목을 잡혔다(빌드 사망 / 리다이렉트 무효). 굳이 세 번째를 만들지 않는다.
+   */
+  const vtName = useMemo(
+    () => new Map(churches.map((church, index) => [church.id, `church-${index}`])),
+    [churches],
+  );
+
+  /**
+   * 결과 안내에 쓰는 "무엇을 기준으로" 부분.
+   *
+   * 검색어를 먼저 두는 것은 사용자가 마지막에 한 조작이 대개 입력이기 때문이다.
+   * **아무 조건도 없으면 `전체`다** — 빈 문자열로 두면 `9곳을 찾았습니다`가 되어
+   * 무엇 중에서 찾은 것인지 사라진다.
+   */
+  const scope =
+    [
+      query.trim() && `"${query.trim()}"`,
+      region !== ALL && region,
+      group !== ALL && group,
+    ]
+      .filter(Boolean)
+      .join(" · ") || "전체";
+
   const results = useMemo(
     () =>
       filterChurches(churches, {
@@ -70,19 +108,25 @@ export function ChurchDirectory({ churches }: { churches: Church[] }) {
 
       {/* 두 줄을 한 덩어리로 붙여 검색바·목록과 구분한다 */}
       <div className="flex flex-col gap-2">
+        {/*
+          **칩 클릭만 전환으로 감싼다.** `<ViewTransition>`은 `startTransition` 안의
+          갱신에서만 발동하는데, 검색 입력까지 감싸면 **글자를 칠 때마다 목록 전체가
+          애니메이션**해서 타이핑이 방해받는다. 칩은 한 번에 하나씩 바뀌는 조작이라
+          재배열이 읽히지만, 타이핑은 결과가 연속으로 흐르므로 움직임이 소음이 된다.
+        */}
         <ChipFilter
           label="지역"
           tone="neutral"
           options={regions}
           selected={region}
-          onSelect={setPicked}
+          onSelect={(value) => startTransition(() => setPicked(value))}
         />
         <ChipFilter
           label="교단"
           tone="brand"
           options={groups}
           selected={group}
-          onSelect={setGroup}
+          onSelect={(value) => startTransition(() => setGroup(value))}
         />
       </div>
 
@@ -98,14 +142,59 @@ export function ChurchDirectory({ churches }: { churches: Church[] }) {
             (`useSearchParams()`를 피한 것과 같은 이유다). `hidden`은 DOM에 그대로
             두고 화면에만 안 보이게 하므로 **크롤러는 89개 링크를 전부 본다.**
           */}
+          {/*
+            결과 안내 — 필터를 걸면 몇 곳이 남았는지 알 수 있는 곳이 여기뿐이다.
+            (상단 문구는 수록 총계라 필터와 무관하게 89곳으로 고정이다.)
+
+            **숫자만 두었을 때는 눈에 띄지 않았다.** 무엇을 기준으로 몇 곳인지
+            문장으로 말해 주는 편이 읽히고, 칩에서 고른 조건이 문장에 다시 나오므로
+            "내가 무엇을 걸었는지"도 함께 확인된다.
+
+            **롤은 `key`가 아니라 View Transition으로 한다.** `key`로 다시 마운트하면
+            새 줄이 올라오기만 하고 옛 줄이 빠지지 않아 slideUp이 된다. 브라우저가
+            옛 화면을 스냅샷으로 들고 있어야 **옛 줄이 위로 나가고 새 줄이 아래에서
+            들어오는** 진짜 롤이 된다.
+
+            ⚠️ **`update`가 핵심이다.** 이 `<p>`는 마운트·언마운트되지 않고 **안의 글자만
+            바뀌므로** `enter`/`exit`로는 아무 일도 일어나지 않는다(실제로 그렇게 만들었다가
+            움직이지 않는 것을 확인했다). 결과가 0이 되면 아래 빈 상태로 교체되면서
+            정말로 언마운트되므로 `enter`/`exit`도 함께 둔다.
+          */}
+          <ViewTransition
+            name="result-note"
+            update="note-roll"
+            enter="note-roll"
+            exit="note-roll"
+          >
+            <p className="text-t4 text-muted-foreground">
+              {scope}{" "}
+              <strong className="font-semibold text-foreground">
+                {results.length}곳
+              </strong>
+              을 찾았습니다{" "}
+              {/* 장식이라 스크린리더가 매번 "웃는 얼굴"을 읽지 않게 감춘다 */}
+              <span aria-hidden>😊</span>
+            </p>
+          </ViewTransition>
+
           <ul className="flex flex-col gap-2">
             {results.map((church, index) => (
-              <li
+              /*
+                같은 교회에 같은 이름이 붙으므로 브라우저가 "이 카드가 자리를
+                옮겼다"고 알아보고 미끄러뜨린다. 빠지는 카드는 줄며 사라지고
+                새 카드는 자라난다 — CSS는 globals.css의 `.card-*`에 있다.
+              */
+              <ViewTransition
                 key={church.id}
-                hidden={!expanded && index >= INITIAL_VISIBLE}
+                name={vtName.get(church.id)}
+                enter="card-enter"
+                exit="card-exit"
+                update="card-move"
               >
-                <ChurchCard church={church} />
-              </li>
+                <li hidden={!expanded && index >= INITIAL_VISIBLE}>
+                  <ChurchCard church={church} />
+                </li>
+              </ViewTransition>
             ))}
           </ul>
 

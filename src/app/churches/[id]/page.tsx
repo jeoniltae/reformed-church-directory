@@ -13,6 +13,7 @@ import { notFound } from "next/navigation";
 import { DataNotice } from "@/components/shared/DataNotice";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { NAV_BACK, PageTransition } from "@/components/shared/PageTransition";
+import { SiteMark } from "@/components/shared/SiteMark";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { ChurchNotice } from "@/features/churches/components/ChurchNotice";
@@ -86,15 +87,23 @@ export default async function ChurchDetailPage({
   return (
     <PageTransition>
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 pt-4 pb-8">
-        {/* 목록으로 돌아가는 이동이라 방향은 후퇴다 */}
-        <Link
-          href="/churches"
-          transitionTypes={NAV_BACK}
-          className="-ml-2 inline-flex items-center gap-1 rounded-lg px-2 py-2 text-t4 text-muted-foreground outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
-        >
-          <ChevronLeft aria-hidden className="size-4" />
-          목록으로
-        </Link>
+        {/*
+          되돌아가기 줄의 빈 오른쪽을 사이트 표시에 쓴다 — 세로를 더 쓰지 않는다.
+          **검색으로 이 페이지에 바로 들어온 사람에게 여기가 어디인지 알리는 유일한
+          자리다.** 상세 89개가 검색 유입의 주 경로라 이 화면이 가장 중요하다.
+        */}
+        <div className="flex items-center justify-between gap-3">
+          {/* 목록으로 돌아가는 이동이라 방향은 후퇴다 */}
+          <Link
+            href="/churches"
+            transitionTypes={NAV_BACK}
+            className="-ml-2 inline-flex items-center gap-1 rounded-lg px-2 py-2 text-t4 text-muted-foreground outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+          >
+            <ChevronLeft aria-hidden className="size-4" />
+            목록으로
+          </Link>
+          <SiteMark />
+        </div>
 
         {/*
           지도 자리. 실제 지도는 5단계(Kakao 지도 SDK 앱 키)에서 이 박스를 교체한다.

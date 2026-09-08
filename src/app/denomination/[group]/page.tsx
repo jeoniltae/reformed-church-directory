@@ -14,6 +14,7 @@ import {
 } from "@/components/shared/PageTransition";
 import { DataNotice } from "@/components/shared/DataNotice";
 import { JsonLd } from "@/components/shared/JsonLd";
+import { SiteMark } from "@/components/shared/SiteMark";
 import { ChurchCard } from "@/features/churches/components/ChurchCard";
 import { getAllChurches } from "@/features/churches/data";
 import {
@@ -93,13 +94,17 @@ export default async function GroupLandingPage({
           ])}
         />
 
-        <Link
-          href="/churches"
-          transitionTypes={NAV_BACK}
-          className="rounded-lg text-t4 text-muted-foreground outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
-        >
-          전체 교회 목록
-        </Link>
+        {/* 되돌아가기 줄의 빈 오른쪽을 사이트 표시에 쓴다 — 세로를 더 쓰지 않는다 */}
+        <div className="flex items-center justify-between gap-3">
+          <Link
+            href="/churches"
+            transitionTypes={NAV_BACK}
+            className="rounded-lg text-t4 text-muted-foreground outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+          >
+            전체 교회 목록
+          </Link>
+          <SiteMark />
+        </div>
 
         <h1 className="mt-2 text-t8 font-bold text-foreground">{title}</h1>
         <p className="mt-1 text-t4 text-muted-foreground">{summary}</p>

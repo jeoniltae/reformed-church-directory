@@ -3,6 +3,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { NAV_BACK, PageTransition } from "@/components/shared/PageTransition";
+import { SiteMark } from "@/components/shared/SiteMark";
 import { CONTACT_EMAIL, DATA_LICENSE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -175,6 +176,8 @@ export default function PrivacyPage() {
   return (
     <PageTransition>
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 pt-8 pb-8">
+        {/* 되돌아가기 줄이 없는 화면이라 제목 위에 한 줄로 둔다 */}
+        <SiteMark className="mb-3" />
         <h1 className="text-t8 font-bold text-foreground">
           개인정보 처리방침
         </h1>

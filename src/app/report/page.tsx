@@ -6,6 +6,7 @@ import {
   NAV_FORWARD,
   PageTransition,
 } from "@/components/shared/PageTransition";
+import { SiteMark } from "@/components/shared/SiteMark";
 import { ReportForm } from "@/features/reports/components/ReportForm";
 
 export const metadata: Metadata = {
@@ -19,6 +20,8 @@ export default function ReportPage() {
   return (
     <PageTransition>
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 pt-8 pb-8">
+        {/* 되돌아가기 줄이 없는 화면이라 제목 위에 한 줄로 둔다 */}
+        <SiteMark className="mb-3" />
         <h1 className="text-t8 font-bold text-foreground">제보하기</h1>
         <p className="mt-1 text-t4 text-muted-foreground">
           정보가 사실과 다르거나 삭제를 원하시면 알려주세요. 로그인은 필요하지

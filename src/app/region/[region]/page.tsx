@@ -10,6 +10,7 @@
 // (`/churches/언약교회-강동구`가 이미 그렇게 동작한다). 그래서 정적 세그먼트만
 // ASCII로 두고 검색에 실제로 쓰이는 지역명은 주소에 한글 그대로 남겼다.
 
+import { ChevronLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -20,10 +21,13 @@ import {
 } from "@/components/shared/PageTransition";
 import { DataNotice } from "@/components/shared/DataNotice";
 import { JsonLd } from "@/components/shared/JsonLd";
+import { ScrollToTop } from "@/components/shared/ScrollToTop";
+import { SiteMark } from "@/components/shared/SiteMark";
 import { ChurchCard } from "@/features/churches/components/ChurchCard";
 import { getAllChurches } from "@/features/churches/data";
 import {
   countBy,
+  facetPhrase,
   landingRegions,
   regionSummary,
   slugFromGroup,
@@ -75,13 +79,13 @@ export default async function RegionLandingPage({
 
   const all = getAllChurches();
   const otherRegions = landingRegions(all).filter((r) => r !== region);
+  // 상단 요약과 아래 교단 링크가 같은 집계를 쓴다 — 두 곳이 다른 숫자를 말하면 안 된다
+  const groupCounts = countBy(churches, "denominationGroup");
   // 이 지역에 실제로 있는 교단만 링크한다. 랜딩이 없는 묶음(`기타`)은 slug가 없어 빠진다
-  const groupLinks = countBy(churches, "denominationGroup").flatMap(
-    ({ value }) => {
-      const slug = slugFromGroup(value);
-      return slug ? [{ label: value, slug }] : [];
-    },
-  );
+  const groupLinks = groupCounts.flatMap(({ value }) => {
+    const slug = slugFromGroup(value);
+    return slug ? [{ label: value, slug }] : [];
+  });
 
   const title = `${region} 개혁주의 교회`;
   const summary = regionSummary(region, churches);
@@ -105,17 +109,45 @@ export default async function RegionLandingPage({
           ])}
         />
 
-        <Link
-          href="/churches"
-          transitionTypes={NAV_BACK}
-          className="rounded-lg text-t4 text-muted-foreground outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
-        >
-          전체 교회 목록
-        </Link>
+        {/*
+          되돌아가기 줄의 빈 오른쪽을 사이트 표시에 쓴다 — 세로를 더 쓰지 않는다.
+          **셰브론과 라벨을 교회 상세와 똑같이 맞췄다.** 아이콘이 없으면 왼쪽·오른쪽이
+          둘 다 회색 링크라 역할(뒤로 가기 / 사이트 정체)이 구분되지 않는다.
+          라벨이 `교회 찾기`인 것은 목적지의 h1·metadata.title·breadcrumb와 같은 이름을
+          쓰기 위해서다 — 한 곳을 세 이름으로 부르고 있었다.
+        */}
+        <div className="flex items-center justify-between gap-3">
+          <Link
+            href="/churches"
+            transitionTypes={NAV_BACK}
+            className="-ml-2 inline-flex items-center gap-1 rounded-lg px-2 py-2 text-t4 text-muted-foreground outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+          >
+            <ChevronLeft aria-hidden className="size-4" />
+            교회 찾기
+          </Link>
+          <SiteMark />
+        </div>
 
-        <h1 className="mt-2 text-t8 font-bold text-foreground">{title}</h1>
-        {/* 목록만 있으면 얇다. 교단 구성을 문장으로 덧붙여 무엇을 모아둔 곳인지 밝힌다 */}
-        <p className="mt-1 text-t4 text-muted-foreground">{summary}</p>
+        <h1 className="mt-3 text-t8 font-bold text-foreground">{title}</h1>
+        {/*
+          **h1이 이미 말한 것을 되풀이하지 않는다.** 예전에는 `regionSummary()` 문장을
+          그대로 찍어 `서울 개혁주의 교회` 바로 밑에 `서울에 있는 개혁주의 교회…`가
+          와서, 새 정보는 건수 하나뿐인데 회색 세 줄을 썼다.
+
+          **`순`을 남기는 이유** — `facetPhrase`는 상위 3개만 주고 `countBy`는 교단
+          없는 건을 세지 않아서 **뒤 숫자의 합이 총계와 맞지 않는다**(서울 29곳,
+          7+6+6=19). 문장일 때는 `순입니다`가 그 신호였다.
+
+          **`summary`는 지우지 않았다** — 아래 JSON-LD의 description으로 계속 쓴다.
+          구조화 데이터의 설명은 완결 문장이 낫고, "목록만 있으면 얇다"는 원래 의도도
+          그대로 지켜진다. 화면만 압축한 것이다.
+        */}
+        <p className="mt-2 text-t4 text-muted-foreground">
+          <strong className="font-semibold text-foreground">
+            {churches.length}곳
+          </strong>
+          {groupCounts.length > 0 && <> · {facetPhrase(groupCounts)} 순</>}
+        </p>
 
         <ul className="mt-5 flex flex-col gap-2">
           {churches.map((church) => (
@@ -169,6 +201,8 @@ export default async function RegionLandingPage({
           </nav>
         )}
 
+        {/* 목록이 있는 화면에만 붙인다. 짧은 화면에서는 임계값에 못 닿아 뜨지 않는다 */}
+        <ScrollToTop />
         <DataNotice />
       </main>
     </PageTransition>

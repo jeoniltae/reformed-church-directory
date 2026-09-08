@@ -1,4 +1,5 @@
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
@@ -101,6 +102,23 @@ export default function RootLayout({
           프로덕션 배포에서만 데이터를 보낸다. 로컬에서는 아무것도 전송하지 않는다.
         */}
         <Analytics />
+        {/*
+          Vercel Speed Insights — 화면이 얼마나 빨리 열렸는지(Core Web Vitals)를 잰다.
+          Analytics가 "몇 번 열렸나"라면 이쪽은 "얼마나 빨랐나"다.
+
+          **쿠키도 localStorage도 쓰지 않는 것은 Analytics와 같다.** 그래서
+          `/privacy`의 "쿠키를 사용하지 않습니다"는 여전히 사실이다. 다만 **재는 것이
+          하나 늘었으므로 처리방침의 집계 항목에 성능 지표를 함께 적었다** —
+          방침 문서와 실제 동작이 어긋나면 안 된다(위 Analytics 때와 같은 이유다).
+
+          **이걸 붙인 이유** — `docs/seo-측정.md`가 "목록 화면 성능 89건 기준 전환
+          137~149ms(CPU 4x 감속)"를 로컬 실측으로만 갖고 있다. 실제 방문자의 기기에서
+          어떤지는 모른다. 고신 2,118건으로 늘릴 때 무엇이 느려지는지 판단하려면
+          확장 전 기준선이 필요하다.
+
+          프로덕션 배포에서만 데이터를 보낸다. 로컬에서는 아무것도 전송하지 않는다.
+        */}
+        <SpeedInsights />
       </body>
     </html>
   );

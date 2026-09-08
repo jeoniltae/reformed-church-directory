@@ -13,6 +13,7 @@ import { notFound } from "next/navigation";
 import { DataNotice } from "@/components/shared/DataNotice";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { NAV_BACK, PageTransition } from "@/components/shared/PageTransition";
+import { SiteMark } from "@/components/shared/SiteMark";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { ChurchNotice } from "@/features/churches/components/ChurchNotice";
@@ -86,15 +87,25 @@ export default async function ChurchDetailPage({
   return (
     <PageTransition>
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 pt-4 pb-8">
-        {/* 목록으로 돌아가는 이동이라 방향은 후퇴다 */}
-        <Link
-          href="/churches"
-          transitionTypes={NAV_BACK}
-          className="-ml-2 inline-flex items-center gap-1 rounded-lg px-2 py-2 text-t4 text-muted-foreground outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
-        >
-          <ChevronLeft aria-hidden className="size-4" />
-          목록으로
-        </Link>
+        {/*
+          되돌아가기 줄의 빈 오른쪽을 사이트 표시에 쓴다 — 세로를 더 쓰지 않는다.
+          **검색으로 이 페이지에 바로 들어온 사람에게 여기가 어디인지 알리는 유일한
+          자리다.** 상세 89개가 검색 유입의 주 경로라 이 화면이 가장 중요하다.
+        */}
+        <div className="flex items-center justify-between gap-3">
+          {/* 목록으로 돌아가는 이동이라 방향은 후퇴다 */}
+          <Link
+            href="/churches"
+            transitionTypes={NAV_BACK}
+            className="-ml-2 inline-flex items-center gap-1 rounded-lg px-2 py-2 text-t4 text-muted-foreground outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+          >
+            <ChevronLeft aria-hidden className="size-4" />
+            {/* 목적지의 h1·metadata.title·breadcrumb와 같은 이름을 쓴다 (2026-09-08).
+                예전에는 상세가 `목록으로`, 랜딩이 `전체 교회 목록`이라 한 곳을 세 이름으로 불렀다 */}
+            교회 찾기
+          </Link>
+          <SiteMark />
+        </div>
 
         {/*
           지도 자리. 실제 지도는 5단계(Kakao 지도 SDK 앱 키)에서 이 박스를 교체한다.
@@ -160,27 +171,43 @@ export default async function ChurchDetailPage({
           전화 걸기가 이 화면의 유일한 brand-solid다.
           CLAUDE.md가 "탭 한 번으로 전화"를 핵심 동선으로 규정했다.
           Base UI Button은 네이티브 <button>을 전제하므로 링크에는 variant만 빌려 쓴다.
-          phone이 없는 2건은 grid-cols-1로 떨어져 길찾기가 전체 너비를 쓴다.
+          phone이 없는 1건은 넓은 화면에서도 1열이라 길찾기가 전체 너비를 쓴다.
+
+          **모바일에서는 2열로 쪼개지 않는다 (2026-09-09).** 375px에서 2열이면 한 칸이
+          167px인데, 가장 긴 번호(`0507-1312-5303`, 14자)가 그 안에 겨우 들어가서
+          **글자 크기·아이콘·굵기를 하나도 못 키우는 상태였다** — 예전에 t5에서 t4로
+          내린 것도 그 때문이다(`docs/ui-checklist.md`). 세로로 쌓으면 각 버튼이 343px를
+          쓰게 되어 제약이 통째로 사라진다. 넓은 화면(sm 이상)에서는 한 칸이 300px가
+          넘으므로 예전처럼 2열로 둔다.
+
+          **길찾기를 outline에서 secondary로 바꿨다.** 투명 배경에 1px 테두리라
+          옆(위)의 네이비 버튼과 무게 차이가 너무 컸다. 회색 면을 깔면 둘이 한 쌍의
+          블럭으로 읽힌다. **"화면당 brand-solid 하나" 원칙은 그대로다** — secondary는
+          solid가 아니고, 전화 걸기가 여전히 유일한 brand-solid다.
         */}
-        <div className={cn("mt-6 grid gap-2", church.phone && "grid-cols-2")}>
+        <div className={cn("mt-6 grid gap-2", church.phone && "sm:grid-cols-2")}>
           <a
             href={directionsUrl(church)}
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              buttonVariants({ variant: "outline", size: "lg" }),
-              "w-full text-t4",
+              buttonVariants({ variant: "secondary", size: "lg" }),
+              "h-12 w-full text-t5 font-semibold",
             )}
           >
-            <Navigation aria-hidden />
+            {/* 기본값 size-4를 덮는다. cva의 `:not([class*='size-'])`가 이 자리를 비워 둔다 */}
+            <Navigation aria-hidden className="size-5" />
             길찾기
           </a>
           {church.phone && (
             <a
               href={`tel:${church.phone}`}
-              className={cn(buttonVariants({ size: "lg" }), "w-full text-t4")}
+              className={cn(
+                buttonVariants({ size: "lg" }),
+                "h-12 w-full text-t5 font-semibold",
+              )}
             >
-              <Phone aria-hidden />
+              <Phone aria-hidden className="size-5" />
               {church.phone}
             </a>
           )}

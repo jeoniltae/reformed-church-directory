@@ -3,6 +3,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { NAV_BACK, PageTransition } from "@/components/shared/PageTransition";
+import { SiteMark } from "@/components/shared/SiteMark";
 import { CONTACT_EMAIL, DATA_LICENSE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -55,12 +56,13 @@ const SECTIONS = [
           브라우저에 무엇을 저장하거나 방문자를 식별해 추적하지 않습니다.
         </li>
         <li>
-          다만 어떤 화면이 얼마나 열렸는지 알기 위해{" "}
+          다만 어떤 화면이 얼마나 열렸는지, 그리고 화면이 얼마나 빨리 열렸는지
+          알기 위해{" "}
           <strong className="font-medium text-foreground">
-            방문 수와 페이지뷰를 익명으로 집계
+            방문 수·페이지뷰와 화면 로딩 속도를 익명으로 집계
           </strong>
-          합니다(Vercel Web Analytics). 쿠키 없이 동작하며 개인을 식별하는 정보는
-          저장하지 않습니다.
+          합니다(Vercel Web Analytics, Speed Insights). 둘 다 쿠키 없이 동작하며
+          개인을 식별하는 정보는 저장하지 않습니다.
         </li>
         <li>
           <Link
@@ -175,6 +177,8 @@ export default function PrivacyPage() {
   return (
     <PageTransition>
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 pt-8 pb-8">
+        {/* 되돌아가기 줄이 없는 화면이라 제목 위에 한 줄로 둔다 */}
+        <SiteMark className="mb-3" />
         <h1 className="text-t8 font-bold text-foreground">
           개인정보 처리방침
         </h1>

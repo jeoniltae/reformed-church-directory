@@ -56,12 +56,13 @@ const SECTIONS = [
           브라우저에 무엇을 저장하거나 방문자를 식별해 추적하지 않습니다.
         </li>
         <li>
-          다만 어떤 화면이 얼마나 열렸는지 알기 위해{" "}
+          다만 어떤 화면이 얼마나 열렸는지, 그리고 화면이 얼마나 빨리 열렸는지
+          알기 위해{" "}
           <strong className="font-medium text-foreground">
-            방문 수와 페이지뷰를 익명으로 집계
+            방문 수·페이지뷰와 화면 로딩 속도를 익명으로 집계
           </strong>
-          합니다(Vercel Web Analytics). 쿠키 없이 동작하며 개인을 식별하는 정보는
-          저장하지 않습니다.
+          합니다(Vercel Web Analytics, Speed Insights). 둘 다 쿠키 없이 동작하며
+          개인을 식별하는 정보는 저장하지 않습니다.
         </li>
         <li>
           <Link

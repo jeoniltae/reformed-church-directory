@@ -6,8 +6,10 @@ import { cn } from "@/lib/utils";
 import { LANDING_MIN } from "../landing";
 import type { RegionCount } from "../search";
 
+// 누름 상태(`active:`)는 `ChurchCard`와 같은 어휘다 — 터치에는 hover가 없어
+// 이것이 없으면 탭이 먹었는지 화면이 바뀔 때까지 알 수 없다
 const TILE =
-  "flex flex-col gap-1 rounded-lg border border-border bg-card p-4 outline-none transition-colors hover:bg-muted focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+  "flex flex-col gap-1 rounded-lg border border-border bg-card p-4 outline-none transition-colors hover:bg-muted focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:translate-y-px active:bg-muted";
 
 // Tailwind는 런타임 값으로 클래스를 만들 수 없다. 12단계 고정 목록에서 고른다
 const BAR_WIDTHS = [

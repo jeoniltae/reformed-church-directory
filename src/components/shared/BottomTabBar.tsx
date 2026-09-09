@@ -44,7 +44,9 @@ export function BottomTabBar() {
                 transitionTypes={direction}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex flex-col items-center gap-1 py-2 text-t2 outline-none transition-colors focus-visible:ring-3 focus-visible:ring-ring/50",
+                  // 탭바에는 hover조차 없었다. 탭 이동도 카드 탭과 같은 대기가 걸리는데
+                  // 그동안 눌렀다는 표시가 전혀 없어, 같은 탭을 두 번 누르게 된다
+                  "flex flex-col items-center gap-1 py-2 text-t2 outline-none transition-colors focus-visible:ring-3 focus-visible:ring-ring/50 active:translate-y-px active:bg-muted",
                   active
                     ? "font-medium text-foreground"
                     : "text-muted-foreground",

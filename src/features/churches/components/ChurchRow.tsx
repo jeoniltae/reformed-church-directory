@@ -14,7 +14,10 @@ export function ChurchRow({ church }: { church: Church }) {
     <Link
       href={`/churches/${church.id}`}
       transitionTypes={NAV_FORWARD}
-      className="flex items-center gap-3 py-4 outline-none transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50"
+      // 누름 상태는 `ChurchCard`와 같은 어휘다 — 같은 상세로 가는 같은 조작이라
+      // 홈에서 눌렀을 때와 목록에서 눌렀을 때가 달라 보일 이유가 없다.
+      // 여기는 중첩된 링크가 없어 `has-[]`로 범위를 좁힐 필요가 없다
+      className="flex items-center gap-3 py-4 outline-none transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 active:translate-y-px active:bg-muted"
     >
       <span
         aria-hidden

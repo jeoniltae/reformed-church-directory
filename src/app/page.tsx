@@ -4,6 +4,7 @@ import { Search } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { AboutComingSoon } from "@/components/shared/AboutComingSoon";
 import { DataNotice } from "@/components/shared/DataNotice";
 import {
   NAV_FORWARD,
@@ -121,6 +122,12 @@ export default function Home() {
           교회명·주소·담임목사 검색
         </Link>
       </div>
+
+      {/*
+        소개 화면 진입점 — 지금은 목적지가 없어 누르면 제자리에서 안내가 펼쳐진다.
+        `/about`이 생기면 `AboutComingSoon`을 지우고 실제 링크로 바꾼다.
+      */}
+      <AboutComingSoon />
 
       <h2 className="mt-8 mb-3 text-t6 font-semibold text-foreground">
         지역으로 찾기

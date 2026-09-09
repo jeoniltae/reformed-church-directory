@@ -93,6 +93,26 @@ export function ReportForm() {
         >
           내용
         </label>
+        {/*
+          **이 폼은 연락처를 받지 않아 되물을 수가 없다.** 교회 추가 요청이 이름만
+          적혀 오면 그대로는 `churches.json`에 넣을 수 없고, 물어볼 방법도 없어
+          버려진다. 그래서 무엇이 필요한지 미리 알린다.
+
+          placeholder에 넣지 않은 이유 — **첫 글자를 치는 순간 사라진다.** 정작
+          적는 동안 보이지 않으면 안내로 쓸모가 없다.
+        */}
+        <p className="text-t2 text-muted-foreground">
+          교회 추가 요청이면 <span className="text-foreground">교회명·주소·교단·담임목사</span>를 함께
+          적어 주세요. 되물을 방법이 없어 빠진 항목은 채우지 못합니다.
+        </p>
+        {/*
+          **`field-sizing-fixed`가 핵심이다.** shadcn `Textarea`에 `field-sizing-content`가
+          붙어 있어 내용에 따라 상자가 계속 늘어난다 — 그 상태로는 `rows`가 아무
+          영향을 주지 않는다. 고정으로 되돌려야 `rows={6}`이 높이를 정하고,
+          그보다 길어지면 상자가 커지는 대신 **안에서 세로 스크롤이 생긴다.**
+
+          `resize: none`은 `globals.css`의 공통 규칙에서 온다.
+        */}
         <Textarea
           id="report-body"
           name="body"
@@ -101,7 +121,7 @@ export function ReportForm() {
           value={body}
           onChange={(event) => setBody(event.target.value)}
           placeholder="예) 전화번호가 031-123-4567로 바뀌었습니다."
-          className="text-t5"
+          className="field-sizing-fixed text-t5"
         />
         <p
           className={

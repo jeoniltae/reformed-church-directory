@@ -1,4 +1,4 @@
-// 제보 화면 — 정보 수정·삭제 요청·교회 추가 요청을 GitHub Issues로 받는다
+// 제보 화면 — 정보 수정·삭제 요청·교회 등록 요청을 GitHub Issues로 받는다
 // 받는 유형의 목록은 `features/reports/report.ts`의 `REPORT_KINDS` 하나가 정한다
 
 import type { Metadata } from "next";

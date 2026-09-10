@@ -1,6 +1,7 @@
 "use client";
 // 교회 목록 화면의 컨테이너 — 검색어·지역 상태를 들고 검색바·지역칩·카드 목록을 조합한다
 
+import Link from "next/link";
 import {
   startTransition,
   useMemo,
@@ -8,7 +9,12 @@ import {
   useSyncExternalStore,
   ViewTransition,
 } from "react";
-import { Button } from "@/components/ui/button";
+import { NAV_FORWARD } from "@/components/shared/PageTransition";
+import { Button, buttonVariants } from "@/components/ui/button";
+// 유형 이름을 문자열로 복사하지 않으려고 reports의 상수를 가져온다.
+// 이미 이 목록은 `/report`로 링크하고 있어 라우팅 수준의 결합은 있던 것이다.
+import { KIND_REGISTER } from "@/features/reports/report";
+import { cn } from "@/lib/utils";
 import type { Church } from "@/types/church";
 import {
   collectDenominationGroups,
@@ -212,6 +218,56 @@ export function ChurchDirectory({ churches }: { churches: Church[] }) {
             >
               교회 {results.length - INITIAL_VISIBLE}곳 모두 보기
             </Button>
+          )}
+
+          {/*
+            목록 끝 — 전부 봤는데도 못 찾은 사람에게 등록 요청 창구를 연다.
+            **수록 범위가 좁은 개혁주의라 자기 교회가 빠진 것을 발견하는 사람이
+            실제로 나온다**(`REPORT_KINDS`에 `교회 등록 요청`을 넣은 것과 같은 이유다).
+            창구가 여기 없으면 그 사람은 푸터의 `정보 등록·수정·삭제 요청`을 찾아내야 한다.
+
+            **조건은 "결과 전부가 화면에 있다"이지 "펼침 버튼을 눌렀다"가 아니다.**
+            `expanded`만 보면 두 가지가 어긋난다. ① 필터로 20건 아래로 줄어 버튼이
+            아예 안 나온 경우 — 목록을 다 봤는데도 안내가 없다. ② `expanded`는 한 번
+            켜지면 계속 켜져 있어서, 같은 4건짜리 화면이 "펼친 적 있으면 보이고
+            없으면 안 보이는" 이력 의존 상태가 된다.
+
+            **brand-solid를 쓰지 않는다.** 위 `모두 보기`와 같은 판단이다 — 목록이
+            주인공이고 이건 보조 동작이다. 높이도 36px로 두어 "주 액션 48px /
+            보조 36px" 위계를 지킨다.
+
+            **`Button`에 `render={<Link/>}`를 넘기지 않는다.** base-nova의 Button은
+            네이티브 `<button>`을 전제한다. 링크에는 `buttonVariants`만 빌려 쓰고
+            반드시 `cn()`으로 감싼다 — 안 그러면 base의 `border-transparent`가
+            outline의 `border-border`를 덮어 테두리가 사라진다.
+          */}
+          {(expanded || results.length <= INITIAL_VISIBLE) && (
+            <div className="mt-4 flex flex-col items-center gap-2 text-center">
+              <p className="text-t5 font-semibold text-foreground">
+                {results.length}곳을 모두 보셨습니다
+              </p>
+              <p className="text-t4 text-muted-foreground">
+                찾으시는 교회가 없다면 등록을 요청해주세요. 확인 후 디렉토리에
+                반영합니다.
+              </p>
+              {/*
+                목록 → 제보는 본문 링크를 타고 들어가는 이동이라 forward다.
+                **`?kind=`로 유형을 미리 골라 준다** — 안 넘기면 폼의 기본 선택이
+                `정보 수정`이라, 등록하러 온 사람이 유형을 다시 골라야 해서
+                이 버튼의 목적이 절반쯤 흐려진다. 값은 `KIND_REGISTER` 상수를
+                양쪽이 공유하므로 이름이 바뀌어도 링크가 함께 따라온다.
+              */}
+              <Link
+                href={`/report?kind=${encodeURIComponent(KIND_REGISTER)}`}
+                transitionTypes={NAV_FORWARD}
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "lg" }),
+                  "mt-2 text-t4",
+                )}
+              >
+                교회 등록 요청
+              </Link>
+            </div>
           )}
         </>
       )}

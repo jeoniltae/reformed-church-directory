@@ -38,6 +38,14 @@ const nextConfig: NextConfig = {
         destination: "/churches/%EC%96%B8%EC%95%BD%EA%B5%90%ED%9A%8C-%ED%95%98%EB%82%A8%EC%8B%9C",
         permanent: true, // 308 — 검색엔진에 색인 주소를 교체하라고 알린다
       },
+      {
+        // /churches/바로선개혁교회-성북구 → /churches/바로선개혁교회-은평구
+        // 서울 성북구 정릉동 → 서울 은평구 진관동 이전 (2026-09-10 확인).
+        // 경위는 data/address-fixes.json의 `바로선개혁교회-성북구` 행 참조.
+        source: "/churches/%EB%B0%94%EB%A1%9C%EC%84%A0%EA%B0%9C%ED%98%81%EA%B5%90%ED%9A%8C-%EC%84%B1%EB%B6%81%EA%B5%AC",
+        destination: "/churches/%EB%B0%94%EB%A1%9C%EC%84%A0%EA%B0%9C%ED%98%81%EA%B5%90%ED%9A%8C-%EC%9D%80%ED%8F%89%EA%B5%AC",
+        permanent: true,
+      },
     ];
   },
 };

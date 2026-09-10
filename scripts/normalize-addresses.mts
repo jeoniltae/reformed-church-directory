@@ -1,6 +1,6 @@
 // 도로명주소 검색 API로 보유 주소를 진단한다 — 보고만 하고 churches.json은 건드리지 않는다
 
-import { writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { normalizeRegion, toAddressKeyword } from "../src/lib/church-utils.ts";
 import { pickByChurchName, pickExactMatch } from "./lib/address-match.mts";
 import { readSource, type SourceRow } from "./lib/source.mts";
@@ -52,9 +52,18 @@ type Entry = {
     sggNm: string;
     /** 좌표제공 API에 그대로 넘길 값. 2단계가 이 파일을 읽어 쓴다 */
     coordParams: Record<string, string>;
+    /**
+     * 2단계(`geocode:coords`)가 채우는 값. **여기서 만들지는 않지만 타입에는 있어야 한다.**
+     * 예전에는 이 필드가 타입에 없어서 파일을 다시 쓸 때 이전 좌표가 통째로 사라졌고,
+     * 주소를 한 건만 고쳐도 전체 좌표를 다시 받아야 했다. 아래 `carryCoord` 참고.
+     */
+    coord?: { lat: number; lng: number; entX: number; entY: number };
   };
   totalCount?: number;
 };
+
+/** 좌표를 결정하는 다섯 코드. 이것이 그대로면 좌표도 반드시 그대로다 */
+const COORD_KEYS = ["admCd", "rnMgtSn", "udrtYn", "buldMnnm", "buldSlno"] as const;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -162,6 +171,35 @@ const { rows } = readSource();
 const only = process.argv.find((a) => a.startsWith("--only="))?.slice(7);
 const targets = only ? rows.filter((c) => c.name.includes(only)) : rows;
 
+/**
+ * 이전 결과를 읽어 둔다. 쓰는 곳이 둘이다.
+ *
+ * ① **좌표 이어받기** — 좌표는 `coordParams` 다섯 코드에서 결정론적으로 나오므로,
+ *    그 다섯이 그대로면 다시 받아도 같은 값이다. 예전에는 이 파일을 통째로 새로
+ *    쓰면서 좌표를 전부 버렸고, 교회 한 건을 고쳐도 좌표 API를 전량 다시 불렀다
+ *    (89건 기준 87건이 같은 값으로 되돌아왔다 — 순수 낭비였다).
+ * ② **`--only=` 안전** — 아래 병합이 없으면 일부만 돌렸을 때 나머지 교회 항목이
+ *    파일에서 사라진다. 정규화 주소와 좌표가 함께 날아가므로 치명적이다.
+ */
+const previous: Entry[] = existsSync(OUTPUT)
+  ? (JSON.parse(readFileSync(OUTPUT, "utf8")) as { entries?: Entry[] }).entries ?? []
+  : [];
+const previousById = new Map(previous.map((e) => [e.id, e]));
+
+/** 좌표를 일부러 다시 받고 싶을 때. 캐리오버가 기본이 됐으므로 탈출구를 둔다 */
+const refreshCoords = process.argv.includes("--refresh-coords");
+
+/** `coordParams`가 그대로면 이전 좌표를 그대로 옮긴다 */
+function carryCoord(entry: Entry): void {
+  if (refreshCoords || !entry.matched) return;
+  const before = previousById.get(entry.id)?.matched;
+  if (!before?.coord) return;
+  const same = COORD_KEYS.every(
+    (k) => before.coordParams?.[k] === entry.matched!.coordParams[k],
+  );
+  if (same) entry.matched.coord = before.coord;
+}
+
 console.log(`대상 ${targets.length}건 · 요청 간격 ${DELAY_MS}ms · 예상 ${Math.ceil((targets.length * (DELAY_MS + 400)) / 60000)}분\n`);
 
 const entries: Entry[] = [];
@@ -199,6 +237,8 @@ for (const [i, church] of targets.entries()) {
   }
   const entry = classify(church, r);
   if (keywordUsed) entry.keywordUsed = keywordUsed;
+  // 건물이 그대로면 이전 좌표를 살린다 — 2단계가 다시 부를 일이 없어진다
+  carryCoord(entry);
   entries.push(entry);
   process.stdout.write(entry.status === "ok" ? "." : entry.status === "notFound" ? "x" : "?");
 }
@@ -219,6 +259,18 @@ console.log(
   (Object.keys(LABEL) as Status[]).map((s) => `${LABEL[s]} ${by(s).length}`).join(" · "),
 );
 console.log(`(검색어를 다듬어 찾아낸 것 ${trimmed}건)`);
+
+// 좌표 캐리오버는 조용히 일어나므로 수치로 보여준다. 0으로 떨어지면 2단계가
+// 전량을 다시 받게 된다는 뜻이라 눈에 띄어야 한다.
+const carried = entries.filter((e) => e.matched?.coord).length;
+const needCoord = entries.filter(
+  (e) => e.status === "ok" && e.matched && !e.matched.coord,
+).length;
+console.log(
+  refreshCoords
+    ? `(--refresh-coords: 좌표를 이어받지 않았다 — 2단계가 ${needCoord}건을 다시 받는다)`
+    : `(좌표 이어받음 ${carried}건 · 2단계가 새로 받을 것 ${needCoord}건)`,
+);
 
 // 새로 생긴 자동 판정이라 조용히 넘기지 않고 전부 보여준다.
 // 사람이 눈으로 훑을 수 있어야 "자동은 어디까지"라는 경계가 유지된다.
@@ -247,13 +299,27 @@ for (const s of ["apiError", "notFound", "multiple", "historical", "regionMismat
   }
 }
 
+/**
+ * **`--only=`로 일부만 돌렸으면 나머지 항목을 그대로 남긴다.**
+ * 전체를 돌렸을 때는 `entries`가 곧 현재 원본의 전부이므로, 원본에서 빠진 교회의
+ * 항목은 함께 사라지는 것이 맞다(그대로 두면 지워진 교회가 파일에 영영 남는다).
+ *
+ * Map은 삽입 순서를 지키므로 기존 순서가 유지되고 새 교회만 뒤에 붙는다.
+ */
+const merged = (() => {
+  if (!only) return entries;
+  const byId = new Map(previous.map((e) => [e.id, e]));
+  for (const e of entries) byId.set(e.id, e);
+  return [...byId.values()];
+})();
+
 writeFileSync(
   OUTPUT,
   JSON.stringify(
     {
-      note: "도로명주소 검색 API 조회 결과. import-source가 status가 'ok'인 건만 address를 roadAddr로 교체한다. 후보가 여럿이어도 원본과 글자까지 일치하는 것이 유일하면 ok로 확정한다(totalCount>1이면서 ok인 건이 그것이다). 그런 후보가 없거나 둘 이상이면 1순위가 맞다는 보장이 없어 multiple로 두고 원본을 유지한다. 좌표 단계는 coordParams를 그대로 쓴다.",
+      note: "도로명주소 검색 API 조회 결과. import-source가 status가 'ok'인 건만 address를 roadAddr로 교체한다. 후보가 여럿이어도 원본과 글자까지 일치하는 것이 유일하면 ok로 확정한다(totalCount>1이면서 ok인 건이 그것이다). 그런 후보가 없거나 둘 이상이면 1순위가 맞다는 보장이 없어 multiple로 두고 원본을 유지한다. 좌표 단계는 coordParams를 그대로 쓴다. coordParams가 이전 실행과 같으면 좌표를 그대로 이어받으므로 주소를 다시 조회해도 좌표 API를 다시 부르지 않는다 — 일부러 다시 받으려면 --refresh-coords를 준다.",
       checkedAt: new Date().toISOString().slice(0, 10),
-      entries,
+      entries: merged,
     },
     null,
     2,

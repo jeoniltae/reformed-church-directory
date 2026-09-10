@@ -94,7 +94,7 @@ export function ReportForm() {
           내용
         </label>
         {/*
-          **이 폼은 연락처를 받지 않아 되물을 수가 없다.** 교회 추가 요청이 이름만
+          **이 폼은 연락처를 받지 않아 되물을 수가 없다.** 교회 등록 요청이 이름만
           적혀 오면 그대로는 `churches.json`에 넣을 수 없고, 물어볼 방법도 없어
           버려진다. 그래서 무엇이 필요한지 미리 알린다.
 
@@ -102,7 +102,7 @@ export function ReportForm() {
           적는 동안 보이지 않으면 안내로 쓸모가 없다.
         */}
         <p className="text-t2 text-muted-foreground">
-          교회 추가 요청이면 <span className="text-foreground">교회명·주소·교단·담임목사</span>를 함께
+          교회 등록 요청이면 <span className="text-foreground">교회명·주소·교단·담임목사</span>를 함께
           적어 주세요. 되물을 방법이 없어 빠진 항목은 채우지 못합니다.
         </p>
         {/*

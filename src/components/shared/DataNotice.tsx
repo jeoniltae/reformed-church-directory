@@ -59,7 +59,7 @@ export function DataNotice({ source, churchId }: DataNoticeProps) {
       */}
       <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
         <Link href={reportHref} transitionTypes={NAV_FORWARD} className={LINK}>
-          정보 수정·삭제 요청
+          정보 등록·수정·삭제 요청
         </Link>
         <Link href="/privacy" transitionTypes={NAV_FORWARD} className={LINK}>
           개인정보 처리방침

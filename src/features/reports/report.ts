@@ -14,10 +14,19 @@
  * 유형만으로는 구분되지 않는다. **이 목록이 폼·검증·이슈 제목을 모두 만들므로
  * 여기 한 줄이면 세 곳이 함께 따라온다.**
  */
+/**
+ * `/churches` 목록 끝의 `교회 등록 요청` 버튼이 `?kind=`로 넘기는 값.
+ *
+ * **문자열을 양쪽에 각각 적지 않으려고 이름을 붙였다.** 링크와 폼이 같은 상수를
+ * 보므로 이름을 바꾸면 링크가 함께 따라온다 — 따로 적어 두면 이름만 바뀌고
+ * 링크는 옛 값을 넘겨 **유형이 조용히 선택되지 않는다.**
+ */
+export const KIND_REGISTER = "교회 등록 요청";
+
 export const REPORT_KINDS = [
   "정보 수정",
   "삭제 요청",
-  "교회 등록 요청",
+  KIND_REGISTER,
   "기타",
 ] as const;
 export type ReportKind = (typeof REPORT_KINDS)[number];

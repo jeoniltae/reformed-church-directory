@@ -11,16 +11,21 @@ import {
   clean,
   countGraphemes,
   INITIAL_REPORT_STATE,
+  isReportKind,
   REPORT_KINDS,
   SOURCE_MAX,
 } from "../report";
 
-// 상세 페이지에서 `?church=`로 넘어온다. 목록 화면과 같은 이유로 URL을 외부
-// 저장소처럼 읽는다 — searchParams를 받으면 라우트가 Dynamic이 된다.
+// 상세 페이지에서 `?church=`로, `/churches` 목록 끝에서 `?kind=`로 넘어온다.
+// 목록 화면과 같은 이유로 URL을 외부 저장소처럼 읽는다 — searchParams를 받으면
+// 라우트가 Dynamic이 된다.
 const subscribeToNothing = () => () => {};
 const readChurchFromUrl = () =>
   new URLSearchParams(window.location.search).get("church") ?? "";
 const noChurchOnServer = () => "";
+const readKindFromUrl = () =>
+  new URLSearchParams(window.location.search).get("kind") ?? "";
+const noKindOnServer = () => "";
 
 export function ReportForm() {
   const churchId = useSyncExternalStore(
@@ -28,6 +33,28 @@ export function ReportForm() {
     readChurchFromUrl,
     noChurchOnServer,
   );
+  /**
+   * 제보 유형. `?kind=`가 있으면 그것으로 시작한다.
+   *
+   * **초기값 전용이다** — 한 번 고르면 그때부터 URL을 보지 않는다. `/churches`의
+   * `?region=` 처리와 같은 구조이며, 목록 끝의 `교회 등록 요청` 버튼이 이 값을 넘긴다.
+   *
+   * **라디오를 controlled로 바꿔야 했다.** 예전처럼 `defaultChecked`로 두면
+   * 하이드레이션 뒤에 값이 바뀌어도 DOM이 따라오지 않는다(마운트 시점에만 읽는
+   * 속성이다). 서버 스냅샷이 빈 문자열이라 서버는 늘 첫 항목을 그린 뒤,
+   * 하이드레이션 후 URL 값으로 옮겨간다.
+   *
+   * **목록 밖 값은 무시한다.** 주소창에 아무 문자열이나 넣어도 첫 항목으로 떨어진다.
+   */
+  const urlKind = useSyncExternalStore(
+    subscribeToNothing,
+    readKindFromUrl,
+    noKindOnServer,
+  );
+  const [pickedKind, setPickedKind] = useState<string | null>(null);
+  const kind =
+    pickedKind ?? (isReportKind(urlKind) ? urlKind : REPORT_KINDS[0]);
+
   const [state, action, pending] = useActionState(
     submitReport,
     INITIAL_REPORT_STATE,
@@ -78,19 +105,20 @@ export function ReportForm() {
         <legend className="mb-2 text-t4 font-semibold text-foreground">
           어떤 제보인가요
         </legend>
-        {REPORT_KINDS.map((kind, index) => (
+        {REPORT_KINDS.map((option) => (
           <label
-            key={kind}
+            key={option}
             className="flex items-center gap-2 text-t5 text-foreground"
           >
             <input
               type="radio"
               name="kind"
-              value={kind}
-              defaultChecked={index === 0}
+              value={option}
+              checked={kind === option}
+              onChange={() => setPickedKind(option)}
               className="size-4 accent-primary"
             />
-            {kind}
+            {option}
           </label>
         ))}
       </fieldset>

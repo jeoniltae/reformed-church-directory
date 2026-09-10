@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { submitReport } from "../actions";
 import {
   BODY_MAX,
+  clean,
   countGraphemes,
   INITIAL_REPORT_STATE,
   REPORT_KINDS,
@@ -35,6 +36,14 @@ export function ReportForm() {
 
   const used = countGraphemes(body);
   const over = used > BODY_MAX;
+  /**
+   * **`clean()`으로 비었는지 본다 — `body === ""`가 아니다.** 공백·줄바꿈만
+   * 채운 것도 `validateReport`는 빈 것으로 본다("내용을 입력해 주세요.").
+   * 여기서도 같은 기준을 써야 "버튼은 눌렸는데 서버가 빈 값이라고 튕기는"
+   * 어긋남이 생기지 않는다. `used`(카운터 표시용)는 원문 그대로 두고
+   * 이 판정만 `clean()`을 거친다 — 목적이 다르다.
+   */
+  const empty = clean(body).length === 0;
 
   if (state.status === "ok") {
     return (
@@ -168,7 +177,10 @@ export function ReportForm() {
       <Button
         type="submit"
         size="lg"
-        disabled={pending || over}
+        // **`empty`만 넣는다 — `source`는 넣지 않는다.** 확인하신 곳은 라벨부터
+        // "(선택)"이고 `validateReport`도 비어 있으면 통과시킨다(테스트로 고정돼
+        // 있다). 여기서 채우라고 강제하면 화면 안내와 실제 검증 규칙이 어긋난다.
+        disabled={pending || over || empty}
         className="h-12 w-full text-t5 font-semibold"
       >
         {pending ? "보내는 중…" : "보내기"}

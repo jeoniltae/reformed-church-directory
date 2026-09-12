@@ -67,7 +67,10 @@ export async function submitReport(
     const created = (await response.json()) as { number?: number };
     return {
       status: "ok",
-      messages: ["접수했습니다. 확인 후 반영하겠습니다."],
+      // 성공 화면의 제목이 된다. **"확인 후 반영"은 화면 쪽 본문이 이어받았으므로
+      // 여기는 접수 사실만 말한다** — 한 문장에 둘을 담으면 제목이 길어져
+      // 두 줄 이상으로 흐른다.
+      messages: ["제보가 접수되었습니다"],
       issueNumber: created.number,
     };
   } catch (error) {

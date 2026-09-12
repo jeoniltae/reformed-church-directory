@@ -1,6 +1,7 @@
 "use client";
 // 제보 폼 — Server Action으로 GitHub Issues에 등록한다
 
+import { Check } from "lucide-react";
 import { useActionState, useState, useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -74,18 +75,52 @@ export function ReportForm() {
 
   if (state.status === "ok") {
     return (
-      <div className="rounded-lg border border-border bg-muted p-5">
-        <p className="text-t5 font-semibold text-foreground">
+      /*
+        접수 확인 화면.
+
+        ⚠️ **배경을 `bg-muted`에서 테두리로 바꿨다.** 바로 위 `page.tsx`의 공개 고지가
+        이미 `bg-muted` 덩어리라, 회색 블록이 둘 연달아 오면 같은 안내의 연장으로
+        읽혀 "접수됐다"는 신호가 묻힌다. `ChurchNotice`가 지도 자리 밑에서 같은
+        이유로 내린 판단과 같다.
+
+        **체크 동그라미가 이 화면의 유일한 brand-solid다.** 보내기 버튼이 사라진
+        자리라 "화면당 하나" 원칙과 충돌하지 않는다. 성공을 색으로 말하는 유일한
+        수단이기도 하다.
+      */
+      <div className="rounded-lg border border-border bg-card p-5">
+        <span
+          aria-hidden
+          className="grid size-12 place-items-center rounded-full bg-primary"
+        >
+          <Check className="size-6 text-primary-foreground" />
+        </span>
+
+        <p className="mt-4 text-t6 font-bold text-foreground">
           {state.messages[0]}
         </p>
-        {state.issueNumber && (
-          <p className="mt-2 text-t4 text-muted-foreground">
-            접수 번호 #{state.issueNumber}
-          </p>
-        )}
-        <p className="mt-3 text-t2 text-muted-foreground">
-          되물을 연락처를 받지 않으므로 추가 확인이 필요하면 반영이 늦어질 수
-          있습니다.
+
+        {/*
+          **처리 예정 시간을 약속하지 않는다.** 1인 운영이라 "2~3일 내" 같은 기한은
+          지킬 수 없는 약속이 되고, 이 프로젝트는 모르는 것을 모른다고 적는 쪽을
+          택해 왔다(`data/notices.json`). 대신 **왜 늦어질 수 있는지**를 밝힌다 —
+          연락처를 안 받는 것은 이 폼의 설계이므로 그 대가도 함께 말하는 것이 맞다.
+        */}
+        <p className="mt-2 text-t4 text-muted-foreground">
+          보내주신 내용을 확인한 뒤 디렉토리에 반영합니다. 되물을 연락처를 받지
+          않으므로 추가 확인이 필요하면 반영이 늦어질 수 있습니다.
+        </p>
+
+        {/*
+          무엇이 접수됐는지 되짚어 준다. `kind`는 제출 시점의 선택 그대로다 —
+          폼이 이 화면으로 교체돼 더 바꿀 수 없다.
+
+          **제목에 유형을 넣지 않은 이유** — `기타가 접수되었습니다`처럼 어색해지고,
+          조사(이/가)가 받침에 따라 갈려 유형이 늘면 조용히 틀린다. 제목은 고정하고
+          유형은 여기서 사실로만 적는다.
+        */}
+        <p className="mt-4 border-t border-border pt-4 text-t2 text-muted-foreground">
+          {kind}
+          {state.issueNumber && ` · 접수 번호 #${state.issueNumber}`}
         </p>
       </div>
     );

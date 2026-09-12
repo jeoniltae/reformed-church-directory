@@ -16,6 +16,7 @@ import {
   getAllChurches,
   getPreviewChurches,
 } from "@/features/churches/data";
+import { STANDARD_REGIONS } from "@/features/churches/regions";
 import { collectRegionCounts } from "@/features/churches/search";
 import { SITE_NAME } from "@/lib/site";
 
@@ -49,8 +50,17 @@ export const metadata: Metadata = {
  */
 export const revalidate = 900;
 
-/** 홈 타일에 세울 지역 수. 나머지는 `그 외 지역` 한 칸으로 모은다 */
-const TILE_REGIONS = 5;
+/**
+ * h1의 지역 롤링에 굴릴 지역 수.
+ *
+ * ⚠️ **`globals.css`의 `region-roll` 키프레임이 5칸 고정이라 이 값과 짝이다.**
+ * 바꾸면 `nth-child` 지연과 주기(10s = 5 × 2s)도 함께 고쳐야 한다.
+ *
+ * ⚠️ **아래 지역 칩과 무관하다.** 롤링은 **건수 상위 5곳**을 굴리고(움직임이라
+ * 적을수록 읽힌다), 칩은 **시도 16곳 전부**를 표준 순서로 세운다. 예전에는 둘이
+ * 같은 목록을 썼는데 칩이 전체로 바뀌면서 갈라졌다.
+ */
+const ROLL_REGIONS = 5;
 /** 홈에서 미리 보여줄 교회 수 */
 const PREVIEW_CHURCHES = 5;
 
@@ -60,9 +70,18 @@ export default function Home() {
   // **뽑는 것은 무작위, 보여주는 것은 가나다.** 정렬까지 `getPreviewChurches`가 한다
   const preview = getPreviewChurches(PREVIEW_CHURCHES);
 
-  const topRegions = regions.slice(0, TILE_REGIONS);
-  const restCount =
-    churches.length - topRegions.reduce((sum, { count }) => sum + count, 0);
+  const topRegions = regions.slice(0, ROLL_REGIONS);
+
+  /*
+    **데이터가 아니라 표준 목록을 기준으로 센다.** `collectRegionCounts`는 데이터에
+    등장하는 지역만 돌려주므로, 그것만 쓰면 수록 0인 제주가 화면에서 사라져
+    **"빠뜨린 건지 아직 없는 건지"를 구분할 수 없게 된다.**
+  */
+  const countOf = new Map(regions.map(({ region, count }) => [region, count]));
+  const regionChips = STANDARD_REGIONS.map((region) => ({
+    region,
+    count: countOf.get(region) ?? 0,
+  }));
 
   return (
     <PageTransition>
@@ -105,7 +124,7 @@ export default function Home() {
       {/*
         롤링은 장식이라 aria-hidden으로 감추고, 제목이 완결된 문장으로 읽히도록
         보이지 않는 대체 문구를 둔다. 스크린리더는 지역이 바뀔 때마다 읽지 않는다.
-        globals.css의 키프레임이 6칸 고정이라 TILE_REGIONS와 짝이다.
+        globals.css의 키프레임이 5칸 고정이라 ROLL_REGIONS와 짝이다.
 
         **락업이 eyebrow보다 무거워 제목까지 여백을 늘렸다**(mt-2 → mt-6).
       */}
@@ -214,7 +233,7 @@ export default function Home() {
       <h2 className="mt-8 mb-3 text-t6 font-semibold text-foreground">
         지역으로 찾기
       </h2>
-      <RegionTiles regions={topRegions} restCount={restCount} />
+      <RegionTiles regions={regionChips} />
 
       <div className="mt-8 flex items-baseline justify-between border-t border-border pt-6">
         <h2 className="text-t6 font-semibold text-foreground">교회 둘러보기</h2>

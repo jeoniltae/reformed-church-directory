@@ -169,7 +169,7 @@ describe("collectRegionCounts", () => {
     ]);
   });
 
-  it("건수 합계는 원본 건수와 같다 — 홈의 `그 외 지역` 계산이 이 성질에 기댄다", () => {
+  it("건수 합계는 원본 건수와 같다 — 지역을 빠뜨리거나 중복해 세지 않는다", () => {
     const total = collectRegionCounts(churches).reduce(
       (sum, { count }) => sum + count,
       0,

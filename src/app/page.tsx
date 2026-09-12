@@ -12,7 +12,10 @@ import {
 import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import { ChurchRow } from "@/features/churches/components/ChurchRow";
 import { RegionTiles } from "@/features/churches/components/RegionTiles";
-import { getAllChurches } from "@/features/churches/data";
+import {
+  getAllChurches,
+  getPreviewChurches,
+} from "@/features/churches/data";
 import { collectRegionCounts } from "@/features/churches/search";
 import { SITE_NAME } from "@/lib/site";
 
@@ -25,6 +28,27 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
+/**
+ * 미리보기 교회를 15분마다 새로 뽑는다 (2026-09-12).
+ *
+ * **홈은 여전히 정적으로 서빙된다.** 요청마다 서버가 그리는 것이 아니라, 15분이
+ * 지난 뒤 첫 요청에서 백그라운드로 다시 구워진다 — 사용자는 언제나 캐시된 HTML을
+ * 받는다. **깜빡임도, 홈 탭을 누를 때마다의 서버 왕복도 없다.**
+ *
+ * ⚠️ **`force-dynamic`으로 바꾸지 말 것.** "새로고침마다 랜덤"이 되지만 **홈 탭을
+ * 누를 때마다 서버 왕복이 생긴다.** 홈은 첫 번째 탭이자 하단 탭바의 기본 목적지라
+ * 이 사이트에서 가장 자주 열리는 화면이다. `/churches`에서 `searchParams`를 거부한
+ * 것과 **같은 이유**다(CLAUDE.md의 "상태 관리" 항목).
+ *
+ * ⚠️ **클라이언트에서 섞는 방식도 버렸다.** Static은 지키지만 하이드레이션 직후
+ * 5줄이 통째로 바뀌는 깜빡임이 생긴다 — 정적 HTML의 5건을 보여준 뒤 다른 5건으로
+ * 갈아끼우게 되기 때문이다.
+ *
+ * **이 프로젝트의 유일한 ISR 지점이다.** 나머지 라우트는 전부 순수 SSG다.
+ * 데이터 갱신은 여전히 커밋으로만 한다 — 이건 데이터 신선도가 아니라 **표본 교체**다.
+ */
+export const revalidate = 900;
+
 /** 홈 타일에 세울 지역 수. 나머지는 `그 외 지역` 한 칸으로 모은다 */
 const TILE_REGIONS = 5;
 /** 홈에서 미리 보여줄 교회 수 */
@@ -33,6 +57,8 @@ const PREVIEW_CHURCHES = 5;
 export default function Home() {
   const churches = getAllChurches();
   const regions = collectRegionCounts(churches);
+  // **뽑는 것은 무작위, 보여주는 것은 가나다.** 정렬까지 `getPreviewChurches`가 한다
+  const preview = getPreviewChurches(PREVIEW_CHURCHES);
 
   const topRegions = regions.slice(0, TILE_REGIONS);
   const restCount =
@@ -201,7 +227,7 @@ export default function Home() {
         </Link>
       </div>
       <ul className="mt-1 divide-y divide-border">
-        {churches.slice(0, PREVIEW_CHURCHES).map((church) => (
+        {preview.map((church) => (
           <li key={church.id}>
             <ChurchRow church={church} />
           </li>

@@ -21,11 +21,13 @@
 import { Check, X } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { JsonLd } from "@/components/shared/JsonLd";
 import {
   NAV_FORWARD,
   PageTransition,
 } from "@/components/shared/PageTransition";
 import { SiteMark } from "@/components/shared/SiteMark";
+import { breadcrumbJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "소개",
@@ -456,6 +458,20 @@ export default function AboutPage() {
             </Link>
           </div>
         </section>
+
+        {/*
+          이동 경로를 검색엔진에 알린다. CLAUDE.md가 **`about/vision`류 핵심 정적
+          페이지를 이 헬퍼의 대상으로 명시**하고 있다.
+
+          **두 칸뿐이다** — 홈 아래 바로 붙는 화면이라 중간 단계가 없다.
+          상세(홈 → 교회 찾기 → 지역 → 교회)와 달리 계층이 얕다.
+        */}
+        <JsonLd
+          data={breadcrumbJsonLd([
+            { name: "홈", path: "/" },
+            { name: "소개", path: "/about" },
+          ])}
+        />
       </main>
     </PageTransition>
   );

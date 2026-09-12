@@ -18,6 +18,20 @@
 // `교회 찾기`로 고친 것과 같은 문제다(2026-09-08). **이름은 h1이, 헤드라인 역할은
 // 태그라인이 나눠 맡는다.**
 //
+// **절마다 `id`가 있다 — 화면에는 아무것도 안 보인다** (2026-09-12).
+// `why`·`history`·`tulip`·`standards`·`glossary`·`scope`.
+//
+// ⚠️ **"아무 데서도 안 쓰니 지워도 되겠다"고 판단하지 말 것.** 이건 버튼이 아니라
+// **주소**다. 쓰이는 곳이 셋이다 — ①다른 화면에서 거는 링크(교단 배지 옆에서
+// `/about#glossary`로 보내는 식) ②공유된 URL ③검색엔진·`llms.txt`가 절 단위를
+// 가리키는 것. **목차는 일부러 넣지 않았다** — 진입점이 홈 카드 하나뿐이고 그
+// 문구(`개혁주의란 무엇인지부터`)가 위에서부터 읽는 글로 틀을 잡는데, 고정 절
+// 제목·진행 게이지·맨 위로까지 이미 있어서 목차는 넷째 크롬이 된다.
+//
+// **`scroll-margin-top`이 필요 없다.** 고정되는 제목이 **그 절 자신의 첫 자식**이라
+// 절 위쪽이 화면 top에 오면 제목도 같이 y=0에 온다 — 제 내용을 가릴 수가 없다.
+// 페이지 전역 고정 바가 있는 사이트에서 생기는 그 함정이 여기엔 없다(실측 확인).
+//
 // **본문은 상수 배열로 두고 반복문으로 그린다.** 절이 여섯이고 항목이 스물이 넘어
 // JSX로 펼치면 문구를 고칠 때 마크업 사이를 헤매게 된다.
 
@@ -354,7 +368,7 @@ export default function AboutPage() {
         </p>
 
         {/* 01 ─ 만든 이유 */}
-        <section className="reveal mt-10">
+        <section id="why" className="reveal mt-10">
           <SectionTitle no="01">이 사이트를 만든 이유</SectionTitle>
 
           {/*
@@ -394,7 +408,7 @@ export default function AboutPage() {
         </section>
 
         {/* 02 ─ 역사 */}
-        <section className="reveal mt-10">
+        <section id="history" className="reveal mt-10">
           <SectionTitle no="02">개혁주의 신앙의 역사</SectionTitle>
           {/*
             **`<ol>`이다.** 시간 순서 자체가 내용이라 순서가 바뀌면 뜻이 달라진다.
@@ -447,7 +461,7 @@ export default function AboutPage() {
         </section>
 
         {/* 03 ─ TULIP */}
-        <section className="reveal mt-10">
+        <section id="tulip" className="reveal mt-10">
           <SectionTitle no="03">칼빈주의 5대 교리 (TULIP)</SectionTitle>
           <p className="mt-1 text-t5 text-muted-foreground">
             도르트 회의(1618~1619)에서 정립된 개혁주의 구원론의 다섯 기둥입니다.
@@ -494,7 +508,7 @@ export default function AboutPage() {
         </section>
 
         {/* 04 ─ 표준 문서 */}
-        <section className="reveal mt-10">
+        <section id="standards" className="reveal mt-10">
           <SectionTitle no="04">개혁주의 신앙의 표준 문서</SectionTitle>
           <p className="mt-1 text-t5 text-muted-foreground">
             역사적 개혁교회가 신앙과 교리의 표준으로 삼아온 대표적인 문서들입니다.
@@ -552,7 +566,7 @@ export default function AboutPage() {
         </section>
 
         {/* 05 ─ 용어 정리 */}
-        <section className="reveal mt-10">
+        <section id="glossary" className="reveal mt-10">
           <SectionTitle no="05">용어 정리</SectionTitle>
           <p className="mt-1 text-t5 text-muted-foreground">
             목록에서 자주 보이는 말들입니다.
@@ -581,7 +595,7 @@ export default function AboutPage() {
           "설명 + 행동 유도"다.** 여기가 같은 역할이므로 어휘가 이어진다 —
           둘 다 다크로 두면 그 의미가 흐려진다.
         */}
-        <section className="reveal mt-12 rounded-lg bg-primary p-5 text-primary-foreground">
+        <section id="scope" className="reveal mt-12 rounded-lg bg-primary p-5 text-primary-foreground">
           <h2 className="flex items-baseline gap-2 text-t7 font-bold">
             <span aria-hidden className="text-t5 font-semibold text-primary-foreground/60">
               06

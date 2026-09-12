@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { BottomTabBar } from "@/components/shared/BottomTabBar";
 import { JsonLd } from "@/components/shared/JsonLd";
+import { OfflineGuard } from "@/components/shared/OfflineGuard";
 import { siteJsonLd } from "@/lib/json-ld";
 import {
   SITE_DESCRIPTION,
@@ -91,6 +92,13 @@ export default function RootLayout({
         <JsonLd data={siteJsonLd()} />
         {children}
         <BottomTabBar />
+        {/*
+          오프라인에서 앱 내부 이동을 막는다. 안 막으면 RSC 페이로드 fetch가 실패하면서
+          Next가 하드 내비게이션으로 폴백해 **크롬 오류 화면으로 문서가 교체되고,
+          네트워크가 돌아와도 복구되지 않는다**(2026-09-11 실측). 링크가 16개 파일에
+          흩어져 있어 여기 한 곳에서 캡처 단계로 잡는다 — 자세한 내용은 컴포넌트 주석.
+        */}
+        <OfflineGuard />
         {/*
           Vercel Web Analytics — 방문 수·페이지뷰만 익명으로 센다.
 

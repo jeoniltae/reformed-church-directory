@@ -1,6 +1,7 @@
 "use client";
 // 교회 목록 화면의 컨테이너 — 검색어·지역 상태를 들고 검색바·지역칩·카드 목록을 조합한다
 
+import { SearchX } from "lucide-react";
 import Link from "next/link";
 import {
   startTransition,
@@ -36,6 +37,15 @@ import { ChurchSearchBar } from "./ChurchSearchBar";
  * 두는 값이고, 나머지는 `hidden`으로 접었다가 버튼으로 편다.
  */
 const INITIAL_VISIBLE = 20;
+
+/**
+ * 등록 요청 창구.
+ *
+ * **두 곳이 같은 곳으로 보낸다** — 목록 끝(전부 봤는데 없음)과 빈 결과(검색해도 없음).
+ * 상황은 다르지만 사용자가 할 일은 같다. `?kind=`를 붙이는 이유는 폼의 기본 선택이
+ * `정보 수정`이라 등록하러 온 사람이 유형을 다시 골라야 하기 때문이다.
+ */
+const REGISTER_HREF = `/report?kind=${encodeURIComponent(KIND_REGISTER)}`;
 
 const subscribeToNothing = () => () => {};
 const readRegionFromUrl = () =>
@@ -137,9 +147,55 @@ export function ChurchDirectory({ churches }: { churches: Church[] }) {
       </div>
 
       {results.length === 0 ? (
-        <p className="py-12 text-center text-t4 text-muted-foreground">
-          조건에 맞는 교회가 없습니다.
-        </p>
+        /*
+          빈 결과 — 사실만 알리던 한 줄에서 **다음 행동을 주는 화면**으로 바꿨다.
+          막다른 길에서 할 수 있는 일이 둘이다. ① 조건을 바꿔 다시 찾기
+          ② 아직 없는 교회라면 등록 요청하기. 둘 다 문장으로 말해 준다.
+
+          **`검색 결과가 없어요`만 `~어요`체다.** 사이트 전체는 `~습니다`체지만
+          (`docs/디자인-고도화.md`), 같은 문서가 결과 안내 이모지를 허용하며
+          "검색 결과 피드백이라 따뜻한 어투가 맞다"고 적은 그 맥락이 여기에도
+          그대로 적용된다. 아래 본문의 `~해주세요`는 기존 어투와 같다.
+
+          **`SearchX`를 고른 이유** — 검색창의 `Search`와 같은 아이콘 가족이라
+          "방금 한 그 검색이 빈손이었다"가 그림으로 이어진다. 회색 둥근 사각형에
+          담아 시각적 무게를 준다(`brand-solid`를 쓰지 않는 화면이라 색으로
+          강조할 수단이 없다).
+        */
+        <div className="flex flex-col items-center gap-4 py-12 text-center">
+          <span
+            aria-hidden
+            className="grid size-16 shrink-0 place-items-center rounded-2xl bg-muted"
+          >
+            <SearchX className="size-7 text-muted-foreground" />
+          </span>
+
+          <div>
+            <p className="text-t5 font-semibold text-foreground">
+              검색 결과가 없어요.
+            </p>
+            {/*
+              줄바꿈을 넣지 않는다 — 375px에서 강제로 끊으면 둘째 줄이 어색하게
+              짧아진다. 폭만 제한하고 자연스럽게 흐르게 둔다.
+            */}
+            <p className="mx-auto mt-1 max-w-xs text-t4 text-muted-foreground">
+              교단명이나 지역으로 다시 찾아보시거나, 아직 등록되지 않은 교회라면
+              직접 등록해주세요.
+            </p>
+          </div>
+
+          {/* 목록 끝 블록과 같은 곳으로 보낸다 — `REGISTER_HREF` 주석 참고 */}
+          <Link
+            href={REGISTER_HREF}
+            transitionTypes={NAV_FORWARD}
+            className={cn(
+              buttonVariants({ variant: "outline", size: "lg" }),
+              "text-t4",
+            )}
+          >
+            교회 등록 요청
+          </Link>
+        </div>
       ) : (
         <>
           {/*
@@ -250,15 +306,9 @@ export function ChurchDirectory({ churches }: { churches: Church[] }) {
                 찾으시는 교회가 없다면 등록을 요청해주세요. 확인 후 디렉토리에
                 반영합니다.
               </p>
-              {/*
-                목록 → 제보는 본문 링크를 타고 들어가는 이동이라 forward다.
-                **`?kind=`로 유형을 미리 골라 준다** — 안 넘기면 폼의 기본 선택이
-                `정보 수정`이라, 등록하러 온 사람이 유형을 다시 골라야 해서
-                이 버튼의 목적이 절반쯤 흐려진다. 값은 `KIND_REGISTER` 상수를
-                양쪽이 공유하므로 이름이 바뀌어도 링크가 함께 따라온다.
-              */}
+              {/* 목록 → 제보는 본문 링크를 타고 들어가는 이동이라 forward다 */}
               <Link
-                href={`/report?kind=${encodeURIComponent(KIND_REGISTER)}`}
+                href={REGISTER_HREF}
                 transitionTypes={NAV_FORWARD}
                 className={cn(
                   buttonVariants({ variant: "outline", size: "lg" }),

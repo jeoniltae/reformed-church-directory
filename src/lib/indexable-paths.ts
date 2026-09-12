@@ -12,8 +12,13 @@ import type { Church } from "@/types/church";
  *
  * `/report`·`/privacy`는 넣는다. 검색 유입 가치는 낮지만 색인돼도 무해하고,
  * **삭제 요청 창구가 검색으로 발견되는 편이 낫다.**
+ *
+ * **`/about`은 오히려 색인 가치가 높다 (2026-09-12).** 누가 만들었고 무엇을
+ * 근거로 모았는지를 밝히는 화면이라, 검색엔진이 이 사이트를 평가할 때 쓰는
+ * 신뢰 신호가 된다. `개혁주의란`·`용어 정리`처럼 **교회명이 아닌 검색어로 들어올
+ * 통로**이기도 하다 — 다른 정적 화면에는 없는 성격이다.
  */
-const STATIC_PATHS = ["/", "/churches", "/report", "/privacy"];
+const STATIC_PATHS = ["/", "/about", "/churches", "/report", "/privacy"];
 
 /**
  * sitemap에 실을 경로 전부.

@@ -1,10 +1,9 @@
 // 홈 — 수록 현황, 지역 타일, 교회 미리보기를 얹은 랜딩 화면
 
-import { Search } from "lucide-react";
+import { ArrowRight, BookOpen, Search } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { AboutComingSoon } from "@/components/shared/AboutComingSoon";
 import { DataNotice } from "@/components/shared/DataNotice";
 import {
   NAV_FORWARD,
@@ -124,10 +123,67 @@ export default function Home() {
       </div>
 
       {/*
-        소개 화면 진입점 — 지금은 목적지가 없어 누르면 제자리에서 안내가 펼쳐진다.
-        `/about`이 생기면 `AboutComingSoon`을 지우고 실제 링크로 바꾼다.
+        소개 화면 진입점 (2026-09-12에 실제 링크로 교체).
+
+        **문구가 `이 사이트는 어떻게 만들어졌나요?`에서 바뀌었다.** `/about`이
+        `개혁주의란`·`흘러온 길`·`용어 정리`까지 담게 되면서 옛 문구가 내용의
+        앞 절반만 가리켰다. 지금 문구는 **용어를 모르는 신규 방문자**에게 말을
+        거는 쪽이다 — 신뢰·출처 쪽 내용은 전 화면 푸터(`DataNotice`)가 이미 맡는다.
+
+        **h1(`소개`)과 이름을 맞추지 않는다.** 이름 일치 규칙은 되돌아가기 줄에
+        적용되는 것이고(2026-09-08), 홈에서 나가는 링크는 이미 설명형이다
+        (`전체 보기`·`교회명·주소·담임목사 검색`). 이 링크도 같은 성격이다.
+
+        ⚠️ **셰브런이 아니라 화살표다.** `AboutComingSoon`은 제자리에서 펼쳐지는
+        조작이라 셰브런을 썼는데, 이제 **실제로 다른 화면으로 이동하므로** 같은
+        아이콘을 두면 "여기서 펼쳐진다"는 잘못된 신호가 된다.
+
+        **맨 텍스트 한 줄에서 면을 가진 카드로 올렸다 (2026-09-12).** 예전에는
+        `muted` + `t4` + 배경 없음 + 가운데 정렬이었는데, 그 조합은 이 사이트에서
+        `ChurchRow`의 메타 줄과 `DataNotice`의 면책 고지가 쓰는 어휘다 —
+        **읽지 않아도 되는 것의 표기법으로 링크를 그린 셈**이라 바로 위 다크 카드
+        옆에서 사라졌다. 탭 영역도 35px로 권장치(44px)에 못 미쳤다.
+
+        **새 어휘를 만들지 않았다.** 표면은 `RegionTiles`의 `TILE`과 같고
+        (`border` + `bg-card` + hover/active), 뼈대는 `ChurchRow`와 같다
+        (원형 아이콘 + 2줄 + 오른쪽 아이콘). 홈에 이미 있는 것 둘을 합쳤을 뿐이다.
+
+        **1군이 되지 않게 막았다.** `화면당 brand-solid 버튼은 하나`(ui-checklist
+        원칙)를 위 다크 카드가 이미 썼으므로, 여기는 **밝은 테두리 면**에 머문다.
+        위계가 `다크 채움 > 밝은 테두리 > 맨 텍스트` 3단으로 유지된다.
+
+        **아이콘 타일에 `--brand-accent`를 쓴다 — 롤링 전용이던 역할을 넓힌 것이다.**
+        홈에서 청록이 붙는 두 곳(제목의 지역 롤링, 이 진입점)은 **둘 다 처음 온
+        사람에게 말을 거는 자리**라 색이 그 역할을 가리킨다. 네이비로 낮추려면
+        `bg-primary/10 text-primary`로 바꾸면 된다(미선택 칩과 같은 어휘).
+
+        **부제가 공간값을 한다.** `/about`은 역사·TULIP·표준문서·용어까지 6절인데
+        제목 한 줄로는 안에 무엇이 있는지 한 글자도 드러나지 않았다.
       */}
-      <AboutComingSoon />
+      <Link
+        href="/about"
+        transitionTypes={NAV_FORWARD}
+        className="mt-3 flex items-center gap-3 rounded-lg border border-border bg-card p-4 outline-none transition-colors hover:bg-muted focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:translate-y-px active:bg-muted"
+      >
+        <span
+          aria-hidden
+          className="grid size-9 shrink-0 place-items-center rounded-full bg-brand-accent/10 text-brand-accent"
+        >
+          <BookOpen className="size-4" />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-t5 font-semibold text-foreground">
+            개혁주의 교회를 찾기 전에
+          </span>
+          <span className="mt-1 block text-t4 text-muted-foreground">
+            개혁주의란 무엇인지부터
+          </span>
+        </span>
+        <ArrowRight
+          aria-hidden
+          className="size-4 shrink-0 text-muted-foreground"
+        />
+      </Link>
 
       <h2 className="mt-8 mb-3 text-t6 font-semibold text-foreground">
         지역으로 찾기

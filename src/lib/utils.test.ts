@@ -19,7 +19,7 @@ describe("cn", () => {
   });
 
   it("등록한 단계 전부가 크기로 인식된다", () => {
-    for (const step of ["t2", "t4", "t5", "t6", "t8", "t9", "t10"]) {
+    for (const step of ["t2", "t4", "t5", "t6", "t7", "t8", "t9", "t10"]) {
       expect(cn("text-sm", `text-${step}`)).toBe(`text-${step}`);
     }
   });

@@ -30,6 +30,8 @@ import {
   NAV_FORWARD,
   PageTransition,
 } from "@/components/shared/PageTransition";
+import { ScrollToTop } from "@/components/shared/ScrollToTop";
+import { SectionTitle } from "@/components/shared/SectionTitle";
 import { breadcrumbJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
@@ -262,33 +264,6 @@ const DOESNT = [
   "예배시간과 설립연도는 아직 없습니다 — 제보로만 채우는 항목이라 현재 값이 하나도 없습니다.",
 ];
 
-/**
- * 절 제목. 번호는 장식이라 `aria-hidden`이다 — 스크린리더가 "공일"을 읽을 이유가
- * 없다. 지역 롤링·이모지·모노그램과 같은 처리다.
- */
-function SectionTitle({ no, children }: { no: string; children: string }) {
-  return (
-    /*
-      **제목 오른쪽 남는 폭을 룰이 채운다** (2026-09-12 추가). 절이 여섯인데 제목이
-      전부 같은 길이의 굵은 글씨라 "장이 열린다"는 신호가 약했다 — 4000px짜리 문서에서
-      가장 필요한 것이 그 신호다. `flex-1` + `h-px`라 **세로를 1px도 더 쓰지 않는다.**
-
-      **`items-baseline`을 쓸 수 없어 `items-center`로 바꿨다.** baseline 정렬에서는
-      글자가 없는 룰(`<span>`)에 기준선이 없어 자기 아래쪽이 기준선으로 잡히고, 룰이
-      제목 밑으로 내려간다. 대신 번호에 `self-baseline`을 줘 예전 정렬을 지킨다.
-    */
-    <h2 className="flex items-center gap-2 text-t7 font-bold text-foreground">
-      <span
-        aria-hidden
-        className="self-baseline text-t5 font-semibold text-muted-foreground"
-      >
-        {no}
-      </span>
-      {children}
-      <span aria-hidden className="h-px flex-1 bg-border" />
-    </h2>
-  );
-}
 
 export default function AboutPage() {
   return (
@@ -666,6 +641,18 @@ export default function AboutPage() {
             </Link>
           </div>
         </section>
+
+        {/*
+          맨 위로 (2026-09-12 추가).
+
+          ⚠️ **`ScrollToTop`은 "교회 목록이 있는 화면에만 붙인다"고 적혀 있었고 읽는
+          화면은 "스크롤이 길지 않다"는 것이 그 근거였다.** `/about`에서 그 전제가
+          깨진다 — 이 화면은 약 4800px으로 **목록 화면들보다 길다.** 근거가 성립하지
+          않으므로 예외가 아니라 조건에 맞는 화면이다. 컴포넌트 주석도 함께 고쳤다.
+
+          임계값(800px)은 그대로다. 위 절들이 이미 그 몇 배라 늘 뜬다.
+        */}
+        <ScrollToTop />
 
         {/*
           이동 경로를 검색엔진에 알린다. CLAUDE.md가 **`about/vision`류 핵심 정적

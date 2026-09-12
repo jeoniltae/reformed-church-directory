@@ -1,10 +1,9 @@
 // 홈 — 수록 현황, 지역 타일, 교회 미리보기를 얹은 랜딩 화면
 
-import { Search } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { AboutComingSoon } from "@/components/shared/AboutComingSoon";
 import { DataNotice } from "@/components/shared/DataNotice";
 import {
   NAV_FORWARD,
@@ -124,10 +123,29 @@ export default function Home() {
       </div>
 
       {/*
-        소개 화면 진입점 — 지금은 목적지가 없어 누르면 제자리에서 안내가 펼쳐진다.
-        `/about`이 생기면 `AboutComingSoon`을 지우고 실제 링크로 바꾼다.
+        소개 화면 진입점 (2026-09-12에 실제 링크로 교체).
+
+        **문구가 `이 사이트는 어떻게 만들어졌나요?`에서 바뀌었다.** `/about`이
+        `개혁주의란`·`흘러온 길`·`용어 정리`까지 담게 되면서 옛 문구가 내용의
+        앞 절반만 가리켰다. 지금 문구는 **용어를 모르는 신규 방문자**에게 말을
+        거는 쪽이다 — 신뢰·출처 쪽 내용은 전 화면 푸터(`DataNotice`)가 이미 맡는다.
+
+        **h1(`소개`)과 이름을 맞추지 않는다.** 이름 일치 규칙은 되돌아가기 줄에
+        적용되는 것이고(2026-09-08), 홈에서 나가는 링크는 이미 설명형이다
+        (`전체 보기`·`교회명·주소·담임목사 검색`). 이 링크도 같은 성격이다.
+
+        ⚠️ **셰브런이 아니라 화살표다.** `AboutComingSoon`은 제자리에서 펼쳐지는
+        조작이라 셰브런을 썼는데, 이제 **실제로 다른 화면으로 이동하므로** 같은
+        아이콘을 두면 "여기서 펼쳐진다"는 잘못된 신호가 된다.
       */}
-      <AboutComingSoon />
+      <Link
+        href="/about"
+        transitionTypes={NAV_FORWARD}
+        className="mt-3 flex items-center justify-center gap-1 rounded-lg py-2 text-t4 text-muted-foreground outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+      >
+        개혁주의 교회를 찾기 전에
+        <ArrowRight aria-hidden className="size-3.5" />
+      </Link>
 
       <h2 className="mt-8 mb-3 text-t6 font-semibold text-foreground">
         지역으로 찾기

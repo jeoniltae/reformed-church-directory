@@ -29,6 +29,14 @@
   --text-t5--line-height: 1.375rem;
   --text-t6: 1.125rem;
   --text-t6--line-height: 1.5rem;
+  /*
+    t7은 `/about` 때문에 생겼다 (2026-09-12). 그 화면 글자를 한 단계씩 올릴 때
+    **t6(18px) 다음이 t8(22px)이라 +4px이 되어 절 제목이 옛 h1만큼 커졌다.**
+    20px 단계가 있어야 +2px로 맞는다.
+    line-height 27px은 t6(24/18=1.33)과 t8(30/22=1.36) 사이 비율(1.35)이다.
+  */
+  --text-t7: 1.25rem;
+  --text-t7--line-height: 1.6875rem;
   --text-t8: 1.375rem;
   --text-t8--line-height: 1.875rem;
   --text-t9: 1.5rem;
@@ -390,6 +398,47 @@ textarea {
 
     animation: scroll-fade linear both;
     animation-timeline: scroll(self inline);
+  }
+}
+
+/*
+  스크롤 진입 — `/about`의 절이 화면에 들어올 때 한 번 떠오른다.
+
+  **자바스크립트가 0줄이다.** `animation-timeline: view()`가 요소와 뷰포트의 관계를
+  타임라인으로 쓰므로 IntersectionObserver도, `"use client"`도 필요 없다 —
+  **`/about`이 Server Component·Static으로 남는다.** 가로 필터 줄의 `scroll-fade`가
+  `scroll()`을 쓰는 것과 같은 어휘이고, `@supports` 가드 방식도 같다.
+
+  ⚠️ **구간을 퍼센트가 아니라 길이로 준다.** 처음에 `cover 25%`로 썼더니 **긴 절일수록
+  늦게 또렷해졌다** — cover 구간의 길이가 `요소 높이 + 뷰포트`라 높이에 비례하기
+  때문이다. 실측에서 절 02(높이 1581px)는 화면에 114px 들어온 시점에 **불투명도가
+  0.20**이었고 완전히 또렷해지려면 595px을 더 스크롤해야 했다 — **읽는 동안 흐린
+  글자를 보게 된다.** `entry 0px ~ entry 220px`은 절 높이와 무관하게 언제나 220px짜리
+  창이다(가장 짧은 절이 372px이라 여섯 절 모두 여유 있게 들어간다).
+
+  ⚠️ **`both`를 쓴다.** 안 쓰면 구간 밖에서 원래 상태로 돌아가 화면 위로 지나간
+  절이 다시 흐려진다.
+
+  ⚠️ **`screen`으로 가둔다.** 인쇄에는 스크롤이 없어 타임라인이 진행되지 않는다.
+  빼면 **아직 읽지 않은 절이 투명한 채로 인쇄된다** — 교리·연표를 담은 문서라
+  인쇄될 여지가 실제로 있다.
+
+  움직임은 8px이다. 그 이상은 열한 항목짜리 연표를 지나는 동안 멀미가 난다.
+*/
+@supports (animation-timeline: view()) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0px entry 220px;
+    }
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    translate: 0 8px;
   }
 }
 

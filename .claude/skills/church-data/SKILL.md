@@ -32,9 +32,9 @@ description: 교회 데이터를 등록·수정·삭제하거나 GitHub Issues �
 ### 0. 제보에서 시작할 때
 
 ```bash
-npm run reports              # 열린 제보 목록
-npm run reports -- 12        # 12번 본문
-npm run reports -- --kind=삭제
+npm run issues              # 열린 제보 목록
+npm run issues -- 12        # 12번 본문
+npm run issues -- --kind=삭제
 ```
 
 제보 유형은 라벨이 아니라 제목 접두사다: `[정보 수정]` · `[삭제 요청]` · `[교회 등록 요청]` · `[기타]`.
@@ -72,7 +72,7 @@ npm run church -- notice <검색어> --message= [--contact-label= --contact-phon
 
 **CLI가 끝에 다음 절차를 출력한다. 그대로 따르고 지어내지 않는다.**
 
-주소가 바뀌었거나 신규 등록이면:
+주소가 바뀌었거나 신규 등록이면 아래 셋을 순서대로 돌린다.
 
 ```bash
 npm run normalize:addresses -- --only=<교회명>
@@ -90,7 +90,7 @@ npm test && npm run lint
 git diff data/churches.json         # 의도한 교회만 바뀌었는지 눈으로 본다
 ```
 
-`--strict`가 잡는 경고(정리하지 않고 넘어가지 않는다):
+`--strict`가 잡는 경고는 셋이다. 정리하지 않고 넘어가지 않는다.
 
 - `excluded.json`/`notices.json`의 id가 매칭되지 않음 → 오타이거나 id가 바뀌었다
 - 교단 표기 미등록 → 판정표에 행을 추가한다
@@ -121,7 +121,7 @@ git diff data/churches.json         # 의도한 교회만 바뀌었는지 눈으
 
 `next.config.ts`의 `source`·`destination`은 **출력된 퍼센트 인코딩 문자열을 그대로** 붙여넣는다. 한글 원문을 쓰면 **빌드는 통과하고 경고도 없이 404만 남는다** — 실제로 그 상태로 배포된 적이 있다.
 
-리다이렉트는 **프로덕션 서버로만 확인된다**(`next start`는 구워진 HTML을 그대로 내려주므로 재빌드가 필요하다):
+리다이렉트는 **프로덕션 서버로만 확인된다**(`next start`는 구워진 HTML을 그대로 내려주므로 재빌드가 필요하다).
 
 ```bash
 npm run build && npx next start
@@ -140,7 +140,7 @@ curl -I "http://localhost:3000/churches/%EC%96%B8%EC%95%BD%EA%B5%90%ED%9A%8C-%EA
 | 편집 판정 로직 (테스트 대상) | `scripts/lib/church-edit.mts` |
 | 원본 읽기·id 생성 | `scripts/lib/source.mts` |
 | 민감정보 검사 | `scripts/lib/sensitive.mts` |
-| 제보 조회 | `scripts/reports.mts` |
+| 제보 조회 | `scripts/issues.mts` |
 | 데이터 계약 | `src/types/church.ts` |
 
 각 데이터 파일의 사용법은 그 파일 안 `note`·`fields`에 있다. 배경과 결정은 `CLAUDE.md`와 `docs/context-notes.md`.

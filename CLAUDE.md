@@ -85,7 +85,7 @@ npm run church -- add ...          # 신규 등록 → data/additions.json
 npm run church -- edit <검색어> ...  # 수정 → data/address-fixes.json
 npm run church -- remove <검색어> --reason=  # 삭제 요청 → data/excluded.json
 npm run church -- notice <검색어> --message= # 알려진 한계 안내 → data/notices.json
-npm run reports                    # GitHub Issues 제보 조회 (읽기 전용)
+npm run issues                     # GitHub Issues 제보 조회 (읽기 전용)
 ```
 
 `--dry-run`을 붙이면 파일을 쓰지 않고 결과만 본다. **명령이 끝에 다음 실행 절차를 출력하므로 그대로 따른다.**

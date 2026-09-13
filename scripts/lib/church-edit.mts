@@ -188,7 +188,7 @@ export function idChangeChecklist(oldId: string, newId: string): string[] {
     `data/geocode.json — entries[].id가 '${oldId}'로 남아 있으면 주소·좌표가 통째로 반영되지 않는다. npm run normalize:addresses -- --only=<교회명> 뒤에 npm run geocode:coords를 다시 돌린다.`,
     `data/notices.json — '${oldId}' 행이 있으면 '${newId}'로 고친다. 안 고치면 안내가 조용히 사라진다.`,
     `data/excluded.json — '${oldId}' 행이 있으면 '${newId}'로 고친다.`,
-    `next.config.ts의 redirects()에 아래를 추가한다. source·destination 모두 인코딩된 문자열 그대로 쓴다 — 한글 원문을 쓰면 빌드는 통과하고 404만 남는다:`,
+    `next.config.ts의 redirects()에 아래를 추가한다. source·destination 모두 인코딩된 문자열 그대로 쓴다 — 한글 원문을 쓰면 빌드는 통과하고 404만 남는다.`,
     `      {`,
     `        // /churches/${oldId} → /churches/${newId}`,
     `        source: "${source}",`,

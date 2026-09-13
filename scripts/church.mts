@@ -123,7 +123,7 @@ function resolveOrDie(rows: readonly SourceRow[], query: string): SourceRow {
  * **주소를 재조회하면 좌표도 무효가 되므로** 두 단계를 붙여서 안내한다.
  */
 function printNextSteps(churchName: string, addressChanged: boolean): void {
-  console.log("\n다음 순서로 반영한다:");
+  console.log("\n다음 순서로 반영한다.");
   if (addressChanged) {
     console.log(`  1. npm run normalize:addresses -- --only=${churchName}`);
     console.log("  2. npm run geocode:coords");

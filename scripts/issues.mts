@@ -6,9 +6,9 @@
 // **여기서 이슈를 닫거나 수정하지 않는다.** 제보 본문은 사람이 자유서술로 쓴 것이라
 // 파싱해서 자동 반영하면 틀린 값이 조용히 들어간다. 값의 사실 확인은 사람이 한다.
 //
-//   npm run reports                  열린 제보 목록
-//   npm run reports -- 12            12번 제보 본문
-//   npm run reports -- --kind=삭제    유형으로 걸러 보기
+//   npm run issues                  열린 제보 목록
+//   npm run issues -- 12            12번 제보 본문
+//   npm run issues -- --kind=삭제    유형으로 걸러 보기
 //
 // 제보 유형은 라벨이 아니라 제목 접두사다(src/features/reports/report.ts) —
 // 라벨은 저장소에 미리 만들어 둬야 하고 없는 라벨을 보내면 이슈 생성이 실패한다.
@@ -76,7 +76,7 @@ try {
       for (const i of issues) {
         console.log(`  #${i.number}  ${i.created_at.slice(0, 10)}  ${i.title}`);
       }
-      console.log("\n본문은 npm run reports -- <번호>");
+      console.log("\n본문은 npm run issues -- <번호>");
     }
   }
 } catch (e) {

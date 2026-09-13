@@ -21,6 +21,11 @@ const DENOMINATIONS = "data/denominations.json";
 const EXCLUDED = "data/excluded.json";
 const NOTICES = "data/notices.json";
 const SOURCE = "자체 수집";
+const ADDITIONS = "data/additions.json";
+
+// 경고가 있어도 기본 동작은 exit 0이다(손으로 돌려 보고 판단하는 도구라서).
+// --strict를 주면 경고 하나에도 실패로 끝난다 — 자동화가 게이트로 쓰는 길이다.
+const STRICT = process.argv.includes("--strict");
 
 // 생존 확인에서 죽은 것으로 판정된 URL. 원본 CSV를 고치지 않으므로
 // 이 목록이 없으면 다음 변환에서 되살아난다.
@@ -74,7 +79,7 @@ const denominations = buildDenominationIndex(
   JSON.parse(readFileSync(DENOMINATIONS, "utf8")) as DenominationTable,
 );
 
-const { rows, droppedColumns } = readSource();
+const { rows, droppedColumns, addedCount } = readSource();
 
 const warnings: string[] = [];
 const churches: Church[] = [];
@@ -197,6 +202,7 @@ for (const row of rows) {
 writeFileSync(OUTPUT, JSON.stringify(churches, null, 2) + "\n", "utf8");
 
 console.log(`${churches.length}건 → ${OUTPUT}`);
+console.log(`원본 CSV 이후 신규 등록: ${addedCount}건 (${ADDITIONS})`);
 console.log(`삭제 요청으로 제외: ${excludedCount}건 / ${excluded.size}건 등록 (${EXCLUDED})`);
 console.log(`버린 열: ${droppedColumns.length ? droppedColumns.join(", ") : "없음"}`);
 console.log(
@@ -236,4 +242,5 @@ if (noticed !== notices.size) {
 if (warnings.length) {
   console.log(`\n확인 필요 ${warnings.length}건`);
   for (const w of warnings) console.log(`  · ${w}`);
+  if (STRICT) process.exit(1);
 }

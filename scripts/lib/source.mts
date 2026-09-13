@@ -26,6 +26,11 @@ export const COLUMNS = [
 
 export type SourceRow = {
   id: string;
+  /**
+   * **원본 값으로 만든 조회용 id.** data/address-fixes.json의 키이며,
+   * 교회명·시군구를 교정하면 출력 id와 달라진다 — 둘을 헷갈리면 교정이 조용히 무시된다.
+   */
+  lookupId: string;
   name: string;
   region: string;
   subRegion: string;
@@ -200,6 +205,7 @@ export function buildRows(input: {
 
     return {
       id,
+      lookupId,
       name: fixedName ?? rec.name,
       region: normalizeRegion(fixedRegion ?? rec.region),
       subRegion: fixedSubRegion ?? rec.subRegion,

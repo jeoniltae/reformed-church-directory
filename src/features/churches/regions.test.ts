@@ -6,14 +6,16 @@
 
 import { describe, expect, it } from "vitest";
 import churches from "../../../data/churches.json";
-import { STANDARD_REGIONS } from "./regions";
+import { sampleRegions, STANDARD_REGIONS } from "./regions";
 
 const regions: string[] = [...STANDARD_REGIONS];
 
 describe("STANDARD_REGIONS", () => {
   it("데이터에 등장하는 지역을 하나도 빠뜨리지 않는다", () => {
     // 이게 깨지면 그 지역 교회들이 **홈에서 찾아갈 길을 잃는다**
-    const inData = [...new Set((churches as { region: string }[]).map((c) => c.region))];
+    const inData = [
+      ...new Set((churches as { region: string }[]).map((c) => c.region)),
+    ];
     expect(regions).toEqual(expect.arrayContaining(inData));
   });
 
@@ -39,5 +41,84 @@ describe("STANDARD_REGIONS", () => {
   it("수록 0인 지역도 들어 있다", () => {
     // 제주는 현재 수록 교회가 없지만 화면에 `0`으로 남아야 한다
     expect(regions).toContain("제주");
+  });
+});
+
+describe("sampleRegions", () => {
+  // 실제 데이터의 지역 분포 — 충북·부산·인천이 4곳으로 동점이다
+  const all = [
+    "서울",
+    "부산",
+    "대구",
+    "인천",
+    "대전",
+    "울산",
+    "세종",
+    "경기",
+    "강원",
+    "충북",
+    "충남",
+    "전북",
+    "전남광주",
+    "경북",
+    "경남",
+  ];
+
+  it("요청한 개수만큼 서로 다른 지역을 뽑는다", () => {
+    const picked = sampleRegions(all, 5);
+    expect(picked).toHaveLength(5);
+    expect(new Set(picked).size).toBe(5);
+  });
+
+  it("표준 순서로 돌려준다 — 굴러가는 차례가 뒤죽박죽이면 임의로 보인다", () => {
+    const picked = sampleRegions(all, 5);
+    const order = picked.map((r) => regions.indexOf(r));
+    expect(order).toEqual([...order].sort((a, b) => a - b));
+  });
+
+  it("입력에 없는 지역은 뽑지 않는다", () => {
+    // 수록 0인 제주가 `오늘, 제주에서 예배하러 가시나요?`로 나오면 거짓말이 된다
+    expect(sampleRegions(all, 5)).not.toContain("제주");
+  });
+
+  it("요청 개수가 지역 수보다 많으면 있는 만큼만 준다", () => {
+    // 칸이 비면 롤링 주기에 빈 구간이 생긴다
+    expect(sampleRegions(["서울", "경기"], 5)).toHaveLength(2);
+  });
+
+  it("⚠️ 건수 상위 고정이 아니다 — 모든 지역이 뽑힐 수 있어야 한다", () => {
+    // 이게 이번에 고친 버그다. 상위 5 고정이면 아래 열 곳은 **영원히** 나오지 않았다
+    const 못나오던지역 = [
+      "충북",
+      "전남광주",
+      "대구",
+      "세종",
+      "경북",
+      "충남",
+      "강원",
+      "대전",
+      "울산",
+      "경남",
+    ];
+    const 한번이라도나온지역 = new Set<string>();
+    for (let i = 0; i < 500; i++) {
+      sampleRegions(all, 5).forEach((r) => 한번이라도나온지역.add(r));
+    }
+    못나오던지역.forEach((r) => expect(한번이라도나온지역).toContain(r));
+  });
+
+  it("⚠️ 동점을 임의로 자르지 않는다 — 충북·부산·인천이 고르게 나온다", () => {
+    // 예전에는 넷 중 부산·인천만 뽑히고 충북은 잘렸다
+    const count = new Map(["충북", "부산", "인천"].map((r) => [r, 0]));
+    for (let i = 0; i < 3000; i++) {
+      sampleRegions(all, 5).forEach((r) => {
+        if (count.has(r)) count.set(r, (count.get(r) ?? 0) + 1);
+      });
+    }
+    // 각 지역이 뽑힐 확률은 5/15 ≈ 33%. 셋의 편차가 크면 공정하지 않다
+    const values = [...count.values()];
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    expect(min / max).toBeGreaterThan(0.85);
   });
 });

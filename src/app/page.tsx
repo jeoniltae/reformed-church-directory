@@ -16,7 +16,10 @@ import {
   getAllChurches,
   getPreviewChurches,
 } from "@/features/churches/data";
-import { STANDARD_REGIONS } from "@/features/churches/regions";
+import {
+  sampleRegions,
+  STANDARD_REGIONS,
+} from "@/features/churches/regions";
 import { collectRegionCounts } from "@/features/churches/search";
 import { SITE_NAME } from "@/lib/site";
 
@@ -56,9 +59,9 @@ export const revalidate = 900;
  * ⚠️ **`globals.css`의 `region-roll` 키프레임이 5칸 고정이라 이 값과 짝이다.**
  * 바꾸면 `nth-child` 지연과 주기(10s = 5 × 2s)도 함께 고쳐야 한다.
  *
- * ⚠️ **아래 지역 칩과 무관하다.** 롤링은 **건수 상위 5곳**을 굴리고(움직임이라
- * 적을수록 읽힌다), 칩은 **시도 16곳 전부**를 표준 순서로 세운다. 예전에는 둘이
- * 같은 목록을 썼는데 칩이 전체로 바뀌면서 갈라졌다.
+ * ⚠️ **아래 지역 칩과 무관하다.** 칩은 **시도 16곳 전부**를 표준 순서로 세우고,
+ * 롤링은 그중 **다섯 곳을 무작위로** 굴린다(움직임이라 적을수록 읽힌다).
+ * 예전에는 둘이 같은 목록을 썼는데 칩이 전체로 바뀌면서 갈라졌다.
  */
 const ROLL_REGIONS = 5;
 /** 홈에서 미리 보여줄 교회 수 */
@@ -70,7 +73,16 @@ export default function Home() {
   // **뽑는 것은 무작위, 보여주는 것은 가나다.** 정렬까지 `getPreviewChurches`가 한다
   const preview = getPreviewChurches(PREVIEW_CHURCHES);
 
-  const topRegions = regions.slice(0, ROLL_REGIONS);
+  /*
+    ⚠️ **`regions.slice(0, ROLL_REGIONS)`로 되돌리지 말 것.** 그건 건수 상위 5곳이라
+    **15개 중 10개가 아예 후보에도 못 들어갔고**, 똑같이 4곳인 충북·부산·인천에서
+    **부산·인천만 뽑혀 동점을 임의로 잘랐다.** 아래 칩에서 `건수 순위를 노출하지
+    않는다`로 정리해 놓고 h1만 상위 5를 전시하던 상태였다. 근거는 `sampleRegions`.
+  */
+  const rollRegions = sampleRegions(
+    regions.map(({ region }) => region),
+    ROLL_REGIONS,
+  );
 
   /*
     **데이터가 아니라 표준 목록을 기준으로 센다.** `collectRegionCounts`는 데이터에
@@ -137,7 +149,7 @@ export default function Home() {
             묻히는데, 청록이 그걸 되찾는다 — 색이 곧 "여기가 바뀐다"는 신호다.
           */}
           <span className="region-roll text-brand-accent">
-            {topRegions.map(({ region }) => (
+            {rollRegions.map((region) => (
               <span key={region}>{region}</span>
             ))}
           </span>

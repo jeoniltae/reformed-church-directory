@@ -12,14 +12,12 @@ UI는 모바일 우선 반응형 웹으로 제작한다.
 
 ## 관련 문서
 
-작업 전에 아래 문서를 반드시 확인하세요.
+작업 전에 아래 문서를 반드시 확인하세요. **전체 목록과 각 문서를 보는 시점은 `docs/README.md`에 있다** — 여기에 다시 나열하지 않는다.
 
 - 코딩 규칙 및 금지 사항: `docs/coding-guidelines.md`
-- 작업 결정 기록: `docs/context-notes.md`
-- 체크리스트 — 개발환경·데이터 수집: `docs/checklist.md`
-- 체크리스트 — 앱 UI·지도·SEO·배포: `docs/ui-checklist.md`
-- 공개 이후 SEO 측정 기록: `docs/seo-측정.md`
-- 보유 데이터 필드 조사 결과: `docs/field-inventory.md`
+- 작업 결정 기록: `docs/context-notes.md` (상단 목차에서 날짜로 찾는다)
+- 진행 중인 작업: `docs/checklist.md`(데이터) · `docs/ui-checklist.md`(화면·SEO) — **체크박스의 단일 출처는 이 둘뿐이다**
+- 끝난 계획과 조사 자료: `docs/archive/` · `docs/research/`
 
 `coding-guidelines.md`를 제외한 `docs/` 문서는 git에서 제외된 로컬 문서다.
 
@@ -41,7 +39,7 @@ UI는 모바일 우선 반응형 웹으로 제작한다.
 
 ### 데이터 저장소
 
-- **DB 없음.** 교회 데이터는 `data/churches.json` 하나에 담고 앱이 직접 읽는다(현재 89건, 고신·합신 확장 후 약 3천 건 예상). 이 규모에서는 DB가 필요 없고, 상세 페이지는 `generateStaticParams`로 89건 전부 SSG로 굽는다(구현 완료). 결정 배경은 `docs/context-notes.md` 참고.
+- **DB 없음.** 교회 데이터는 `data/churches.json` 하나에 담고 앱이 직접 읽는다(**현재 100건 미만, 고신·합신 확장 후 약 3천 건 예상**). 이 규모에서는 DB가 필요 없고, 상세 페이지는 `generateStaticParams`로 **전량** SSG로 굽는다(구현 완료). 결정 배경은 `docs/context-notes.md` 참고.
 - 데이터 생성·갱신은 크롤러(`scripts/`)가 오프라인 배치로만 수행하고, 결과 JSON을 커밋한다. 배포는 커밋에 따라 Vercel이 자동 처리한다.
 - API Route 없음 — Server Component에서 JSON을 직접 읽는다.
 - Supabase를 다시 검토할 조건(데이터 수만 건 초과, 재배포 없는 갱신, PostGIS·전문 검색 필요)은 `docs/context-notes.md`에 정리돼 있다.
@@ -112,36 +110,26 @@ npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32�
 ## 프로젝트 구조
 
 ```
-├── src/
-│   ├── app/               # Next.js App Router (페이지 & 레이아웃)
-│   ├── components/
-│   │   ├── ui/            # shadcn/ui 기본 컴포넌트 (button, input, badge, textarea)
-│   │   └── shared/        # 프로젝트 공통 컴포넌트 (BottomTabBar, PageTransition)
-│   ├── features/          # 기능별 모듈
-│   │   ├── churches/      # 교회 검색·조회 — data.ts, search.ts, components/
-│   │   └── reports/       # 교회 정보 제보 (폼, Server Action → GitHub Issues)
-│   ├── lib/               # 유틸리티 (cn(), church-utils, json-ld)
-│   └── types/             # 전역 TypeScript 타입
-├── scripts/               # 데이터 정비 스크립트 — 오프라인 배치, 앱 런타임과 분리
-│   ├── lib/               #   스크립트 공용 모듈
-│   ├── lib/coords.mts     #   UTM-K → WGS84 변환 (proj4, devDependency)
-│   ├── import-source.mts
-│   ├── check-homepages.mts
-│   ├── normalize-addresses.mts
-│   ├── geocode-coords.mts
-│   ├── make-favicon.mts   #   icon.png → favicon.ico (sharp, devDependency)
-│   └── collect-kosin.ts   # [WIP] 고신 교회 데이터 수집
-└── data/                  # 앱이 직접 읽는 유일한 데이터 소스
-    ├── churches.json      #   커밋 대상 (89건)
-    ├── address-fixes.json #   주소 수동 교정 표
-    ├── dead-links.json    #   홈페이지 생존 확인 결과
-    ├── denominations.json #   교단 표기 판정표 — 배지 19종·묶음 6종. 앱 번들에는 안 들어간다
-    ├── geocode.json       #   지오코딩 중간 산출물
-    ├── notices.json       #   교회별 '알려진 한계' 안내 — churches.json의 notice 필드가 된다
-    ├── reports/           #   스크립트 점검 리포트
-    ├── excluded.json      #   삭제 요청받은 교회 — import-source.mts가 항상 제외
-    └── raw/               #   내려받은 원본(KML 등), git 제외
+src/app/          Next.js App Router
+src/components/   ui/ (shadcn 관리 영역) · shared/ (BottomTabBar, PageTransition, SiteMark, JsonLd)
+src/features/     기능별 슬라이스 — churches/ (조회·검색) · reports/ (제보 → GitHub Issues)
+src/lib/          cn() · church-utils · json-ld · site · indexable-paths · llms-txt · og
+src/types/        전역 타입
+scripts/          데이터 정비 배치 — 앱 런타임과 분리된 `.mts`. 공용 모듈은 scripts/lib/
+data/             앱이 직접 읽는 유일한 데이터 소스
 ```
+
+**파일 목록을 여기 적지 않는다** — 디렉토리를 보면 알 수 있고, 적어 두면 낡는다. 대신 **이름만 봐서는 모르는 것**만 적는다.
+
+| `data/` | 무엇 |
+|---|---|
+| `churches.json` | **앱이 읽는 유일한 파일.** 커밋 대상 |
+| `denominations.json` | 교단 표기 판정표. **앱 번들에 안 들어간다** — 스크립트만 읽는다 |
+| `address-fixes.json` | 주소 수동 교정 표. 사람이 손대는 입력을 스크립트가 흡수한다 |
+| `notices.json` | 교회별 '알려진 한계' 안내 → `Church.notice`가 된다 |
+| `excluded.json` | 삭제 요청받은 교회. **없으면 다음 크롤링에서 되살아난다** |
+| `dead-links.json` · `geocode.json` · `reports/` | 스크립트 중간 산출물·점검 리포트 |
+| `raw/` | 내려받은 원본(KML 등). **git 제외** |
 
 `src/components/ui/`는 shadcn/ui가 관리하는 영역이므로 직접 수정하지 않는다. `[WIP]` 표시된 항목은 아직 생성 전이다. `src/hooks/`는 아직 필요해진 적이 없어 만들지 않았다.
 
@@ -151,12 +139,13 @@ npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32�
 
 | 경로 | 렌더링 | 내용 |
 |---|---|---|
-| `/` | Static | 랜딩 — 수록 현황 카드, 지역 타일 6칸, 교회 미리보기 5건 |
+| `/` | Static | 랜딩 — 수록 현황 카드, 지역 칩(시도 16곳 전부), 교회 미리보기 5건 |
 | `/churches` | Static | 검색·목록. `?region=`은 클라이언트에서 읽는다 (아래 "상태 관리") |
-| `/churches/[id]` | SSG | 교회 상세 89건. `generateStaticParams`로 빌드 시점에 전량 생성 |
+| `/churches/[id]` | SSG | 교회 상세. `generateStaticParams`로 빌드 시점에 **전량** 생성 |
 | `/region/[region]` | SSG | 지역 랜딩 7개(3곳 이상만). **임계값 미만 지역도 주소로 열리지만 미리 굽지도 sitemap에 넣지도 않는다** |
 | `/denomination/[group]` | SSG | 교단 랜딩 5개(`기타` 제외). slug는 `고신·고려 계열` → `고신고려` |
 | `/map` | Static | 준비 중 안내. 좌표·지도 SDK 확보 전까지 자리만 지킨다. **`noindex` + sitemap 제외** |
+| `/about` | Static | 사이트 소개 (2026-09-12). 누가 왜 만들었고 무엇을 담지 않는지. **색인 가치가 높다** — `src/lib/indexable-paths.ts` 주석 참고 |
 | `/report` | Static | 제보 폼. 상세에서 `?church=<id>`로 대상을 넘겨받는다 (클라이언트에서 읽는다) |
 | `/privacy` | Static | 개인정보 처리방침. 공개에 따르는 의무이며 `/report`·홈 footer에서 링크한다 |
 
@@ -174,16 +163,13 @@ npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32�
 
 **상단 헤더가 없다.** 전역 이동은 `src/components/shared/BottomTabBar.tsx`(홈·검색·지도)가 전담하고, `layout.tsx`는 탭바와 `pb-16` 여백만 얹는다. **헤더를 다시 만들지 않는다** — 시안이 정한 구조다.
 
-**사이트명은 홈 히어로의 로고 락업에만 나온다** (2026-09-08). 마크(`/icon.png`) + `개혁주의 교회 디렉토리` + `REFORMED CHURCH DIRECTORY` 구성이며 `src/app/page.tsx`에 있다. 원래는 화면에 전혀 노출하지 않고 문서 제목에만 뒀는데, **공유 미리보기(OG 이미지)에는 같은 락업이 있어 링크로 들어온 사람이 화면에서 같은 로고를 다시 못 보는 상태**였다. 경위와 버린 선택지는 `docs/디자인-고도화.md`에 있다.
+**사이트명은 두 형태로만 나온다** (2026-09-08). 홈 히어로의 **로고 락업**(마크 + `개혁주의 교회 디렉토리` + 영문 서브라인, `src/app/page.tsx`)과 안쪽 화면의 축약형 **`SiteMark`**(마크 + 사이트명 한 줄)다. **경위와 버린 선택지는 `docs/디자인-고도화.md`의 2026-09-08 항목들에 있다** — 전역 헤더를 만들지 않은 이유의 계산도 그쪽이다.
 
-- **전역 헤더가 아니다.** 홈 히어로 안의 콘텐츠다. 위 "헤더를 만들지 않는다"는 그대로 유효하다.
-- **안쪽 화면에는 축약형 `SiteMark`가 온다** (2026-09-08). 마크 + 사이트명 한 줄이고 영문 서브라인이 없다. **검색으로 교회 상세에 바로 들어온 사람이 사이트명을 한 글자도 못 보던 문제**를 푼 것이다 — 상세 89개가 검색 유입의 주 경로다.
-  - **되돌아가기 줄의 빈 오른쪽에 얹어 세로를 쓰지 않는다** (상세·지역·교단). 그 줄이 없는 `/report`·`/privacy`만 제목 위에 한 줄을 쓴다.
-  - **홈에는 넣지 않는다** — 전체 락업이 있다. `/map`·`/not-found`는 세로 중앙 정렬 구조라 제외했다.
-  - **`/churches`의 h1은 `교회 찾기`다** (2026-09-08). 예전에는 사이트명(`개혁주의 교회 디렉토리`)이었는데, 그러면 **`metadata.title`·breadcrumb가 부르는 이름과 화면만 어긋나고** h1이 정보를 더하지 못했다. 이름을 맞춘 뒤 이 화면에도 `SiteMark`를 넣었다. **h1은 t9다** — 탭 루트(홈·검색·지도)는 같은 급이라 홈과 맞추고, 지역·교단 랜딩은 그 아래라 t8로 남는다.
-  - **전역 헤더를 만들지 않은 이유**: 하단 탭바가 이미 64px을 점유해 위에도 띠를 두면 667px 화면에서 크롬이 19%가 된다. 자세한 비교는 `docs/디자인-고도화.md`.
-- **마크는 `/icon.png`를 그대로 쓴다.** 파비콘·매니페스트·OG와 같은 파일이라 **로고를 바꿀 때 여전히 `icon.png` 하나만 갈아끼우면 된다.** `next/image`가 32/64px로 줄여 내보내므로 512px 원본이 그대로 나가지 않는다(실측 806바이트).
-- **영문 표기는 `aria-hidden`이다.** 같은 이름의 다른 표기라 스크린리더가 연달아 두 번 읽지 않게 한다 — 지역 롤링을 감춘 것과 같은 이유다.
+- **전역 헤더가 아니다.** 홈 히어로 안의 콘텐츠이고, 위 "헤더를 만들지 않는다"는 그대로 유효하다.
+- **`SiteMark`는 되돌아가기 줄의 빈 오른쪽에 얹어 세로를 쓰지 않는다** (상세·지역·교단). 그 줄이 없는 `/report`·`/privacy`·`/about`만 제목 위에 한 줄을 쓴다. **홈·`/map`·`/not-found`에는 넣지 않는다.**
+- **h1 급수는 화면 층위를 따른다** — 탭 루트(홈·`/churches`·`/map`)는 `t9`, 지역·교단 랜딩은 그 아래라 `t8`. `/churches`의 h1은 `교회 찾기`다(`metadata.title`·breadcrumb와 이름을 맞춘 것이다).
+- **마크는 `/icon.png`를 그대로 쓴다.** 파비콘·매니페스트·OG와 같은 파일이라 **로고를 바꿀 때 `icon.png` 하나만 갈아끼우면 된다.**
+- **영문 표기는 `aria-hidden`이다** — 같은 이름의 다른 표기라 스크린리더가 연달아 두 번 읽지 않게 한다.
 
 ### 화면 전환 (View Transitions)
 
@@ -281,7 +267,7 @@ npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32�
 
 **필드 집합은 보유 개혁교회 약 100건이 정의한다.** 무엇을 모을지 먼저 정하고 소스를 찾는 순서가 아니라, 이미 확보한 데이터에 무엇이 들어 있는지가 기준이다. `Church` 타입도 여기서 나온다.
 
-**원본은 `data/raw/추천교회.CSV` 9열이 전부다** (2026-08-06 실측, `docs/field-inventory.md`).
+**원본은 `data/raw/추천교회.CSV` 9열이 전부다** (2026-08-06 실측, `docs/research/field-inventory.md`).
 
 지역 · sub-지역 · 교회명 · 담임목사 · 교단 · 전화번호 · 주소 · 홈페이지 · 비고
 
@@ -314,14 +300,17 @@ npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32�
 
 ### 소스 & 도구
 
-착수 순서는 법적 위험도 기준으로 정했다. 근거는 `docs/context-notes.md`의 "소스별 법적 판단" 참조.
+착수 순서는 **법적 위험도 기준**으로 정했다. 단계별 계획과 조사 결과는 `docs/archive/2026-08-06-크롤링-실행계획.md`, 판단 근거는 `docs/context-notes.md`의 "소스별 법적 판단"에 있다. **여기에는 소스별로 지켜야 할 선을 적는다.**
 
-- **1단계 — 보유 개혁교회 약 100건.** 발견과 교단 판별이 이미 끝난 자체 보유 데이터. 법적 리스크가 없고, 독립개신교회·독립개혁장로회·개혁교회 자매그룹은 통합 디렉토리가 존재하지 않아 다른 데서 구할 수 없다. **`Church` 스키마를 이 100건으로 확정한다.**
-- **2단계 — 개별 교회 홈페이지.** 예배시간·SNS는 여기서만 얻을 수 있다. 정적 사이트는 내장 `fetch` + 파서, JS 렌더링 사이트만 Playwright(예정). 아래 "개별 홈페이지 크롤 가드" 필수.
-- **3단계 — 소규모 개혁교회 확장.** 자매교회 링크 페이지를 시드로 삼고, 필요하면 Kakao 로컬·Naver 검색 **공식 API**로 보조한다.
-- **4단계 — 예장 고신 (총회 양해 후).** Google My Maps KML 일괄 다운로드(`mid=1rElpaz34C8gWiRkcJSLzSFGUacCSjUyB`), 약 2,118개 교회. `fetch` + `fast-xml-parser`로 파싱. 전량 다운로드는 데이터베이스제작자 권리에 걸리므로 **사무국 양해가 선행 조건이다.**
-- **5단계 — 예장 합신 (총회 요청).** robots.txt 차단이 확인됐으므로 **크롤링하지 않는다.** 총회에 명단을 요청한다.
-- 파싱·정규화 함수는 유틸 성격이므로 Vitest 단위 테스트 대상으로 적합 (기존 테스트 정책과 일관).
+| 소스 | 지켜야 할 선 |
+|---|---|
+| **보유 개혁교회** (1단계, **완료**) | 자체 데이터라 제약 없음. `Church` 스키마가 여기서 확정됐다 |
+| **개별 교회 홈페이지** (2단계) | 아래 **"개별 홈페이지 크롤 가드" 필수.** HTML만, 경로 블랙리스트, 추출 화이트리스트 |
+| **소규모 개혁교회 확장** (3단계) | 자매교회 링크를 시드로. 보조는 Kakao·Naver **공식 API로만** |
+| **예장 고신** (4단계) | Google My Maps KML로 일괄 수집 가능하나, 전량 다운로드는 데이터베이스제작자 권리에 걸린다 — **사무국 양해가 선행 조건이다** |
+| **예장 합신** (5단계) | robots.txt 차단 확인됨. **크롤링하지 않는다** — 총회에 명단을 요청한다 |
+
+- 크롤 전용 의존성은 **devDependency로만** 둔다. 파싱·정규화 함수는 Vitest 단위 테스트 대상이다.
 
 #### 주소 정규화·좌표
 
@@ -396,15 +385,15 @@ npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32�
 
 ### 교단 표기 정규화 (2026-09-01 완료)
 
-원본 21종을 판정해 **배지 19종 + 묶음 6종**으로 정리했다. 판정표는 `data/denominations.json`, 경위는 `docs/교단 표기 정규화.md`와 `docs/context-notes.md`에 있다.
+원본 21종을 판정해 **배지 19종 + 묶음 6종**으로 정리했다. 판정표는 `data/denominations.json`, 경위는 `docs/archive/2026-09-01-교단표기-정규화.md`와 `docs/context-notes.md`에 있다.
 
 - **필드가 둘이다.** `denomination`은 배지에 보이는 총회 이름, `denominationGroup`은 필터에 쓰는 묶음이다. **나눠 둔 덕에 별개 총회를 같은 묶음에 담을 수 있다** — `고려`는 1976년 고신에서 분리된 별개 총회지만 `고신·고려 계열`이다. 필드가 하나였다면 합치거나 쪼개거나였고 어느 쪽도 사실과 어긋났다.
-- **묶음은 6종이다** — `합신 계열` 20 · `합동 계열` 17 · `고신·고려 계열` 16 · `기타` 16 · `대신 계열` 9 · `독립·해외` 5 (교단 없음 6건). Seed `which-input` 기준 7개 이하라 칩 필터로 쓸 수 있다.
+- **묶음은 6종이다.** 7개 이하라 칩 필터로 쓸 수 있다(Seed `which-input` 기준). **건수는 적지 않는다** — `churches.json`에서 세면 나오고, 확장하면 바뀐다.
 - **묶음에 넣는 기준은 `data/denominations.json`의 `groupRule`이다.** ①X에서 갈라져 나온 것이 확인된 총회 ②`대한예수교장로회(X…)` 형식으로 스스로 X를 표방하는 총회. **이름에 X 글자가 들어간다는 것만으로는 넣지 않는다** — 이름으로 계열을 추정한 네 건이 전부 틀렸다.
-- **`기타`는 판정 실패를 뜻하지 않는다.** 16건 중 9건은 교단이 확정된 소규모 독자 총회다.
+- **`기타`는 판정 실패를 뜻하지 않는다.** 상당수가 교단이 확정된 소규모 독자 총회다.
 - **매핑표는 앱 번들에 들어가지 않는다.** `scripts/lib/denominations.mts`가 오프라인에서만 읽고, 앱은 구워진 값만 소비한다.
 - **표에 없는 표기는 조용히 비우지 않는다.** 원본을 그대로 두고 `import:source`가 경고한다 — 확장 때 교단이 사라진 것을 알아채기 위해서다.
-- **한 raw 값이 서로 다른 교단을 가리키면 `perChurch`로 교회별로 나눈다** (`개혁`·`독립`·`합동진리` 세 행).
+- **한 raw 값이 서로 다른 교단을 가리키면 `perChurch`로 교회별로 나눈다.** 어느 행이 그런지는 판정표에 있다.
 
 **남은 것** — `독립개혁장로회`와 `독립개혁장로교회(IRPC)`가 같은 조직인지 미확정이다(`data/denominations.json`의 `openQuestion`). 묶음은 이 답에 좌우되지 않는다.
 
@@ -420,19 +409,28 @@ npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32�
 
 > **⚠️ 이 사이트는 공개돼 있다 (2026-09-06).** `https://www.refchurch.kr`에서 검색엔진이 수집 중이고 구글·네이버·Bing에 등록·사이트맵 제출까지 끝났다. **이제 URL을 바꾸면 색인된 주소가 깨진다** — 라우트 구조를 손대기 전에 리다이렉트를 함께 생각할 것.
 >
-> `src/app/robots.ts`는 `VERCEL_ENV === "production"`일 때만 열리고 로컬·프리뷰에서는 전면 차단이다(프리뷰 중복 색인 방지). **`dev` 브랜치 push로는 열리지 않는다.** 6-0 ~ 6-6이 끝났고 **남은 것은 측정(6-7)뿐**이다 — 목록은 `docs/ui-checklist.md`의 SEO 섹션에 있다.
+> `src/app/robots.ts`는 `VERCEL_ENV === "production"`일 때만 열리고 로컬·프리뷰에서는 전면 차단이다(프리뷰 중복 색인 방지). **`dev` 브랜치 push로는 열리지 않는다.** 구현은 사실상 끝났고 **남은 것은 측정과 확인뿐**이다 — **항목별 진도는 `docs/ui-checklist.md`의 SEO 절이 단일 출처이므로 여기에 적지 않는다.**
 
-### 현재 구현된 것
+### 어디에 무엇이 있나
 
-- `src/app/layout.tsx` — `metadataBase`, `title`(`default` + `template`), `description`, `openGraph`, `twitter`, `robots`, `verification`. 소유확인 토큰은 `src/lib/site.ts`의 `SEARCH_VERIFICATION`에 모여 있다 — **공개 값이라 환경변수로 감싸지 않고, 빈 값은 태그를 만들지 않는다.**
-- 모든 화면에 `metadata`(title/description/canonical)가 있다. 홈은 `title`을 일부러 비워 layout의 `default`를 상속받는다 — 넣으면 template이 걸려 `홈 · 개혁주의 교회 디렉토리`가 된다.
-- `/churches/[id]`·`/region/[region]`·`/denomination/[group]` — `generateMetadata`로 데이터 기반 title/description/canonical을 만든다.
-- **OG 이미지는 코드로 굽는다.** `src/app/opengraph-image.tsx`(기본)와 `src/app/churches/[id]/opengraph-image.tsx`(89장). 껍데기·팔레트·로고는 `src/lib/og-layout.tsx`가 공유하고, 폰트 로딩은 `src/lib/og.ts`에 있다.
-- `src/app/manifest.ts` · `icon.png` · `apple-icon.png` · `favicon.ico` — 아이콘은 전부 `icon.png` 하나에서 파생된다.
-- `src/app/robots.ts` — 프로덕션에서만 개방, 그 외는 전면 차단. 위 경고 참고.
-- `src/app/sitemap.ts` — 경로 목록은 `src/lib/indexable-paths.ts`가 만든다(105개). **`lastModified`·`priority`·`changeFrequency`를 넣지 않는다** — 넣을 만한 값이 없거나 무시되는 값이다.
-- `src/lib/json-ld.ts` — `siteJsonLd()`(Organization+WebSite를 `@graph`로 묶어 `layout.tsx`에서 전역 삽입) · `breadcrumbJsonLd()` · `churchCollectionJsonLd()`(랜딩) · `churchJsonLd()`(상세). 문서에 심는 것은 `src/components/shared/JsonLd.tsx`가 전담한다.
-- `src/app/not-found.tsx` — 없는 교회 id 접근 시. 상세의 `notFound()` 호출과 짝이다.
+**파일별 인벤토리를 적지 않는다** — 코드가 단일 출처이고, 적어 두면 파일이 바뀔 때 조용히 낡는다. 진입점만 둔다.
+
+| 무엇 | 어디 |
+|---|---|
+| 전역 메타데이터 · OG · 소유확인 토큰 | `src/app/layout.tsx` · `src/lib/site.ts`(`SEARCH_VERIFICATION`) |
+| 화면별 메타데이터 | 각 `page.tsx`의 `metadata` / 동적 라우트는 `generateMetadata` |
+| OG 이미지 (코드로 굽는다) | `src/app/opengraph-image.tsx` · `churches/[id]/opengraph-image.tsx` · 공유 껍데기 `src/lib/og-layout.tsx` |
+| robots · sitemap · manifest · llms.txt | `src/app/`의 동명 파일. 경로 목록은 `src/lib/indexable-paths.ts` |
+| JSON-LD | 만드는 곳 `src/lib/json-ld.ts` · 심는 곳 `src/components/shared/JsonLd.tsx` |
+| 아이콘 전부 | `src/app/icon.png` **하나에서 파생된다** |
+
+**여기 적는 것은 결정뿐이다.**
+
+- **홈은 `title`을 일부러 비운다** — 넣으면 template이 걸려 `홈 · 개혁주의 교회 디렉토리`가 된다.
+- **소유확인 토큰은 환경변수로 감싸지 않는다** — 공개 값이다. 빈 값이면 태그를 만들지 않는다.
+- **sitemap에 `lastModified`·`priority`·`changeFrequency`를 넣지 않는다** — 넣을 만한 값이 없거나 무시되는 값이다.
+- **`src/app/robots.ts`는 프로덕션에서만 열린다.** 그 외는 전면 차단 — 위 경고 참고.
+- **없는 교회 id는 `notFound()`** → `src/app/not-found.tsx`. 상세의 호출과 짝이다.
 
 ### 구현할 때의 방침
 
@@ -444,7 +442,7 @@ npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32�
 - **교회 상세 구조화 데이터는 `@type: "Church"`에 `geo`를 넣는다** (2026-08-12 결정, 구현 완료). schema.org에 `Place > CivicStructure > PlaceOfWorship > Church`로 실재하는 타입이다. **`LocalBusiness`를 쓰지 않는다** — 교회를 사업체로 표기하게 되어 사실과 어긋난다. `src/lib/json-ld.ts`의 `churchJsonLd()`.
 - **이 선택이 리치 결과를 포기하는 것이 아님을 실측으로 확인했다 (2026-09-06).** 리치 검색결과 테스트에서 구글이 `Church`를 **`지역 업체`로 인식했고 오류 0건**이다. 좌표 없는 건도 마찬가지다 — `geo` 키를 통째로 빼는 방식이 맞다.
 - **`image`에는 교회별 OG 이미지를 넣는다.** 사진이 아니지만 **이 사이트는 앞으로도 교회 사진을 가질 수 없다**(사람 사진 수집 금지 + 건물 사진·로고는 저작권). 영원히 비워두는 것보다 이름·교단·지역·담임목사가 사실대로 담긴 카드를 쓰는 편이 낫다고 판단했다. **쿼리 없는 경로를 쓴다** — Next가 붙이는 해시는 빌드마다 달라진다.
-- 좌표가 이 `geo` 때문에 필요해졌다. 그래서 좌표 확보가 지도(5단계)가 아니라 상세 페이지의 선행 조건이었다 — 나중에 넣으면 89개 정적 페이지를 다시 구워야 한다.
+- 좌표가 이 `geo` 때문에 필요해졌다. 그래서 좌표 확보가 지도(5단계)가 아니라 상세 페이지의 선행 조건이었다 — 나중에 넣으면 상세 페이지를 전부 다시 구워야 한다.
 - **없는 값은 키 자체를 넣지 않는다.** 빈 문자열은 "값이 있는데 비어 있다"로 읽힌다. 좌표 없는 1건(군산진성교회)에는 `geo`가 없다.
 
 ### 새 페이지 추가 시 손대야 하는 곳
@@ -456,8 +454,9 @@ npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32�
 
 ### 크롤러 정책 — 적용됨 (2026-09-06)
 
-- **AI 크롤러를 명시적으로 allow한다** — GPTBot, ClaudeBot, PerplexityBot, Google-Extended. 학습용/검색용 구분 없이 전부 허용(최대 노출 우선, 2026-06-19 결정).
-- **국내 검색엔진 크롤러도 명시한다** — `Yeti`(네이버)·`Daumoa`(다음). "교회 찾기"는 생활·지역 쿼리라 네이버 비중이 크고, 네이버는 크롤러 허용과 별개로 **서치어드바이저 소유확인·사이트맵 수동 제출**이 따로 필요하다.
+- **AI 크롤러를 명시적으로 allow한다.** 학습용/검색용을 구분하지 않고 전부 허용한다 — 최대 노출 우선(2026-06-19 결정).
+- **국내 검색엔진 크롤러도 명시한다** — "교회 찾기"는 생활·지역 쿼리라 네이버 비중이 크다. **목록은 `src/app/robots.ts`가 단일 출처다.**
+- ⚠️ **네이버는 크롤러 허용과 별개로 서치어드바이저 소유확인·사이트맵 수동 제출이 따로 필요하다.**
 - ⚠️ **robots.txt는 가장 구체적인 그룹 하나만 적용한다.** 위 크롤러들은 각자 그룹을 갖고 있어, `User-agent: *`에 `Disallow`를 추가해도 그 제한을 물려받지 않는다 — **`*`를 제한할 일이 생기면 이 목록도 함께 고쳐야 한다.**
 - ⚠️ **`Daumoa`를 열어두는 것만으로는 다음 검색에 잡히지 않는다.** 다른 프로젝트에서 robots.txt 허용만으로 몇 달을 기다렸으나 노출되지 않은 것을 확인했다(2026-09-06). **`register.search.daum.net`에 검색등록을 따로 신청해야 한다** — 소유확인 없이 사람이 검토하는 폼이고 반영에 3~15일 걸린다. 다음에 등록하면 네이트에도 함께 나간다.
 - **`/llms.txt`** — AI 검색·답변 엔진을 위한 사이트 개요(llmstxt.org 포맷). **개별 교회 URL은 나열하지 않는다** — 지역·교단 랜딩까지만 링크하고 개별 페이지는 sitemap이 맡는다.

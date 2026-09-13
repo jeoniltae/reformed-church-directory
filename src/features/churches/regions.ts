@@ -40,3 +40,38 @@ export const STANDARD_REGIONS = [
   "경남",
   "제주",
 ] as const;
+
+/**
+ * 홈 h1의 지역 롤링에 굴릴 지역을 뽑는다 (2026-09-13).
+ *
+ * ⚠️ **예전에는 `건수 상위 N`이었다. 그 방식으로 되돌리지 말 것.**
+ * 15개 지역 중 **10개가 아예 후보에 들어가지 못했고**(충북·전남광주·대구·세종·경북·
+ * 충남·강원·대전·울산·경남), 무엇보다 **충북·부산·인천이 똑같이 4곳인데 부산·인천만
+ * 뽑혀** 동점을 임의로 잘랐다. 지역 칩에서 `건수 순위를 노출하지 않는다`로 정리해
+ * 놓고 **바로 위 h1만 상위 5를 전시하고 있었다.**
+ *
+ * **무작위 표본이다.** 홈은 `revalidate`로 15분마다 다시 구워지므로 표본도 그때
+ * 바뀐다 — 오래 보면 모든 지역이 고르게 나온다. 홈 미리보기 교회를 무작위로 뽑는
+ * 것과 **같은 방식이고 같은 주기**다.
+ *
+ * ⚠️ **전체를 돌리지 않는 이유.** `globals.css`의 키프레임이 **항목 수에 비례한
+ * 퍼센트**로 각 항목의 노출 구간을 잡는다(5칸 기준). 15개를 돌리려면 항목 수마다
+ * 키프레임을 따로 써야 하고, 늘어날 때마다 CSS를 고쳐야 한다. 그렇게 해도
+ * **2초 × 15개 = 30초 주기**라 **한 방문자가 보는 개수는 지금과 별로 다르지 않다** —
+ * 비용은 크고 얻는 것은 작다.
+ *
+ * **뽑은 뒤 표준 순서로 되돌린다.** 굴러가는 차례가 뒤죽박죽이면 임의로 보인다.
+ */
+export function sampleRegions(regions: string[], count: number): string[] {
+  const pool = [...regions];
+  const take = Math.min(count, pool.length);
+
+  // Fisher–Yates를 앞 `take`칸만 돌린다 — `getPreviewChurches`와 같은 방식이다
+  for (let i = 0; i < take; i++) {
+    const j = i + Math.floor(Math.random() * (pool.length - i));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+
+  const picked = new Set(pool.slice(0, take));
+  return STANDARD_REGIONS.filter((region) => picked.has(region));
+}

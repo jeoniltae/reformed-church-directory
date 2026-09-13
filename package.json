@@ -11,6 +11,7 @@
     "lint": "eslint",
     "test": "vitest run",
     "import:source": "node scripts/import-source.mts",
+    "church": "node scripts/church.mts",
     "check:homepages": "node scripts/check-homepages.mts",
     "normalize:addresses": "node --env-file=.env.local scripts/normalize-addresses.mts",
     "geocode:coords": "node --env-file=.env.local scripts/geocode-coords.mts",

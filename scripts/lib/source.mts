@@ -242,10 +242,18 @@ export function buildRows(input: {
   return { rows, addedCount: additions.length };
 }
 
-export function readSource(): {
-  rows: SourceRow[];
+/**
+ * 파일에서 buildRows의 입력을 그대로 꺼낸다.
+ *
+ * **신규 등록·교정을 미리 시뮬레이션할 때 쓴다** — 예상 id를 손으로 계산하지 않고
+ * 진짜 변환을 한 번 더 돌려 보는 편이 안전하다(충돌 규칙이 한 곳에만 있게 된다).
+ */
+export function readSourceInputs(): {
+  header: string[];
+  body: string[][];
+  additions: AdditionRow[];
+  fixes: Map<string, Fix>;
   droppedColumns: string[];
-  addedCount: number;
 } {
   const table = parseCsv(new TextDecoder("euc-kr").decode(readFileSync(CSV)));
   const header = table[HEADER_ROW - 1].map((h) => h.trim());
@@ -264,8 +272,6 @@ export function readSource(): {
     JSON.parse(readFileSync(ADDITIONS, "utf8")) as { churches: AdditionRow[] }
   ).churches;
 
-  const { rows, addedCount } = buildRows({ header, body, additions, fixes });
-
   const droppedColumns = header.filter(
     (h) =>
       h &&
@@ -273,5 +279,15 @@ export function readSource(): {
       h !== "홈페이지",
   );
 
+  return { header, body, additions, fixes, droppedColumns };
+}
+
+export function readSource(): {
+  rows: SourceRow[];
+  droppedColumns: string[];
+  addedCount: number;
+} {
+  const { droppedColumns, ...input } = readSourceInputs();
+  const { rows, addedCount } = buildRows(input);
   return { rows, droppedColumns, addedCount };
 }

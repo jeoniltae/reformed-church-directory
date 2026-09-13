@@ -77,6 +77,19 @@ npm run lint   # ESLint
 npm run build  # 프로덕션 빌드
 ```
 
+교회를 등록·수정·삭제할 때 쓴다. **데이터 파일을 손으로 고치지 않는다** — 절차는 `.claude/skills/church-data/SKILL.md`에 있다.
+
+```bash
+npm run church -- find <검색어>    # 대상 확인. 출력 id와 조회용 id를 나란히 보여준다
+npm run church -- add ...          # 신규 등록 → data/additions.json
+npm run church -- edit <검색어> ...  # 수정 → data/address-fixes.json
+npm run church -- remove <검색어> --reason=  # 삭제 요청 → data/excluded.json
+npm run church -- notice <검색어> --message= # 알려진 한계 안내 → data/notices.json
+npm run reports                    # GitHub Issues 제보 조회 (읽기 전용)
+```
+
+`--dry-run`을 붙이면 파일을 쓰지 않고 결과만 본다. **명령이 끝에 다음 실행 절차를 출력하므로 그대로 따른다.**
+
 데이터 정비용 오프라인 스크립트. 앱 런타임과 무관하며 수동으로만 돌린다.
 
 ```bash
@@ -91,6 +104,7 @@ npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32�
 
 **순서가 있다.** `normalize:addresses` → `geocode:coords` → `import:source`. 앞의 둘은 `data/geocode.json`만 갱신하고 `churches.json`은 건드리지 않는다. **주소를 재조회하면 좌표도 무효가 되므로** `normalize:addresses`를 다시 돌렸으면 `geocode:coords`도 다시 돌린다. 둘 다 `.env.local`의 승인키가 필요하다(`JUSO_SEARCH_KEY`·`JUSO_COORD_KEY`, API별로 키가 다르다).
 
+- `import:source`에 **`--strict`**를 주면 경고 하나에도 exit 1이다. 기본은 exit 0 — 손으로 돌려 보고 판단하는 도구라서다. 자동화·검증에서는 `--strict`를 쓴다.
 - `npm run crawl:kosin`은 `scripts/collect-kosin.ts`가 생기는 시점에 `node scripts/collect-kosin.ts`로 추가한다. Node 24가 `.ts`를 네이티브 실행하므로 tsx 같은 실행기가 필요 없다.
 
 ### 화면 확인 — 개발 서버와 프로덕션 서버를 구분한다
@@ -115,7 +129,7 @@ src/components/   ui/ (shadcn 관리 영역) · shared/ (BottomTabBar, PageTrans
 src/features/     기능별 슬라이스 — churches/ (조회·검색) · reports/ (제보 → GitHub Issues)
 src/lib/          cn() · church-utils · json-ld · site · indexable-paths · llms-txt · og
 src/types/        전역 타입
-scripts/          데이터 정비 배치 — 앱 런타임과 분리된 `.mts`. 공용 모듈은 scripts/lib/
+scripts/          데이터 정비 배치 — 앱 런타임과 분리된 `.mts`. 공용 모듈은 scripts/lib/, 훅은 scripts/hooks/
 data/             앱이 직접 읽는 유일한 데이터 소스
 ```
 
@@ -123,7 +137,8 @@ data/             앱이 직접 읽는 유일한 데이터 소스
 
 | `data/` | 무엇 |
 |---|---|
-| `churches.json` | **앱이 읽는 유일한 파일.** 커밋 대상 |
+| `churches.json` | **앱이 읽는 유일한 파일.** 커밋 대상. **산출물이므로 직접 고치지 않는다** |
+| `additions.json` | 원본 CSV 이후에 등록한 교회. **CSV를 고치지 않는 대신 여기 쌓인다** (UTF-8) |
 | `denominations.json` | 교단 표기 판정표. **앱 번들에 안 들어간다** — 스크립트만 읽는다 |
 | `address-fixes.json` | 주소 수동 교정 표. 사람이 손대는 입력을 스크립트가 흡수한다 |
 | `notices.json` | 교회별 '알려진 한계' 안내 → `Church.notice`가 된다 |
@@ -364,7 +379,9 @@ data/             앱이 직접 읽는 유일한 데이터 소스
 - **수집한다** — 소스가 연락처 필드로 명시한 번호. 형식 무관.
 - **수집하지 않는다** — 본문 텍스트를 정규식으로 스캔해 찾아낸 번호(목회자 소개 문단, 게시글, 첨부 파일 등). 원본 필드를 통째로 담지 말고 **파싱한 필드만 화이트리스트로 뽑아 쓰면** 이 구분이 자동으로 지켜진다.
 - **이메일은 싣지 않는다** — `mailto:` 평문 노출은 스팸 수집 봇의 표적이 되고, 교회가 입은 피해의 원인으로 이 사이트가 지목될 수 있다. 대신 홈페이지/SNS 링크를 노출한다.
-- 주민등록번호 형식 등 명백한 민감정보가 섞여 들어오면 커밋 전에 걸러낸다.
+- 주민등록번호 형식 등 명백한 민감정보가 섞여 들어오면 커밋 전에 걸러낸다. **이것은 자동으로 막힌다 (2026-09-13)** — `scripts/lib/sensitive.mts`가 주민번호·평문 이메일·카드번호(Luhn) 형식을 찾고, `.claude/settings.json`의 `PreToolUse` 훅(`scripts/hooks/check-sensitive.mts`)이 `data/` 아래 쓰기를 차단한다. `npm run church`도 쓰기 직전에 같은 함수를 부른다. **막혔다면 우회하지 말고 그 값이 정말 필요한지 다시 본다.**
+  - 오탐을 내지 않는 쪽에 무게를 뒀다 — 국내 전화번호(3-4-4)와 도로명주소 API 코드값은 걸리지 않는다. 정상 데이터가 걸리기 시작하면 아무도 검사를 켜 두지 않고, 그러면 진짜를 놓친다.
+  - **`old_string`은 검사하지 않는다.** 이미 들어간 민감정보를 *지우는* 편집까지 막으면 고치려는 사람을 막는 꼴이 된다.
 
 전화번호는 `tel:` 링크로 노출한다. 모바일 우선 UI에서 탭 한 번으로 전화가 걸리는 것이 이 서비스의 핵심 동선이다.
 

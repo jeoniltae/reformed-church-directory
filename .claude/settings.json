@@ -4,6 +4,9 @@
       "Bash(npx vitest *)",
       "Bash(npx eslint *)",
       "Bash(npx shadcn *)",
+      "Bash(npm run church*)",
+      "Bash(npm run import:source*)",
+      "Bash(npm run issues*)",
       "Bash(git status*)",
       "Bash(git diff*)",
       "Bash(git log*)",
@@ -21,6 +24,19 @@
       "Edit(./data/raw/**)",
       "Edit(./src/components/ui/**)",
       "Bash(rm -rf *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hooks/check-sensitive.mts"
+          }
+        ]
+      }
     ]
   }
 }

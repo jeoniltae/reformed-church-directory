@@ -69,7 +69,8 @@
       "phoneCorrected": "",
       "pastorHint": "이정화",
       "pastorCorrected": "",
-      "note": ""
+      "note": "",
+      "homepageCorrected": "https://thevine21.hompee.com/user/bbs/html/index?menuId=101512&topMenuId=1&menuType=27&newmenuAt=0"
     },
     {
       "id": "명륜교회-종로구",
@@ -88,7 +89,7 @@
       "original": "서울시 종로구 필운동 298 3층",
       "corrected": "서울 은평구 증산로 275 순수지혜 3층",
       "phoneHint": "010-8993-777",
-      "phoneCorrected": "02-306-0643",
+      "phoneCorrected": "070-4110-0643",
       "pastorHint": "문정식",
       "pastorCorrected": "",
       "note": ""
@@ -102,7 +103,8 @@
       "phoneCorrected": "032-564-6187",
       "pastorHint": "이경섭",
       "pastorCorrected": "",
-      "note": ""
+      "note": "",
+      "homepageCorrected": "https://www.youtube.com/@bansuk1616"
     },
     {
       "id": "주님의교회-북구",
@@ -163,9 +165,9 @@
       "id": "내흥교회-군산시",
       "church": "내흥교회",
       "original": "전북 군산시 내흥동 579",
-      "corrected": "전북특별자치도 군산시 내흥1길 15 (내흥동)",
+      "corrected": "전북 군산시 구암3.1로 219 204호",
       "phoneHint": "063-445-3458",
-      "phoneCorrected": "",
+      "phoneCorrected": "063-442-3458",
       "pastorHint": "장재훈",
       "pastorCorrected": "",
       "note": ""
@@ -265,7 +267,7 @@
       "phoneHint": "02-353-6265",
       "phoneCorrected": "",
       "pastorHint": "서문강",
-      "pastorCorrected": "",
+      "pastorCorrected": "김태선",
       "homepageHint": "http://joongsim.hompee.org/",
       "homepageCorrected": "http://www.joongsimch.org/",
       "note": "홈페이지가 홈피닷컴에서 자체 도메인으로 이전했다. **원본은 `check:homepages` 개선(2026-09-01)이 처음 잡아낸 안내 페이지 유형이다** — `joongsim.hompee.org`가 HTTP 200을 주면서 title이 `홈피닷컴 :: Not Found,`인 호스팅 안내 페이지다. 새 주소는 같은 판정 함수로 확인했다(HTTP 200, title `중심교회`, 안내 페이지 아님). **dead-links.json에는 넣지 않았다** — homepageCorrected가 죽은 링크 판정 뒤에 얹혀 원본이 출력에 닿지 않으므로 기능상 불필요하고, 원본이 죽었다는 사실은 이 note가 남긴다. 주소는 그대로라 normalize:addresses 재실행이 필요 없다."
@@ -434,6 +436,102 @@
       "pastorCorrected": "",
       "subRegionCorrected": "은평구",
       "note": "**성북구 정릉동에서 은평구 진관동으로 옮겼다. 사용자가 직접 확인해 알려줬다(2026-09-10).** 지번은 `은평구 진관동 69-1`. 원본 `서울시 성북구 정릉4동 401-2번지`는 도로명주소 조회가 `보국문로 54-1 (정릉동)`으로 정상 매칭돼 좌표까지 붙어 있었다 — **형식이 멀쩡해 자동 점검으로는 걸러지지 않는 부류의 오류다.** 상세 주소 `이로운프라자 6층`은 넣지 않았다(필그림교회 `두정프라자 4층`과 같은 기준). **regionCorrected는 두지 않는다** — 서울 안에서의 이동이라 시도가 그대로다. ⚠️ **subRegionCorrected 때문에 출력 id가 `바로선개혁교회-성북구`에서 `바로선개혁교회-은평구`로 바뀌고 상세 페이지 URL도 함께 바뀐다.** 사이트가 2026-09-06 공개돼 색인 중이므로 옛 URL에 리다이렉트를 넣었다(next.config.ts). 언약교회 건과 같은 구조다. **전화번호도 함께 바꿨다 (2026-09-10).** 원본 `02-941-2019`는 성북·강북 쪽 국번이라 이전 후 유효한지 의심스러웠는데, 사용자가 `0507-1410-7208`을 확인해 알려줬다. **0507은 안심번호(가상번호)다** — 형식이 아니라 게시 맥락으로 판단한다는 CLAUDE.md 연락처 수집 기준에 따라 그대로 싣는다(개척·소형교회에서 흔하다). 길이는 14자로 기존 최장(`0507-1312-5303`)과 같아 버튼 폭에 새 제약을 만들지 않는다."
+    },
+    {
+      "id": "솔리데오글로리아교회-남양주시",
+      "church": "솔리데오글로리아교회",
+      "original": "경기도 남양주시 진건읍 진관리 162-1",
+      "corrected": "경기 의정부시 동일로 546 3층",
+      "phoneHint": "010-7560-3340",
+      "phoneCorrected": "070-7775-7770",
+      "homepageHint": "http://www.sdgfaith.com/",
+      "homepageCorrected": "https://sdgchurch.kr",
+      "subRegionCorrected": "의정부시",
+      "note": "2026-09-16 전수조사 — 의정부시로 이전"
+    },
+    {
+      "id": "새롬교회-노원구",
+      "church": "새롬교회",
+      "homepageHint": "",
+      "homepageCorrected": "http://www.reformedchurch.co.kr/default/index.php"
+    },
+    {
+      "id": "예림교회-노원구",
+      "church": "예림교회",
+      "homepageHint": "",
+      "homepageCorrected": "https://www.rcw.kr/www/yelimchurch"
+    },
+    {
+      "id": "한우리교회-해운대구",
+      "church": "한우리교회",
+      "homepageHint": "http://www.hwrchurch.or.kr/",
+      "homepageCorrected": "https://www.youtube.com/@hanwoorichurch_busan"
+    },
+    {
+      "id": "언약교회-수성구",
+      "church": "언약교회",
+      "homepageHint": "http://www.covenant.kimc.net/",
+      "homepageCorrected": "https://cafe.daum.net/covenant2021"
+    },
+    {
+      "id": "세종말씀교회",
+      "church": "세종말씀교회",
+      "homepageHint": "sejonglogos.modoo.at",
+      "homepageCorrected": "https://cafe.naver.com/sejonglogos"
+    },
+    {
+      "id": "삼송제일교회-고양시",
+      "church": "삼송제일교회",
+      "homepageHint": "",
+      "homepageCorrected": "https://www.samsongfirst.org"
+    },
+    {
+      "id": "주교개혁장로교회-고양시",
+      "church": "주교개혁장로교회",
+      "homepageHint": "http://blog.daum.net/jkrpe/1329627",
+      "homepageCorrected": "https://www.youtube.com/@%EC%9E%A5%EB%A1%9C%EA%B5%90%ED%9A%8C%EC%A3%BC%EA%B5%90%EA%B0%9C%ED%98%81"
+    },
+    {
+      "id": "한사랑교회-동두천시",
+      "church": "한사랑교회",
+      "homepageHint": "",
+      "homepageCorrected": "https://thevine21.hompee.com/user/bbs/html/index?menuId=115787&topMenuId=1&menuType=27&newmenuAt=0"
+    },
+    {
+      "id": "한마음개혁교회-성남시",
+      "church": "한마음개혁교회",
+      "homepageHint": "https://cafe.naver.com/hmchurch/",
+      "homepageCorrected": "https://www.reformedchurch.or.kr"
+    },
+    {
+      "id": "제천행복한교회-제천시",
+      "church": "제천행복한교회",
+      "homepageHint": "",
+      "homepageCorrected": "https://blog.naver.com/jcfamcounsel"
+    },
+    {
+      "id": "반석교회-평택시",
+      "church": "반석교회",
+      "pastorHint": "문민규",
+      "pastorCorrected": "최문관"
+    },
+    {
+      "id": "안산푸른교회-안산시",
+      "church": "안산푸른교회",
+      "phoneHint": "",
+      "phoneCorrected": "031-411-3445"
+    },
+    {
+      "id": "삼천제일교회-전주시",
+      "church": "삼천제일교회",
+      "original": "전북 전주시 완산구 효자동1가 205-12",
+      "corrected": "전북 전주시 완산구 용머리로 136"
+    },
+    {
+      "id": "청주언약교회-청주시",
+      "church": "청주언약교회",
+      "original": "충북 청주시 흥덕구 복대2동 2386",
+      "corrected": "충북 청주시 서원구 성봉로 209"
     }
   ]
 }

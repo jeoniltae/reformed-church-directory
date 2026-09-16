@@ -12,6 +12,7 @@
 // 루트의 기본 OG를 그대로 쓴다.
 
 import { ImageResponse } from "next/og";
+import { notFound } from "next/navigation";
 import { getAllChurchIds, getChurchById } from "@/features/churches/data";
 import { decodeRouteParam } from "@/lib/church-utils";
 import { OG_CONTENT_TYPE, OG_SIZE, ogFonts } from "@/lib/og";
@@ -44,9 +45,17 @@ export default async function ChurchOpengraphImage({
 }) {
   const church = getChurchById(decodeRouteParam((await params).id));
 
-  const place = church?.subRegion
+  /**
+   * **없는 교회는 빈 카드를 그리지 않고 404로 끝낸다.**
+   * `generateStaticParams`에 없는 id도 요청되면 렌더되므로, 막지 않으면
+   * 아무 문자열이나 넣어도 로고만 있는 200 이미지가 나온다(soft 404).
+   * 상세 페이지의 `notFound()` 호출과 짝이다.
+   */
+  if (!church) notFound();
+
+  const place = church.subRegion
     ? `${church.region} ${church.subRegion}`
-    : church?.region;
+    : church.region;
 
   return new ImageResponse(
     (
@@ -61,7 +70,7 @@ export default async function ChurchOpengraphImage({
         >
           <OgLogo />
 
-          {church?.denomination && (
+          {church.denomination && (
             <div
               style={{
                 display: "flex",
@@ -82,7 +91,7 @@ export default async function ChurchOpengraphImage({
           <div
             style={{
               // 배지가 없는 6건은 위가 비므로 그만큼 띄운다
-              marginTop: church?.denomination ? 22 : 56,
+              marginTop: church.denomination ? 22 : 56,
               fontSize: 68,
               fontWeight: 800,
               color: OG_COLORS.heading,
@@ -95,52 +104,46 @@ export default async function ChurchOpengraphImage({
               overflow: "hidden",
             }}
           >
-            {church?.name ?? SITE_NAME}
+            {church.name}
           </div>
 
-          {church && (
-            <div
-              style={{
-                display: "flex",
-                marginTop: 20,
-                fontSize: 27,
-                color: OG_COLORS.muted,
-              }}
-            >
-              {/* 값과 문자열을 섞으면 자식 둘로 세므로 템플릿 문자열로 합친다 */}
-              {`${place} · ${church.pastor} 목사`}
-            </div>
-          )}
+          <div
+            style={{
+              display: "flex",
+              marginTop: 20,
+              fontSize: 27,
+              color: OG_COLORS.muted,
+            }}
+          >
+            {/* 값과 문자열을 섞으면 자식 둘로 세므로 템플릿 문자열로 합친다 */}
+            {`${place} · ${church.pastor} 목사`}
+          </div>
 
-          {church && (
-            <div
-              style={{
-                display: "flex",
-                marginTop: 30,
-                width: 560,
-                height: 1,
-                background: OG_COLORS.divider,
-              }}
-            />
-          )}
+          <div
+            style={{
+              display: "flex",
+              marginTop: 30,
+              width: 560,
+              height: 1,
+              background: OG_COLORS.divider,
+            }}
+          />
 
-          {church && (
-            <div
-              style={{
-                marginTop: 24,
-                fontSize: 23,
-                color: OG_COLORS.body,
-                lineHeight: 1.5,
-                // 주소가 긴 교회가 있어 한 줄로 자른다
-                display: "-webkit-box",
-                WebkitBoxOrient: "vertical",
-                WebkitLineClamp: 1,
-                overflow: "hidden",
-              }}
-            >
-              {church.address}
-            </div>
-          )}
+          <div
+            style={{
+              marginTop: 24,
+              fontSize: 23,
+              color: OG_COLORS.body,
+              lineHeight: 1.5,
+              // 주소가 긴 교회가 있어 한 줄로 자른다
+              display: "-webkit-box",
+              WebkitBoxOrient: "vertical",
+              WebkitLineClamp: 1,
+              overflow: "hidden",
+            }}
+          >
+            {church.address}
+          </div>
         </div>
 
         {/* 특정 교회를 가리키는 이미지라 채운 핀 하나만 둔다 */}

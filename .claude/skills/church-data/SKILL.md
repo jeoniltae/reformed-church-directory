@@ -102,6 +102,28 @@ git diff data/churches.json         # 의도한 교회만 바뀌었는지 눈으
 
 ---
 
+## 대량 반영 — 전수조사 결과처럼 건수가 많을 때
+
+위 절차는 한 건짜리다. 수십 건이면 네 가지가 달라진다.
+
+**① 먼저 전부 `--dry-run`으로 돌려 대상부터 확인한다.** 못 찾거나 후보가 여럿인 건, 그리고 아래 ②③에 걸리는 건을 **한꺼번에 모아 사용자에게 묻는다.** 한 건씩 물어보면 스무 번 끊긴다.
+
+**② 주소 변경은 새 주소의 시군구를 현재 id와 대조한다.** 이전하면 시군구가 바뀌는데, `--address`만 주면 **주소는 새 동네인데 id와 지역 필터는 옛 동네로 남아** 데이터가 자기모순이 된다. 시군구가 다르면 `--subRegion`을 함께 주고, 그러면 id가 바뀌므로 아래 "id가 바뀌는 수정"으로 간다. 시도까지 넘어가면 `--region`도 함께 준다.
+
+**③ 주소가 여러 건 바뀌면 `--only`를 반복하지 않는다.** 건마다 API 호출이 1초씩 쌓인다. 수정을 전부 넣은 뒤 전체 재조회를 한 번 돌린다.
+
+```bash
+npm run normalize:addresses          # --only 없이 전체
+npm run geocode:coords
+npm run import:source -- --strict
+```
+
+좌표는 `coordParams` 다섯 코드가 같으면 그대로 이어받으므로 **주소가 안 바뀐 교회는 좌표 API를 다시 부르지 않는다.** 89건 전체 재조회가 1~2분이다.
+
+**④ `git diff`로는 검수가 안 된다.** 수십 건이면 사람이 눈으로 못 훑는다. **반영 전에 대상들의 현재 값을 스냅샷으로 저장해 두고, 반영 후 before/after 표를 만들어 보여준다.** 스냅샷은 작업용 임시 디렉토리에 두고 저장소에 넣지 않는다.
+
+---
+
 ## 금지
 
 - `data/churches.json` 직접 편집 — 산출물이다
@@ -132,6 +154,25 @@ curl -I "http://localhost:3000/churches/%EC%96%B8%EC%95%BD%EA%B5%90%ED%9A%8C-%EA
 
 ---
 
+## 교단을 바꿀 때 — `edit`이 아니다
+
+**`edit`에 `--denomination`이 없다.** 교단은 `data/address-fixes.json`이 아니라 `data/denominations.json`에서 결정되는 값이라 그 파일을 직접 고친다.
+
+raw 표기 자체는 그대로 두고 **그 교회만 다르게 판정해야 하면** 해당 `entries[].perChurch`에 넣는다.
+
+```json
+{ "id": "<출력 id>", "short": "<배지에 보일 이름>", "group": "<묶음>" }
+```
+
+`short`·`group`이 없거나 빈 문자열이면 entry의 값으로 떨어진다 — 그래서 **빈 칸이 곧 "미정"이다.**
+
+- ⚠️ **비어 있는 것이 실수가 아닐 수 있다.** 근거가 부족해 일부러 비워 둔 행이 있다(`status`가 `불확실`·`확인 불가`). **채우기 전에 그 행의 `note`를 읽는다** — 거기에 "무엇을 확인하면 채워도 되는지"가 적혀 있는 경우가 많고, 그 조건이 충족됐는지가 판단 기준이다.
+- 바꿨으면 `note`에 **무엇으로 확인했는지와 이전 판단의 경위**를 남기고 `status`·`checkedAt`을 갱신한다. `sourceUrl`을 못 채우면 왜 없는지도 적는다(사람이 직접 명부를 봤다면 인용할 URL이 없다).
+- **`groupRule`을 따른다.** 이름에 그 글자가 들어간다는 것만으로 계열에 넣지 않는다 — 이름으로 추정한 네 건이 전부 틀렸다.
+- 바꾼 뒤 `npm run import:source -- --strict`의 `교단 정규화` 줄에서 `표기 교체` 건수가 하나 늘었는지 확인한다.
+
+---
+
 ## 어디에 무엇이 있나
 
 | 무엇 | 어디 |
@@ -139,6 +180,7 @@ curl -I "http://localhost:3000/churches/%EC%96%B8%EC%95%BD%EA%B5%90%ED%9A%8C-%EA
 | CLI | `scripts/church.mts` |
 | 편집 판정 로직 (테스트 대상) | `scripts/lib/church-edit.mts` |
 | 원본 읽기·id 생성 | `scripts/lib/source.mts` |
+| 교단 판정표 (`groupRule`·`perChurch`) | `data/denominations.json` |
 | 민감정보 검사 | `scripts/lib/sensitive.mts` |
 | 제보 조회 | `scripts/issues.mts` |
 | 데이터 계약 | `src/types/church.ts` |

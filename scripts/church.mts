@@ -34,6 +34,7 @@ import {
   upsertFix,
   upsertNotice,
 } from "./lib/church-edit.mts";
+import { todayInSeoul } from "./lib/date.mts";
 import {
   buildDenominationIndex,
   type DenominationTable,
@@ -61,7 +62,7 @@ const target = argv.slice(1).find((a) => !a.startsWith("--")) ?? "";
 const flag = (name: string) =>
   argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
 const DRY = argv.includes("--dry-run");
-const today = new Date().toISOString().slice(0, 10);
+const today = todayInSeoul();
 
 const USAGE = `교회 데이터 등록·수정·삭제
 

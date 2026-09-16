@@ -46,6 +46,14 @@ const nextConfig: NextConfig = {
         destination: "/churches/%EB%B0%94%EB%A1%9C%EC%84%A0%EA%B0%9C%ED%98%81%EA%B5%90%ED%9A%8C-%EC%9D%80%ED%8F%89%EA%B5%AC",
         permanent: true,
       },
+      {
+        // /churches/솔리데오글로리아교회-남양주시 → /churches/솔리데오글로리아교회-의정부시
+        // 경기 남양주시 진건읍 → 경기 의정부시 동일로 이전 (2026-09-16 전수조사).
+        // 경위는 data/address-fixes.json의 `솔리데오글로리아교회-남양주시` 행 참조.
+        source: "/churches/%EC%86%94%EB%A6%AC%EB%8D%B0%EC%98%A4%EA%B8%80%EB%A1%9C%EB%A6%AC%EC%95%84%EA%B5%90%ED%9A%8C-%EB%82%A8%EC%96%91%EC%A3%BC%EC%8B%9C",
+        destination: "/churches/%EC%86%94%EB%A6%AC%EB%8D%B0%EC%98%A4%EA%B8%80%EB%A1%9C%EB%A6%AC%EC%95%84%EA%B5%90%ED%9A%8C-%EC%9D%98%EC%A0%95%EB%B6%80%EC%8B%9C",
+        permanent: true,
+      },
     ];
   },
 };

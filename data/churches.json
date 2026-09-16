@@ -97,7 +97,8 @@
     "lat": 37.629939,
     "lng": 127.06829,
     "subRegion": "노원구",
-    "phone": "02-978-9140"
+    "phone": "02-978-9140",
+    "homepage": "http://www.reformedchurch.co.kr/default/index.php"
   },
   {
     "id": "예림교회-노원구",
@@ -111,7 +112,8 @@
     "subRegion": "노원구",
     "denomination": "개혁",
     "denominationGroup": "기타",
-    "phone": "02-977-2780"
+    "phone": "02-977-2780",
+    "homepage": "https://www.rcw.kr/www/yelimchurch"
   },
   {
     "id": "고은교회-동대문구",
@@ -364,14 +366,15 @@
     "subRegion": "은평구",
     "denomination": "합동",
     "denominationGroup": "합동 계열",
-    "phone": "02-388-2847"
+    "phone": "02-388-2847",
+    "homepage": "https://thevine21.hompee.com/user/bbs/html/index?menuId=101512&topMenuId=1&menuType=27&newmenuAt=0"
   },
   {
     "id": "중심교회-은평구",
     "name": "중심교회",
     "region": "서울",
     "address": "서울특별시 은평구 녹번로3길 2 (녹번동)",
-    "pastor": "서문강",
+    "pastor": "김태선",
     "source": "자체 수집",
     "lat": 37.605432,
     "lng": 126.928554,
@@ -423,7 +426,7 @@
     "subRegion": "종로구",
     "denomination": "합신",
     "denominationGroup": "합신 계열",
-    "phone": "02-306-0643"
+    "phone": "070-4110-0643"
   },
   {
     "id": "동래언약교회-동래구",
@@ -481,7 +484,8 @@
     "subRegion": "해운대구",
     "denomination": "합동",
     "denominationGroup": "합동 계열",
-    "phone": "051-518-9125"
+    "phone": "051-518-9125",
+    "homepage": "https://www.youtube.com/@hanwoorichurch_busan"
   },
   {
     "id": "성서계명교회-달서구",
@@ -510,7 +514,8 @@
     "subRegion": "수성구",
     "denomination": "대한예수교 개혁회",
     "denominationGroup": "기타",
-    "phone": "053-741-6221"
+    "phone": "053-741-6221",
+    "homepage": "https://cafe.daum.net/covenant2021"
   },
   {
     "id": "주님뜻이룸교회-남동구",
@@ -568,7 +573,8 @@
     "subRegion": "서구",
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
-    "phone": "032-564-6187"
+    "phone": "032-564-6187",
+    "homepage": "https://www.youtube.com/@bansuk1616"
   },
   {
     "id": "주님의교회-북구",
@@ -638,7 +644,8 @@
     "lng": 127.233987,
     "denomination": "대신",
     "denominationGroup": "대신 계열",
-    "phone": "010-5050-5105"
+    "phone": "010-5050-5105",
+    "homepage": "https://cafe.naver.com/sejonglogos"
   },
   {
     "id": "삼송제일교회-고양시",
@@ -652,7 +659,8 @@
     "subRegion": "고양시",
     "denomination": "개혁",
     "denominationGroup": "기타",
-    "phone": "010-8003-2246"
+    "phone": "010-8003-2246",
+    "homepage": "https://www.samsongfirst.org"
   },
   {
     "id": "주교개혁장로교회-고양시",
@@ -666,7 +674,8 @@
     "subRegion": "고양시",
     "denomination": "합신",
     "denominationGroup": "합신 계열",
-    "phone": "010-8297-4120"
+    "phone": "010-8297-4120",
+    "homepage": "https://www.youtube.com/@%EC%9E%A5%EB%A1%9C%EA%B5%90%ED%9A%8C%EC%A3%BC%EA%B5%90%EA%B0%9C%ED%98%81"
   },
   {
     "id": "금정제일교회-군포시",
@@ -713,18 +722,19 @@
     "homepage": "http://blog.naver.com/PostList.nhn?blogId=sae-somang&categoryNo=18"
   },
   {
-    "id": "솔리데오글로리아교회-남양주시",
+    "id": "솔리데오글로리아교회-의정부시",
     "name": "솔리데오글로리아교회",
     "region": "경기",
-    "address": "경기도 남양주시 진건읍 양진로 375-77",
+    "address": "경기도 의정부시 동일로 546 (신곡동)",
     "pastor": "김병혁",
     "source": "자체 수집",
-    "lat": 37.653187,
-    "lng": 127.169793,
-    "subRegion": "남양주시",
+    "lat": 37.736943,
+    "lng": 127.058264,
+    "subRegion": "의정부시",
     "denomination": "합신",
     "denominationGroup": "합신 계열",
-    "phone": "010-7560-3340"
+    "phone": "070-7775-7770",
+    "homepage": "https://sdgchurch.kr"
   },
   {
     "id": "온생명교회-남양주시",
@@ -753,7 +763,8 @@
     "subRegion": "동두천시",
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
-    "phone": "031-868-6264"
+    "phone": "031-868-6264",
+    "homepage": "https://thevine21.hompee.com/user/bbs/html/index?menuId=115787&topMenuId=1&menuType=27&newmenuAt=0"
   },
   {
     "id": "한마음개혁교회-성남시",
@@ -768,7 +779,7 @@
     "denomination": "대신",
     "denominationGroup": "대신 계열",
     "phone": "010-5130-6803",
-    "homepage": "https://cafe.naver.com/hmchurch/"
+    "homepage": "https://www.reformedchurch.or.kr"
   },
   {
     "id": "광교장로교회-수원시",
@@ -855,7 +866,8 @@
     "lng": 126.827464,
     "subRegion": "안산시",
     "denomination": "고신",
-    "denominationGroup": "고신·고려 계열"
+    "denominationGroup": "고신·고려 계열",
+    "phone": "031-411-3445"
   },
   {
     "id": "안산믿음교회-안산시",
@@ -990,7 +1002,7 @@
     "name": "반석교회",
     "region": "경기",
     "address": "경기도 평택시 특구로43번길 90 (서정동)",
-    "pastor": "문민규",
+    "pastor": "최문관",
     "source": "자체 수집",
     "lat": 37.068476,
     "lng": 127.05958,
@@ -1082,15 +1094,15 @@
     "id": "내흥교회-군산시",
     "name": "내흥교회",
     "region": "전북",
-    "address": "전북특별자치도 군산시 내흥1길 15 (내흥동)",
+    "address": "전북특별자치도 군산시 구암3.1로 219 (구암동)",
     "pastor": "장재훈",
     "source": "자체 수집",
-    "lat": 35.987194,
-    "lng": 126.746274,
+    "lat": 35.983904,
+    "lng": 126.742872,
     "subRegion": "군산시",
     "denomination": "합신",
     "denominationGroup": "합신 계열",
-    "phone": "063-445-3458"
+    "phone": "063-442-3458"
   },
   {
     "id": "예본교회-김제시",
@@ -1125,11 +1137,11 @@
     "id": "삼천제일교회-전주시",
     "name": "삼천제일교회",
     "region": "전북",
-    "address": "전북특별자치도 전주시 완산구 효동2길 23 (효자동1가)",
+    "address": "전북특별자치도 전주시 완산구 용머리로 136 (효자동1가)",
     "pastor": "조영일",
     "source": "자체 수집",
-    "lat": 35.804397,
-    "lng": 127.126788,
+    "lat": 35.805582,
+    "lng": 127.125181,
     "subRegion": "전주시",
     "denomination": "합동",
     "denominationGroup": "합동 계열",
@@ -1219,7 +1231,8 @@
     "lat": 37.154015,
     "lng": 128.214007,
     "subRegion": "제천시",
-    "phone": "043-643-0691"
+    "phone": "043-643-0691",
+    "homepage": "https://blog.naver.com/jcfamcounsel"
   },
   {
     "id": "새소망교회-청주시",
@@ -1255,14 +1268,14 @@
     "id": "청주언약교회-청주시",
     "name": "청주언약교회",
     "region": "충북",
-    "address": "충청북도 청주시 흥덕구 풍산로178번길 65 (복대동)",
+    "address": "충청북도 청주시 서원구 성봉로 209 (개신동)",
     "pastor": "이종경",
     "source": "자체 수집",
-    "lat": 36.625469,
-    "lng": 127.449069,
+    "lat": 36.623791,
+    "lng": 127.449596,
     "subRegion": "청주시",
-    "denomination": "개혁",
-    "denominationGroup": "기타",
+    "denomination": "합신",
+    "denominationGroup": "합신 계열",
     "phone": "010-3315-6801"
   },
   {

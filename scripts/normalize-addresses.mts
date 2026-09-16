@@ -3,6 +3,7 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { normalizeRegion, toAddressKeyword } from "../src/lib/church-utils.ts";
 import { pickByChurchName, pickExactMatch } from "./lib/address-match.mts";
+import { todayInSeoul } from "./lib/date.mts";
 import { readSource, type SourceRow } from "./lib/source.mts";
 
 // 커밋 대상이다. import-source가 이 파일을 읽어 정규화된 주소를 반영하고,
@@ -318,7 +319,7 @@ writeFileSync(
   JSON.stringify(
     {
       note: "도로명주소 검색 API 조회 결과. import-source가 status가 'ok'인 건만 address를 roadAddr로 교체한다. 후보가 여럿이어도 원본과 글자까지 일치하는 것이 유일하면 ok로 확정한다(totalCount>1이면서 ok인 건이 그것이다). 그런 후보가 없거나 둘 이상이면 1순위가 맞다는 보장이 없어 multiple로 두고 원본을 유지한다. 좌표 단계는 coordParams를 그대로 쓴다. coordParams가 이전 실행과 같으면 좌표를 그대로 이어받으므로 주소를 다시 조회해도 좌표 API를 다시 부르지 않는다 — 일부러 다시 받으려면 --refresh-coords를 준다.",
-      checkedAt: new Date().toISOString().slice(0, 10),
+      checkedAt: todayInSeoul(),
       entries: merged,
     },
     null,

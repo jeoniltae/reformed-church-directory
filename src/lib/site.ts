@@ -89,3 +89,44 @@ export function siteUrl(): string {
     process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
   return vercel ? `https://${vercel}` : "http://localhost:3000";
 }
+
+export interface PageMeta {
+  /** 화면 제목. `<title>`에는 template이 붙고 `og:title`에는 이 값만 나간다 */
+  title: string;
+  description: string;
+  /** canonical이자 `og:url`. 앞에 `/`를 붙인 경로 */
+  path: string;
+}
+
+/**
+ * 화면 하나의 메타데이터 한 벌 — 제목·설명·canonical·OG를 **한 값에서 만든다.**
+ *
+ * ⚠️ **`openGraph`를 주지 않으면 루트 값이 그대로 물려온다** (2026-09-19 실측).
+ * `layout.tsx`가 `openGraph.title`·`description`·`url`을 들고 있어서, 페이지가
+ * `title`만 선언하면 **공유 카드에는 사이트명과 홈 주소가 나갔다.**
+ *
+ * - **교회 상세는 OG 이미지에 교회명이 찍히는데 제목은 사이트명**이라 그림과 글이
+ *   어긋났다. `언약교회` 카드가 `개혁주의 교회 디렉토리`라는 제목으로 공유됐다.
+ * - ⚠️ **`og:url`이 전 페이지에서 `/`였다.** 카카오·페이스북은 이 값으로 공유 대상을
+ *   식별하므로 **어느 교회를 공유해도 같은 대상으로 접힌다.** 좋아요·공유 수가
+ *   홈으로 합쳐지고, 미리보기 캐시도 한 칸을 나눠 쓰게 된다.
+ *
+ * **canonical과 `og:url`을 같은 인자에서 만든다.** 둘이 갈라지면 어느 쪽이 맞는지
+ * 크롤러가 판단해야 하는데, 그 판단을 시킬 이유가 없다.
+ *
+ * ⚠️ **`og:title`에는 사이트명을 붙이지 않는다**(`absolute`). `og:site_name`이 이미
+ * 사이트명을 말하고 있어 `소개 · 개혁주의 교회 디렉토리`는 같은 말을 두 번 하는
+ * 꼴이다. **브라우저 탭의 `<title>`은 template을 그대로 받는다** — 그쪽은 탭만 보고
+ * 어느 사이트인지 알아야 하므로 접미사가 필요하다.
+ *
+ * **홈은 이 함수를 쓰지 않는다.** 루트 메타데이터가 이미 홈을 가리키고 있고,
+ * `title`을 선언하면 template이 걸려 `홈 · 개혁주의 교회 디렉토리`가 된다.
+ */
+export function pageMetadata({ title, description, path }: PageMeta): Metadata {
+  return {
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: { title: { absolute: title }, description, url: path },
+  };
+}

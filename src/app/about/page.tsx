@@ -47,13 +47,14 @@ import {
 import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import { SectionTitle } from "@/components/shared/SectionTitle";
 import { breadcrumbJsonLd } from "@/lib/json-ld";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "소개",
   description:
     "개혁주의 교회 디렉토리를 만든 이유와 개혁주의 신앙의 역사·표준 문서를 소개합니다.",
-  alternates: { canonical: "/about" },
-};
+  path: "/about",
+});
 
 /** 01 — 사용자가 작성한 산문 그대로 */
 const REASON = [

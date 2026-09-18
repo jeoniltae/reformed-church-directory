@@ -36,6 +36,7 @@ import {
 import { filterChurches } from "@/features/churches/search";
 import { decodeRouteParam } from "@/lib/church-utils";
 import { breadcrumbJsonLd, churchCollectionJsonLd } from "@/lib/json-ld";
+import { pageMetadata } from "@/lib/site";
 
 /**
  * 임계값을 채운 지역만 미리 굽는다.
@@ -61,11 +62,11 @@ export async function generateMetadata({
   const churches = churchesIn(region);
   if (!churches.length) return {};
 
-  return {
+  return pageMetadata({
     title: `${region} 개혁주의 교회`,
     description: `${region}에 있는 개혁주의 교회 ${churches.length}곳입니다. 교단·담임목사·주소·연락처를 확인하세요.`,
-    alternates: { canonical: `/region/${region}` },
-  };
+    path: `/region/${region}`,
+  });
 }
 
 export default async function RegionLandingPage({

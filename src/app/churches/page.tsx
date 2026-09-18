@@ -8,13 +8,13 @@ import { SiteMark } from "@/components/shared/SiteMark";
 import { ChurchDirectory } from "@/features/churches/components/ChurchDirectory";
 import { getAllChurches } from "@/features/churches/data";
 import { collectRegionCounts } from "@/features/churches/search";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "교회 찾기",
-  description:
-    "국내 개혁주의 교회를 교회명·주소·담임목사·지역으로 검색합니다.",
-  alternates: { canonical: "/churches" },
-};
+  description: "국내 개혁주의 교회를 교회명·주소·담임목사·지역으로 검색합니다.",
+  path: "/churches",
+});
 
 export default function ChurchesPage() {
   const churches = getAllChurches();

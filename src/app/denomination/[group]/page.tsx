@@ -32,6 +32,7 @@ import {
 import { filterChurches } from "@/features/churches/search";
 import { decodeRouteParam } from "@/lib/church-utils";
 import { breadcrumbJsonLd, churchCollectionJsonLd } from "@/lib/json-ld";
+import { pageMetadata } from "@/lib/site";
 
 export function generateStaticParams() {
   return landingGroups().map(({ slug }) => ({ group: slug }));
@@ -64,11 +65,11 @@ export async function generateMetadata({
   const lead = groupContent(group)
     ?.lead.split(". ")[0]
     .replace(/[.]$/, "");
-  return {
+  return pageMetadata({
     title: `${group} 교회`,
     description: lead ? `${lead}. ${count}` : `${count} 지역·담임목사·주소·연락처를 확인하세요.`,
-    alternates: { canonical: `/denomination/${slug}` },
-  };
+    path: `/denomination/${slug}`,
+  });
 }
 
 export default async function GroupLandingPage({

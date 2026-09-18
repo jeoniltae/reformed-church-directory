@@ -37,16 +37,17 @@ import {
   landingGroups,
 } from "@/features/churches/landing";
 import { breadcrumbJsonLd } from "@/lib/json-ld";
+import { pageMetadata } from "@/lib/site";
 
 const TITLE = "교단으로 찾기";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: TITLE,
   // `/churches`(이름·주소 검색)와 의도를 갈라 준다
   description:
     "수록된 개혁주의 교단을 계열별로 정리했습니다. 각 총회의 정식 표기와 채택한 신앙고백을 확인하세요.",
-  alternates: { canonical: "/denomination" },
-};
+  path: "/denomination",
+});
 
 export default function DenominationHubPage() {
   const all = getAllChurches();

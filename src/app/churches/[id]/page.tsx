@@ -30,6 +30,7 @@ import { decodeRouteParam } from "@/lib/church-utils";
 import { breadcrumbJsonLd, churchJsonLd } from "@/lib/json-ld";
 import { cn } from "@/lib/utils";
 import type { Church } from "@/types/church";
+import { pageMetadata } from "@/lib/site";
 
 export function generateStaticParams() {
   return getAllChurchIds().map((id) => ({ id }));
@@ -59,11 +60,11 @@ export async function generateMetadata({
   const place = church.subRegion
     ? `${church.region} ${church.subRegion}`
     : church.region;
-  return {
+  return pageMetadata({
     title: church.name,
     description: `${place}에 있는 ${church.name} 정보입니다. 주소·담임목사·연락처를 확인하세요.`,
-    alternates: { canonical: `/churches/${church.id}` },
-  };
+    path: `/churches/${church.id}`,
+  });
 }
 
 export default async function ChurchDetailPage({

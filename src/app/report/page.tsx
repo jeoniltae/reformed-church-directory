@@ -9,13 +9,14 @@ import {
 } from "@/components/shared/PageTransition";
 import { SiteMark } from "@/components/shared/SiteMark";
 import { ReportForm } from "@/features/reports/components/ReportForm";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "제보하기",
   description:
     "교회 정보가 사실과 다르거나, 빠진 교회가 있거나, 삭제를 원하시면 알려주세요. 로그인 없이 보낼 수 있습니다.",
-  alternates: { canonical: "/report" },
-};
+  path: "/report",
+});
 
 export default function ReportPage() {
   return (

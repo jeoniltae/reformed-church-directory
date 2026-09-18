@@ -17,8 +17,20 @@ import type { Church } from "@/types/church";
  * 근거로 모았는지를 밝히는 화면이라, 검색엔진이 이 사이트를 평가할 때 쓰는
  * 신뢰 신호가 된다. `개혁주의란`·`용어 정리`처럼 **교회명이 아닌 검색어로 들어올
  * 통로**이기도 하다 — 다른 정적 화면에는 없는 성격이다.
+ *
+ * **`/denomination` 허브는 이유가 또 있다 (2026-09-18).** 아래 `landingGroups()`는
+ * 랜딩이 있는 묶음만 내놓으므로 `기타` 묶음의 총회명(`계신`·`한국개혁장로교회` 등)은
+ * sitemap의 어느 경로에도 실리지 않는다. **허브가 그 묶음을 글자로 담은 유일한
+ * 화면이다** — 빼면 그 교단들이 색인 대상에서 통째로 사라진다.
  */
-const STATIC_PATHS = ["/", "/about", "/churches", "/report", "/privacy"];
+const STATIC_PATHS = [
+  "/",
+  "/about",
+  "/churches",
+  "/denomination",
+  "/report",
+  "/privacy",
+];
 
 /**
  * sitemap에 실을 경로 전부.

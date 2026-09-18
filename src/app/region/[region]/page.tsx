@@ -24,10 +24,11 @@ import { JsonLd } from "@/components/shared/JsonLd";
 import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import { SiteMark } from "@/components/shared/SiteMark";
 import { ChurchCard } from "@/features/churches/components/ChurchCard";
+import { LandingFacts } from "@/features/churches/components/LandingFacts";
 import { getAllChurches } from "@/features/churches/data";
 import {
   countBy,
-  facetPhrase,
+  facetLine,
   landingRegions,
   regionSummary,
   slugFromGroup,
@@ -35,6 +36,7 @@ import {
 import { filterChurches } from "@/features/churches/search";
 import { decodeRouteParam } from "@/lib/church-utils";
 import { breadcrumbJsonLd, churchCollectionJsonLd } from "@/lib/json-ld";
+import { pageMetadata } from "@/lib/site";
 
 /**
  * 임계값을 채운 지역만 미리 굽는다.
@@ -60,11 +62,11 @@ export async function generateMetadata({
   const churches = churchesIn(region);
   if (!churches.length) return {};
 
-  return {
+  return pageMetadata({
     title: `${region} 개혁주의 교회`,
     description: `${region}에 있는 개혁주의 교회 ${churches.length}곳입니다. 교단·담임목사·주소·연락처를 확인하세요.`,
-    alternates: { canonical: `/region/${region}` },
-  };
+    path: `/region/${region}`,
+  });
 }
 
 export default async function RegionLandingPage({
@@ -81,11 +83,32 @@ export default async function RegionLandingPage({
   const otherRegions = landingRegions(all).filter((r) => r !== region);
   // 상단 요약과 아래 교단 링크가 같은 집계를 쓴다 — 두 곳이 다른 숫자를 말하면 안 된다
   const groupCounts = countBy(churches, "denominationGroup");
-  // 이 지역에 실제로 있는 교단만 링크한다. 랜딩이 없는 묶음(`기타`)은 slug가 없어 빠진다
-  const groupLinks = groupCounts.flatMap(({ value }) => {
-    const slug = slugFromGroup(value);
-    return slug ? [{ label: value, slug }] : [];
-  });
+  /*
+    이 지역에 실제로 있는 교단을 전부 링크한다.
+
+    **랜딩이 없는 묶음(`기타`)은 허브로 보낸다** (2026-09-18). 그전에는 slug가 없어
+    칩에서 통째로 빠졌는데, 서울 6곳처럼 적지 않은 수라 분포가 어긋나 보였다.
+    `/denomination` 허브가 생기면서 갈 곳이 생겼다.
+  */
+  const groupLinks = groupCounts.map(({ value, count }) => ({
+    label: value,
+    count,
+    href: (() => {
+      const slug = slugFromGroup(value);
+      return slug ? `/denomination/${slug}` : "/denomination";
+    })(),
+  }));
+  /*
+    **시군구를 상단에 한 행 세운다.** 이름들이 교회 카드 주소에도 들어 있지만 목록
+    아래쪽에 흩어져 있어, `은평구 개혁주의 교회` 같은 쿼리를 받기에는 위치가 낮다.
+    시군구 페이지를 따로 만들지 않고 이 행이 그 수요를 받는다 — `LANDING_MIN`을
+    어기지 않으면서 롱테일을 챙기는 방법이다.
+
+    ⚠️ **칩으로 만들지 않는다.** 눌리게 생겼는데 갈 곳이 없다 — 시군구 랜딩은
+    임계값 정책상 만들지 않기로 했다. `RegionTiles`가 같은 함정을 같은 말로
+    경고해 뒀다("칸으로 두면 눌러보게 되는데 눌러야 빈 목록").
+  */
+  const subRegionCounts = countBy(churches, "subRegion");
 
   const title = `${region} 개혁주의 교회`;
   const summary = regionSummary(region, churches);
@@ -132,22 +155,25 @@ export default async function RegionLandingPage({
         {/*
           **h1이 이미 말한 것을 되풀이하지 않는다.** 예전에는 `regionSummary()` 문장을
           그대로 찍어 `서울 개혁주의 교회` 바로 밑에 `서울에 있는 개혁주의 교회…`가
-          와서, 새 정보는 건수 하나뿐인데 회색 세 줄을 썼다.
-
-          **`순`을 남기는 이유** — `facetPhrase`는 상위 3개만 주고 `countBy`는 교단
-          없는 건을 세지 않아서 **뒤 숫자의 합이 총계와 맞지 않는다**(서울 29곳,
-          7+6+6=19). 문장일 때는 `순입니다`가 그 신호였다.
+          와서, 새 정보는 건수 하나뿐인데 회색 세 줄을 썼다. 그래서 헤드라인이
+          `4곳`뿐이고 지역명이 다시 나오지 않는다.
 
           **`summary`는 지우지 않았다** — 아래 JSON-LD의 description으로 계속 쓴다.
           구조화 데이터의 설명은 완결 문장이 낫고, "목록만 있으면 얇다"는 원래 의도도
           그대로 지켜진다. 화면만 압축한 것이다.
+
+          **라벨-값 블록으로 바꿨다 (2026-09-18).** 그전에는 회색 두 줄이 `4곳 · 교단
+          나열 순` / `4개 시군구 · 나열 순`으로 **형태가 똑같아 층이 없었고**, 작은
+          지역에서는 `순`이 거짓말을 했다(부산 3종이 전부인데 "순"). 규칙은
+          `facetLine` 주석에 있다.
         */}
-        <p className="mt-2 text-t4 text-muted-foreground">
-          <strong className="font-semibold text-foreground">
-            {churches.length}곳
-          </strong>
-          {groupCounts.length > 0 && <> · {facetPhrase(groupCounts)} 순</>}
-        </p>
+        <LandingFacts
+          count={churches.length}
+          facts={[
+            { label: "교단", value: facetLine(groupCounts, "종") },
+            { label: "시군구", value: facetLine(subRegionCounts, "개") },
+          ]}
+        />
 
         <ul className="mt-5 flex flex-col gap-2">
           {churches.map((church) => (
@@ -166,18 +192,40 @@ export default async function RegionLandingPage({
             <h2 className="text-t4 font-semibold text-foreground">
               교단으로 찾기
             </h2>
+            {/*
+              **건수를 칩에 붙여 이 줄이 교단 분포 전체가 되게 한다.** 위 요약은 상위
+              3개만 보여주므로, 이 칩들이 그 지역의 교단 구성을 끝까지 말하는 유일한 곳이다.
+              **`기타`는 허브(`/denomination`)로 보낸다** — 랜딩이 없어 slug가 없지만
+              서울 6곳처럼 적지 않은 수라 빼면 분포가 어긋나 보인다.
+            */}
             <ul className="mt-2 flex flex-wrap gap-2">
-              {groupLinks.map(({ label, slug }) => (
-                <li key={slug}>
+              {groupLinks.map(({ label, href, count }) => (
+                <li key={label}>
                   <Link
-                    href={`/denomination/${slug}`}
+                    href={href}
                     transitionTypes={NAV_FORWARD}
                     className="inline-block rounded-lg bg-muted px-3 py-1.5 text-t4 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
                   >
-                    {label}
+                    {label}{" "}
+                    <span className="text-foreground">{count}곳</span>
                   </Link>
                 </li>
               ))}
+              {/*
+                **줄 끝에 허브를 둔다 (2026-09-18).** 위 칩들은 *이 지역에 있는*
+                교단만 보여주므로, 수록 교단 전체를 보려면 나갈 곳이 필요하다.
+                `기타` 칩이 없는 지역(교회가 전부 계열에 묶인 곳)에서는 **이것이
+                허브로 가는 유일한 길**이다.
+              */}
+              <li>
+                <Link
+                  href="/denomination"
+                  transitionTypes={NAV_FORWARD}
+                  className="inline-block rounded-lg bg-muted px-3 py-1.5 text-t4 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+                >
+                  전체 보기
+                </Link>
+              </li>
             </ul>
           </nav>
         )}

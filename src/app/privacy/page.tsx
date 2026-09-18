@@ -4,14 +4,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { NAV_BACK, PageTransition } from "@/components/shared/PageTransition";
 import { SiteMark } from "@/components/shared/SiteMark";
-import { CONTACT_EMAIL, DATA_LICENSE_URL } from "@/lib/site";
+import { CONTACT_EMAIL, DATA_LICENSE_URL, pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "개인정보 처리방침",
   description:
     "이 사이트가 다루는 정보의 성격과 출처, 방문자로부터 수집하지 않는 것, 정보 수정·삭제를 요청하는 방법을 안내합니다.",
-  alternates: { canonical: "/privacy" },
-};
+  path: "/privacy",
+});
 
 const SECTIONS = [
   {

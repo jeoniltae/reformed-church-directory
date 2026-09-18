@@ -6,11 +6,14 @@ import Link from "next/link";
 import { NAV_BACK, PageTransition } from "@/components/shared/PageTransition";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "지도",
-  description: "개혁주의 교회 지도는 준비 중입니다.",
-  alternates: { canonical: "/map" },
+  ...pageMetadata({
+    title: "지도",
+    description: "개혁주의 교회 지도는 준비 중입니다.",
+    path: "/map",
+  }),
   /**
    * **색인하지 않는다 (2026-09-04 결정).** "준비 중" 안내만 있어 검색 노출 가치가
    * 없고, 내용 없는 페이지는 soft 404로 판정될 위험이 있다. sitemap에서도 빠져 있다

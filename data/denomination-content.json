@@ -1,0 +1,184 @@
+{
+  "note": "화면에 그대로 나가는 공개용 원고. **내부 판정표 data/denominations.json과 다른 파일이다** — 그쪽은 hint에 `추정:` 같은 작업 메모와 교회명 배열이 들어 있어 앱 번들에 넣지 않는다(CLAUDE.md). 건수는 여기 적지 않고 churches.json에서 실시간 집계한다 — 데이터가 늘어도 문구가 거짓이 되지 않게.",
+  "fields": {
+    "lead": "계열이 무엇인지 2~3문장. **확정된 사실만 쓴다.** 판정표의 groupDefinitions에는 `넣을 뻔했으나` 같은 작업 후일담이 섞여 있어 그대로 옮기지 않는다",
+    "denomination": "**churches.json에 실리는 short 값이어야 한다.** 판정표의 raw가 아니다 — 화면 집계가 short 기준이라 어긋나면 건수가 0으로 나온다",
+    "official": "정식 표기. 화면에 이 값이 나가며, 검색에서 `대한예수교장로회(고신)` 같은 쿼리를 받는 자리다",
+    "confession": "채택한 신앙고백. **공식 사이트·헌법 원문에 닿았을 때만 채운다.** 못 닿으면 null로 두고 화면에서 그 행을 그리지 않는다 — 2차 자료의 `거의 모든 장로교단은 웨스트민스터`로 채우지 않는다",
+    "note": "창립·분립 연도 등 짧은 사실 (선택)",
+    "sourceUrl": "그 행의 근거. **검수 때 `이 문장이 어디서 왔나`가 보여야 한다**"
+  },
+  "주의": "lead와 confession은 사용자 검수를 통과하기 전에 커밋하지 않는다. 교단 계보는 틀리면 티가 나고 회복이 어렵다 — 이름으로 계열을 추정한 네 건이 전부 틀렸던 전례가 있다.",
+  "groups": {
+    "합신 계열": {
+      "lead": "합신은 1981년에 창립된 총회입니다. 창립 당시 이름은 대한예수교장로회(개혁)이었고, 1998년에 지금의 표기로 바뀌었습니다.",
+      "synods": [
+        {
+          "denomination": "합신",
+          "official": "대한예수교장로회(합신)",
+          "confession": "웨스트민스터 신앙고백서와 대·소요리문답",
+          "note": "1981년 창립",
+          "sourceUrl": "https://www.hapshin.org/chnet2/home/?type=sub&step1=9&sid=31&parent=26"
+        }
+      ]
+    },
+    "합동 계열": {
+      "lead": "예장 합동과, 대한예수교장로회(합동…) 형식으로 스스로 합동을 표방하는 총회를 묶었습니다. 합동은 1901년 조선예수교장로회 공의회를 모체로 1912년에 창립된 총회입니다.",
+      "synods": [
+        {
+          "denomination": "합동",
+          "official": "대한예수교장로회(합동)",
+          "confession": "웨스트민스터 신도게요서(신앙고백서)와 대소요리문답",
+          "note": "1912년 창립",
+          "sourceUrl": "https://gapck.org/history?cat=ideology"
+        },
+        {
+          "denomination": "합동사당총신",
+          "official": "대한예수교장로회 합동(사당총신)",
+          "confession": "웨스트민스터 표준문서(신앙고백서·대소요리문답·정치모범·예배모범)와 도르트 신조·벨기에 신앙고백서·하이델베르크 요리문답",
+          "note": "",
+          "sourceUrl": "https://mahanaimjjang.wixsite.com/seoulreformedchurch"
+        }
+      ]
+    },
+    "고신·고려 계열": {
+      "lead": "고신은 1952년에 출범한 총회이고, 고려는 1976년 고신에서 분리된 별개 총회입니다. 두 총회를 한 묶음으로 둔 것은 고려가 옛 고려파의 신앙 전통을 잇기 때문이며, 같은 총회라는 뜻은 아닙니다.",
+      "synods": [
+        {
+          "denomination": "고신",
+          "official": "대한예수교장로회(고신)",
+          "confession": "웨스트민스터 신앙고백서와 대·소교리문답",
+          "note": "1952년 출범",
+          "sourceUrl": "http://kosin.org/page_okXd87"
+        },
+        {
+          "denomination": "고려",
+          "official": "대한예수교장로회(고려)",
+          "confession": null,
+          "note": "1976년 고신에서 분리",
+          "sourceUrl": "http://www.calvary.kr/"
+        }
+      ]
+    },
+    "대신 계열": {
+      "lead": "예장 대신과 그 분립을 묶었습니다.",
+      "synods": [
+        {
+          "denomination": "대신",
+          "official": "대한예수교장로회(대신)",
+          "confession": "역사적 기독교회의 공동 신조들과 웨스트민스터 신앙고백서",
+          "note": "",
+          "sourceUrl": "https://pckd1961.org/modu/document/document_view.asp?uotc_code=5166&uotc=24318&lef=nav6"
+        },
+        {
+          "denomination": "정통대신",
+          "official": "대한예수교장로회(정통대신)",
+          "confession": null,
+          "note": "",
+          "sourceUrl": "http://afamily.ijesus.net/"
+        }
+      ]
+    },
+    "독립·해외": {
+      "lead": "특정 총회에 속하지 않는 독립 교회와 독립 개혁교회 연합, 그리고 해외 교단 소속을 묶었습니다.",
+      "synods": [
+        {
+          "denomination": "독립",
+          "official": "",
+          "confession": null,
+          "note": "무소속",
+          "sourceUrl": ""
+        },
+        {
+          "denomination": "독립(근본노회)",
+          "official": "",
+          "confession": null,
+          "note": "무소속",
+          "sourceUrl": ""
+        },
+        {
+          "denomination": "독립개혁장로교회",
+          "official": "독립개혁장로교회(IRPC)",
+          "confession": "웨스트민스터 신앙고백서·대소요리문답과 하이델베르크 요리문답·도르트 신조·벨직 신앙고백",
+          "note": "",
+          "sourceUrl": "https://gwrech.com/"
+        },
+        {
+          "denomination": "독립개혁장로회",
+          "official": "독립개혁장로회",
+          "confession": "도르트 신조·벨직 신앙고백서·하이델베르크 요리문답과 웨스트민스터 신앙고백서·대소요리문답",
+          "note": "",
+          "sourceUrl": "http://cafe.daum.net/churchinsejong"
+        },
+        {
+          "denomination": "PCA",
+          "official": "미국장로회(PCA)",
+          "confession": null,
+          "note": "",
+          "sourceUrl": "https://pcanet.org"
+        }
+      ]
+    }
+  },
+  "ungrouped": {
+    "lead": "어느 계열에도 묶지 않은 교단입니다. 판정에 실패했다는 뜻이 아니라, 대부분 독자적인 소규모 총회입니다.",
+    "synods": [
+      {
+        "denomination": "계신",
+        "official": "대한예수교장로회 계신총회",
+        "confession": null,
+        "note": "1980년 총회 조직",
+        "sourceUrl": "https://www.kyesin.org/Page/Index/12"
+      },
+      {
+        "denomination": "개혁",
+        "official": "",
+        "confession": null,
+        "note": "여러 배경의 총회가 같은 표기를 씁니다",
+        "sourceUrl": ""
+      },
+      {
+        "denomination": "한국개혁장로교회",
+        "official": "한국개혁장로교회",
+        "confession": null,
+        "note": "",
+        "sourceUrl": "http://www.krpc.or.kr"
+      },
+      {
+        "denomination": "합동진리",
+        "official": "대한예수교장로회 합동진리총회",
+        "confession": null,
+        "note": "",
+        "sourceUrl": "http://jooklimch.hompee.com/"
+      },
+      {
+        "denomination": "고려개혁",
+        "official": "대한예수교장로회(고려개혁)총회",
+        "confession": null,
+        "note": "",
+        "sourceUrl": "https://korearpck.org"
+      },
+      {
+        "denomination": "대한예수교 개혁회",
+        "official": "대한예수교 개혁회",
+        "confession": "벨직 신앙고백서·하이델베르크 교리문답·도르트 신경과 웨스트민스터 신앙고백서·대소요리문답",
+        "note": "",
+        "sourceUrl": "http://kjrc.org"
+      },
+      {
+        "denomination": "마스터스개혁파총회",
+        "official": "사단법인 마스터스개혁파총회",
+        "confession": "웨스트민스터 신앙고백서·요리문답과 하이델베르크 요리문답·벨직 신앙고백·도르트 신조",
+        "note": "",
+        "sourceUrl": "https://www.mareca.org/about/confession"
+      },
+      {
+        "denomination": "합동총회",
+        "official": "대한예수교장로회 합동총회",
+        "confession": null,
+        "note": "",
+        "sourceUrl": "http://cafe.daum.net/cbcsus"
+      }
+    ]
+  }
+}

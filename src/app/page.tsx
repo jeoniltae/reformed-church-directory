@@ -1,6 +1,11 @@
 // 홈 — 수록 현황, 지역 타일, 교회 미리보기를 얹은 랜딩 화면
 
-import { ArrowRight, BookOpen, Search } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  Church as ChurchIcon,
+  Search,
+} from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,6 +15,7 @@ import {
   PageTransition,
 } from "@/components/shared/PageTransition";
 import { ScrollToTop } from "@/components/shared/ScrollToTop";
+import { Badge } from "@/components/ui/badge";
 import { ChurchRow } from "@/features/churches/components/ChurchRow";
 import { RegionTiles } from "@/features/churches/components/RegionTiles";
 import {
@@ -20,7 +26,10 @@ import {
   sampleRegions,
   STANDARD_REGIONS,
 } from "@/features/churches/regions";
-import { collectRegionCounts } from "@/features/churches/search";
+import {
+  collectDenominationGroups,
+  collectRegionCounts,
+} from "@/features/churches/search";
 import { SITE_NAME } from "@/lib/site";
 
 /**
@@ -96,6 +105,13 @@ export default function Home() {
     region,
     count: countOf.get(region) ?? 0,
   }));
+
+  /*
+    **교단 진입점의 배지에 쓸 수다.** 손으로 적으면 교단이 늘 때 조용히 거짓말이
+    된다 — `마스터스개혁파총회`가 들어온 2026-09-18이 그런 날이었다.
+    (묶음 자체는 어휘라 6종 고정이지만, 데이터에 한 건도 없는 묶음은 세지 않는다.)
+  */
+  const groupCount = collectDenominationGroups(churches).length;
 
   return (
     <PageTransition>
@@ -244,10 +260,73 @@ export default function Home() {
         />
       </Link>
 
+      {/*
+        **제목 줄 오른쪽을 비워 둔다.** 이 자리의 링크는 이 코드베이스에서 이미
+        **"이 섹션의 전체 보기"**라는 뜻이다(아래 `교회 둘러보기` → `전체 보기`).
+        교단 진입점을 여기 얹었더니 지역의 하위 조작으로 읽혀 칩 아래로 내렸다 —
+        경위는 그 링크의 주석에 있다.
+      */}
       <h2 className="mt-8 mb-3 text-t6 font-semibold text-foreground">
         지역으로 찾기
       </h2>
       <RegionTiles regions={regionChips} />
+
+      {/*
+        **교단 진입점 — 지역 칩 아래 한 줄이다 (2026-09-18, 같은 날 자리를 옮겼다).**
+
+        처음에는 `지역으로 찾기` 제목 줄 오른쪽에 얹었다. 새 어휘를 만들지 않으려고
+        아래 `교회 둘러보기`의 형태를 빌린 것이었는데, **그 자리가 이미 갖고 있던
+        의미까지 딸려왔다** — 꼬리 링크는 "이 섹션을 더 보기"다. 교단은 지역의 하위가
+        아니라 **탐색 축의 나머지 절반**이라 뜻이 어긋났고, t4 muted로 그려져 동급인
+        것이 종속으로 읽혔다.
+
+        **터치 타깃도 맞지 않았다.** 패딩 없는 텍스트 링크라 22px 남짓인데, 이 프로젝트는
+        지역 칩을 46px(`RegionTiles`의 `CHIP`), `ScrollToTop`을 `size-11`로 맞춰 왔다.
+        여기는 `py-3` + t5 줄높이로 **48px**이다.
+
+        **읽는 순서도 이쪽이 맞다** — 지역 칩을 훑고 "내 지역엔 없네" 한 다음 교단으로
+        넘어간다. 대신 **접힘선 위에서는 사라진다**(375×800에서 칩 5행 아래). 교단으로
+        찾을 사람은 지역에서 답을 못 찾고 스크롤하는 사람이라 감수한 손해다.
+
+        ⚠️ **채운 버튼으로 올리지 않는다.** `화면당 brand-solid 버튼은 하나`
+        (ui-checklist 원칙)를 위 수록 현황 카드가 이미 썼다. 표면은 `/about` 카드와 같은
+        `border` + `bg-card`이고, **한 줄 · 원형 아이콘 없음 · 낮은 패딩**으로 한 단
+        아래에 둔다 — `다크 채움 > /about 2줄 카드 > 이 줄`의 3단이 유지된다.
+
+        ⚠️ **청록(`--brand-accent`)을 쓰지 않는다.** 바로 위 칩이 밑줄과 숫자에 청록을
+        써서 **"지역 = 청록"**이라는 어휘를 만들어 놨다(`RegionTiles` 주석). 교단까지
+        같은 색이면 그 구분이 사라진다. 아이콘은 브랜드 네이비다.
+
+        **배지는 `Badge variant="secondary"`다** — 아래 `ChurchRow`의 교단 배지와
+        같은 것이다. 같은 화면에서 같은 어휘가 두 번 나오므로 **이 줄이 교단으로 간다는
+        것이 색과 모양으로 먼저 읽힌다.** 숫자는 지역 칩이 건수를 보여주는 것과 대칭이다.
+
+        ⚠️ **`기타` 칩을 홈에 두지 않는다.** 여기에는 "합동 계열 7곳, … 기타 6곳 순"
+        같은 요약 문장이 없어 `기타`가 무엇의 기타인지 드러나지 않는다. 지역 랜딩에서는
+        바로 위 요약이 그 맥락을 주지만 홈에는 그것이 없다. 허브가 대신 설명한다.
+
+        **교단 타일을 만들지 않았다.** `docs/ui-checklist.md`가 남긴 미결정 항목
+        ("둘 다 두면 타일이 12칸이 된다")은 그대로 둔다. 지역 타일은 건드리지 않았고
+        교단은 여전히 줄 하나다. 홈 구조를 바꾸는 판단은 교단 필터를 만들 때 한다.
+      */}
+      <Link
+        href="/denomination"
+        transitionTypes={NAV_FORWARD}
+        className="mt-6 flex items-center gap-2.5 rounded-lg border border-border bg-card px-4 py-3 outline-none transition-colors hover:bg-muted focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:translate-y-px active:bg-muted"
+      >
+        <ChurchIcon aria-hidden className="size-4 shrink-0 text-primary" />
+        <span className="text-t5 font-semibold text-foreground">
+          교단으로 찾기
+        </span>
+        {/* 배지 자체는 hover에 반응하지 않는다 — 밝아지는 것은 줄 전체의 바탕이다 */}
+        <Badge variant="secondary" className="tabular-nums">
+          계열 {groupCount}종
+        </Badge>
+        <ArrowRight
+          aria-hidden
+          className="ml-auto size-4 shrink-0 text-muted-foreground"
+        />
+      </Link>
 
       <div className="mt-8 flex items-baseline justify-between border-t border-border pt-6">
         <h2 className="text-t6 font-semibold text-foreground">교회 둘러보기</h2>

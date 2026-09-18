@@ -46,6 +46,15 @@ describe("buildLlmsTxt", () => {
     }
   });
 
+  /*
+    **허브는 위 반복문으로 못 잡는다** — 슬러그가 없어 `landingGroups()`에 안 들어간다.
+    그런데 `기타` 묶음은 랜딩이 없으므로 **이 링크가 llms.txt에서 그 묶음에 닿는
+    유일한 통로**다. 빠져도 나머지 테스트는 전부 초록이라 따로 고정한다.
+  */
+  it("교단 허브를 링크한다 — 랜딩이 없는 묶음에 닿는 유일한 통로다", () => {
+    expect(buildLlmsTxt(churches)).toContain(`](${SITE}/denomination)`);
+  });
+
   it("임계값 미만 지역은 링크하지 않는다 — 색인 대상과 같은 기준이다", () => {
     const text = buildLlmsTxt(churches);
     const listed = new Set(landingRegions(churches));

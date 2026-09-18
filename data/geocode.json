@@ -1,6 +1,6 @@
 {
   "note": "도로명주소 검색 API 조회 결과. import-source가 status가 'ok'인 건만 address를 roadAddr로 교체한다. 후보가 여럿이어도 원본과 글자까지 일치하는 것이 유일하면 ok로 확정한다(totalCount>1이면서 ok인 건이 그것이다). 그런 후보가 없거나 둘 이상이면 1순위가 맞다는 보장이 없어 multiple로 두고 원본을 유지한다. 좌표 단계는 coordParams를 그대로 쓴다. coordParams가 이전 실행과 같으면 좌표를 그대로 이어받으므로 주소를 다시 조회해도 좌표 API를 다시 부르지 않는다 — 일부러 다시 받으려면 --refresh-coords를 준다.",
-  "checkedAt": "2026-09-16",
+  "checkedAt": "2026-09-18",
   "entries": [
     {
       "id": "언약교회-하남시",
@@ -2852,7 +2852,135 @@
       },
       "status": "ok",
       "reason": "정상"
+    },
+    {
+      "id": "제주서광교회-제주시",
+      "name": "제주서광교회",
+      "original": {
+        "address": "제주특별자치도 제주시 정실3길 8",
+        "region": "제주",
+        "subRegion": "제주시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "제주특별자치도 제주시 정실3길 8 (오라이동)",
+        "jibunAddr": "제주특별자치도 제주시 오라이동 1622-1",
+        "zipNo": "63147",
+        "siNm": "제주특별자치도",
+        "sggNm": "제주시",
+        "coordParams": {
+          "admCd": "5011012000",
+          "rnMgtSn": "501104848662",
+          "udrtYn": "0",
+          "buldMnnm": "8",
+          "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 33.48049,
+          "lng": 126.51147,
+          "entX": 908157.6697857,
+          "entY": 1499178.2572997336
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "제주시민교회-제주시",
+      "name": "제주시민교회",
+      "original": {
+        "address": "제주특별자치도 제주시 동광로 112",
+        "region": "제주",
+        "subRegion": "제주시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "제주특별자치도 제주시 동광로 112 (일도이동)",
+        "jibunAddr": "제주특별자치도 제주시 일도이동 367-7",
+        "zipNo": "63275",
+        "siNm": "제주특별자치도",
+        "sggNm": "제주시",
+        "coordParams": {
+          "admCd": "5011010200",
+          "rnMgtSn": "501103349055",
+          "udrtYn": "0",
+          "buldMnnm": "112",
+          "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 33.506251,
+          "lng": 126.539424,
+          "entX": 910781.2918331334,
+          "entY": 1502010.1576554335
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "제주동신교회-제주시",
+      "name": "제주동신교회",
+      "original": {
+        "address": "제주특별자치도 제주시 용문로 120-1",
+        "region": "제주",
+        "subRegion": "제주시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "제주특별자치도 제주시 용문로 120-1 (용담이동)",
+        "jibunAddr": "제주특별자치도 제주시 용담이동 2708-2 동신교회",
+        "zipNo": "63162",
+        "siNm": "제주특별자치도",
+        "sggNm": "제주시",
+        "coordParams": {
+          "admCd": "5011010900",
+          "rnMgtSn": "501103349154",
+          "udrtYn": "0",
+          "buldMnnm": "120",
+          "buldSlno": "1"
+        },
+        "coord": {
+          "lat": 33.505523,
+          "lng": 126.509146,
+          "entX": 907968.2076210333,
+          "entY": 1501955.857903367
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "하람교회-제주시",
+      "name": "하람교회",
+      "original": {
+        "address": "제주특별자치도 제주시 애월읍 애납로 155",
+        "region": "제주",
+        "subRegion": "제주시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "제주특별자치도 제주시 애월읍 애납로 155",
+        "jibunAddr": "제주특별자치도 제주시 애월읍 납읍리 2271-6",
+        "zipNo": "63035",
+        "siNm": "제주특별자치도",
+        "sggNm": "제주시",
+        "coordParams": {
+          "admCd": "5011025335",
+          "rnMgtSn": "501103349126",
+          "udrtYn": "0",
+          "buldMnnm": "155",
+          "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 33.440343,
+          "lng": 126.327993,
+          "entX": 891060.0340072336,
+          "entY": 1494904.2291609668
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
     }
   ],
-  "coordsCheckedAt": "2026-09-16T14:51:03.318Z"
+  "coordsCheckedAt": "2026-09-18T10:35:14.798Z"
 }

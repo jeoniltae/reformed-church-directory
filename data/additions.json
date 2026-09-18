@@ -13,5 +13,50 @@
     "sourceNote": "어디서 온 정보인지 (선택). 예: `제보 #12`, `교단 사무국 회신`. 기록용이며 파이프라인은 읽지 않는다"
   },
   "주의": "여기에 행을 추가해도 주소는 원본 그대로 실리고 좌표는 붙지 않는다. 도로명주소로 정규화하려면 `npm run normalize:addresses -- --only=<교회명>` → `npm run geocode:coords` → `npm run import:source` 순으로 돌려야 한다. 순서를 건너뛰면 좌표 없는 채로 상세 페이지가 구워진다.",
-  "churches": []
+  "churches": [
+    {
+      "region": "제주",
+      "subRegion": "제주시",
+      "name": "제주서광교회",
+      "pastor": "김준모",
+      "denomination": "고신",
+      "phone": "064-722-5312",
+      "address": "제주특별자치도 제주시 정실3길 8",
+      "homepage": "https://www.jjsg.or.kr",
+      "addedAt": "2026-09-18"
+    },
+    {
+      "region": "제주",
+      "subRegion": "제주시",
+      "name": "제주시민교회",
+      "pastor": "이범구",
+      "denomination": "고신",
+      "phone": "064-803-0140",
+      "address": "제주특별자치도 제주시 동광로 112",
+      "homepage": "https://jejusimin.tistory.com",
+      "addedAt": "2026-09-18"
+    },
+    {
+      "region": "제주",
+      "subRegion": "제주시",
+      "name": "제주동신교회",
+      "pastor": "강원익",
+      "denomination": "합동",
+      "phone": "064-757-9845",
+      "address": "제주특별자치도 제주시 용문로 120-1",
+      "homepage": "",
+      "addedAt": "2026-09-18"
+    },
+    {
+      "region": "제주",
+      "subRegion": "제주시",
+      "name": "하람교회",
+      "pastor": "최상권",
+      "denomination": "마스터스개혁파총회",
+      "phone": "010-8466-7247",
+      "address": "제주특별자치도 제주시 애월읍 애납로 155",
+      "homepage": "https://www.mareca.org",
+      "addedAt": "2026-09-18"
+    }
+  ]
 }

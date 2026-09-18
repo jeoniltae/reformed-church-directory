@@ -86,8 +86,10 @@ export default function Home() {
 
   /*
     **데이터가 아니라 표준 목록을 기준으로 센다.** `collectRegionCounts`는 데이터에
-    등장하는 지역만 돌려주므로, 그것만 쓰면 수록 0인 제주가 화면에서 사라져
+    등장하는 지역만 돌려주므로, 그것만 쓰면 수록 0인 지역이 화면에서 사라져
     **"빠뜨린 건지 아직 없는 건지"를 구분할 수 없게 된다.**
+    (제주가 그 사례였다 — 2026-09-18에 4건이 들어와 지금은 수록 0인 시도가 없지만,
+    삭제 요청으로 다시 0이 될 수 있으므로 장치는 그대로 둔다.)
   */
   const countOf = new Map(regions.map(({ region, count }) => [region, count]));
   const regionChips = STANDARD_REGIONS.map((region) => ({

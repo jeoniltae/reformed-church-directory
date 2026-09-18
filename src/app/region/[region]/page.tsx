@@ -82,11 +82,21 @@ export default async function RegionLandingPage({
   const otherRegions = landingRegions(all).filter((r) => r !== region);
   // 상단 요약과 아래 교단 링크가 같은 집계를 쓴다 — 두 곳이 다른 숫자를 말하면 안 된다
   const groupCounts = countBy(churches, "denominationGroup");
-  // 이 지역에 실제로 있는 교단만 링크한다. 랜딩이 없는 묶음(`기타`)은 slug가 없어 빠진다
-  const groupLinks = groupCounts.flatMap(({ value, count }) => {
-    const slug = slugFromGroup(value);
-    return slug ? [{ label: value, slug, count }] : [];
-  });
+  /*
+    이 지역에 실제로 있는 교단을 전부 링크한다.
+
+    **랜딩이 없는 묶음(`기타`)은 허브로 보낸다** (2026-09-18). 그전에는 slug가 없어
+    칩에서 통째로 빠졌는데, 서울 6곳처럼 적지 않은 수라 분포가 어긋나 보였다.
+    `/denomination` 허브가 생기면서 갈 곳이 생겼다.
+  */
+  const groupLinks = groupCounts.map(({ value, count }) => ({
+    label: value,
+    count,
+    href: (() => {
+      const slug = slugFromGroup(value);
+      return slug ? `/denomination/${slug}` : "/denomination";
+    })(),
+  }));
   // 상단 요약이 상위 3개만 보여주므로 시군구는 따로 한 줄을 쓴다 — 함수 주석 참고
   const subRegions = subRegionPhrase(churches);
 
@@ -185,14 +195,14 @@ export default async function RegionLandingPage({
             {/*
               **건수를 칩에 붙여 이 줄이 교단 분포 전체가 되게 한다.** 위 요약은 상위
               3개만 보여주므로, 이 칩들이 그 지역의 교단 구성을 끝까지 말하는 유일한 곳이다.
-              ⚠️ **`기타`는 여전히 빠진다** — 랜딩이 없어 slug가 없다. 서울 6곳처럼
-              적지 않은 수라, `/denomination` 허브가 생기면 그쪽으로 링크해 메운다.
+              **`기타`는 허브(`/denomination`)로 보낸다** — 랜딩이 없어 slug가 없지만
+              서울 6곳처럼 적지 않은 수라 빼면 분포가 어긋나 보인다.
             */}
             <ul className="mt-2 flex flex-wrap gap-2">
-              {groupLinks.map(({ label, slug, count }) => (
-                <li key={slug}>
+              {groupLinks.map(({ label, href, count }) => (
+                <li key={label}>
                   <Link
-                    href={`/denomination/${slug}`}
+                    href={href}
                     transitionTypes={NAV_FORWARD}
                     className="inline-block rounded-lg bg-muted px-3 py-1.5 text-t4 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
                   >

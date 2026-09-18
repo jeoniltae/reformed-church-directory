@@ -244,9 +244,28 @@ export default function Home() {
         />
       </Link>
 
-      <h2 className="mt-8 mb-3 text-t6 font-semibold text-foreground">
-        지역으로 찾기
-      </h2>
+      {/*
+        **교단 진입점을 제목 줄 오른쪽에 얹는다 (2026-09-18).** 아래 `교회 둘러보기`가
+        이미 쓰는 어휘(제목 + 오른쪽 링크)를 그대로 가져왔다 — **새 어휘를 만들지 않는다.**
+
+        **교단 타일을 만들지 않았다.** `docs/ui-checklist.md`가 남긴 미결정 항목
+        ("둘 다 두면 타일이 12칸이 된다")을 그대로 둔다. 지역 타일은 건드리지 않았고,
+        교단은 링크 한 줄로만 연다. 홈 구조를 바꾸는 판단은 교단 필터를 만들 때 한다.
+
+        ⚠️ **`기타` 칩을 홈에 두지 않는다.** 여기에는 "합동 계열 7곳, … 기타 6곳 순"
+        같은 요약 문장이 없어 `기타`가 무엇의 기타인지 드러나지 않는다. 지역 랜딩에서는
+        바로 위 요약이 그 맥락을 주지만 홈에는 그것이 없다. 허브가 대신 설명한다.
+      */}
+      <div className="mt-8 mb-3 flex items-baseline justify-between">
+        <h2 className="text-t6 font-semibold text-foreground">지역으로 찾기</h2>
+        <Link
+          href="/denomination"
+          transitionTypes={NAV_FORWARD}
+          className="rounded-lg text-t4 text-muted-foreground outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+        >
+          교단으로 찾기
+        </Link>
+      </div>
       <RegionTiles regions={regionChips} />
 
       <div className="mt-8 flex items-baseline justify-between border-t border-border pt-6">

@@ -211,6 +211,21 @@ export default async function RegionLandingPage({
                   </Link>
                 </li>
               ))}
+              {/*
+                **줄 끝에 허브를 둔다 (2026-09-18).** 위 칩들은 *이 지역에 있는*
+                교단만 보여주므로, 수록 교단 전체를 보려면 나갈 곳이 필요하다.
+                `기타` 칩이 없는 지역(교회가 전부 계열에 묶인 곳)에서는 **이것이
+                허브로 가는 유일한 길**이다.
+              */}
+              <li>
+                <Link
+                  href="/denomination"
+                  transitionTypes={NAV_FORWARD}
+                  className="inline-block rounded-lg bg-muted px-3 py-1.5 text-t4 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+                >
+                  전체 보기
+                </Link>
+              </li>
             </ul>
           </nav>
         )}

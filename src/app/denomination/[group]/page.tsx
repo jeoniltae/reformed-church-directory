@@ -238,24 +238,41 @@ export default async function GroupLandingPage({
           </nav>
         )}
 
-        {otherGroups.length > 0 && (
-          <nav className="mt-6">
-            <h2 className="text-t4 font-semibold text-foreground">다른 교단</h2>
-            <ul className="mt-2 flex flex-wrap gap-2">
-              {otherGroups.map(({ group: label, slug: otherSlug }) => (
-                <li key={otherSlug}>
-                  <Link
-                    href={`/denomination/${otherSlug}`}
-                    transitionTypes={NAV_FORWARD}
-                    className="inline-block rounded-lg bg-muted px-3 py-1.5 text-t4 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        )}
+        {/*
+          **허브 칩을 줄 끝에 둔다 (2026-09-18).** 그전에는 계열 5개가 서로만
+          가리키는 닫힌 고리였다 — 여기서 `기타` 묶음으로는 갈 방법이 없었고,
+          허브로 들어오는 링크는 사이트 전체에서 지역 랜딩의 `기타` 칩 하나뿐이었다.
+
+          **`기타` 칩을 여기 두지 않는다.** 랜딩이 없어 주소가 없기도 하지만,
+          그보다 이 줄은 **계열 이름이 늘어선 자리**라 거기에 `기타`를 끼우면
+          "기타 계열"이라는 교단이 있는 것처럼 읽힌다 — `llms.txt`가 `기타`를
+          맨 뒤로 빼고 괄호로 설명한 것과 같은 이유다. 허브가 그 설명을 맡는다.
+        */}
+        <nav className="mt-6">
+          <h2 className="text-t4 font-semibold text-foreground">다른 교단</h2>
+          <ul className="mt-2 flex flex-wrap gap-2">
+            {otherGroups.map(({ group: label, slug: otherSlug }) => (
+              <li key={otherSlug}>
+                <Link
+                  href={`/denomination/${otherSlug}`}
+                  transitionTypes={NAV_FORWARD}
+                  className="inline-block rounded-lg bg-muted px-3 py-1.5 text-t4 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+                >
+                  {label}
+                </Link>
+              </li>
+            ))}
+            <li>
+              <Link
+                href="/denomination"
+                transitionTypes={NAV_FORWARD}
+                className="inline-block rounded-lg bg-muted px-3 py-1.5 text-t4 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+              >
+                전체 보기
+              </Link>
+            </li>
+          </ul>
+        </nav>
 
         {/* 목록이 있는 화면에만 붙인다. 짧은 화면에서는 임계값에 못 닿아 뜨지 않는다 */}
         <ScrollToTop />

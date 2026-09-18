@@ -13,10 +13,30 @@ const churches: Church[] = JSON.parse(
 const paths = indexablePaths(churches);
 
 describe("indexablePaths", () => {
-  it("홈·목록·제보·개인정보 처리방침을 넣는다", () => {
+  it("정적 화면을 전부 넣는다", () => {
     expect(paths).toEqual(
-      expect.arrayContaining(["/", "/churches", "/report", "/privacy"]),
+      expect.arrayContaining([
+        "/",
+        "/about",
+        "/churches",
+        "/denomination",
+        "/report",
+        "/privacy",
+      ]),
     );
+  });
+
+  /*
+    **허브를 따로 한 번 더 고정하는 이유가 다른 경로와 다르다.** 아래 "랜딩은 임계값을
+    넘긴 것만" 테스트는 `/denomination/`(끝 슬래시)로 세기 때문에 **허브를 세지 않는다**
+    — 허브가 통째로 빠져도 그 테스트는 초록이다.
+
+    그런데 `landingGroups()`는 랜딩이 있는 묶음만 내놓으므로 `기타` 묶음의 총회명
+    (`계신`·`한국개혁장로교회` 등)은 **허브 말고는 sitemap의 어느 경로에도 실리지
+    않는다.** 빠지면 그 교단들이 색인 대상에서 조용히 사라진다.
+  */
+  it("교단 허브를 넣는다 — `기타` 묶음이 실리는 유일한 경로다", () => {
+    expect(paths).toContain("/denomination");
   });
 
   it("`/map`은 넣지 않는다 — 준비 중 안내라 soft 404 위험이 있다", () => {

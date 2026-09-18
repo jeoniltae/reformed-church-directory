@@ -54,7 +54,15 @@ export async function generateMetadata({
     연락처를 확인하세요.`)은 다섯 랜딩이 건수만 다른 같은 문장이라 검색결과에서
     서로 구분되지 않았다. 리드는 계열마다 내용이 달라 그 구분을 만든다.
   */
-  const lead = groupContent(group)?.lead.split(". ")[0];
+  /*
+    ⚠️ **끝의 마침표를 떼고 다시 붙인다.** `split(". ")`는 **리드가 한 문장이면
+    자를 곳이 없어 마침표를 단 채 통째로** 돌아오고, 아래 템플릿이 거기에 `.`를
+    한 번 더 붙여 `묶었습니다.. 대신 계열에…`가 됐다(대신·독립·해외 2건 실측).
+    **검색결과 스니펫에 그대로 나가는 자리라 눈에 띈다.**
+  */
+  const lead = groupContent(group)
+    ?.lead.split(". ")[0]
+    .replace(/[.]$/, "");
   return {
     title: `${group} 교회`,
     description: lead ? `${lead}. ${count}` : `${count} 지역·담임목사·주소·연락처를 확인하세요.`,

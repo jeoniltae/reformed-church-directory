@@ -32,7 +32,8 @@ import {
 import {
   countBy,
   EXCLUDED_GROUP,
-  facetPhrase,
+  facetLine,
+  facetText,
   landingGroups,
 } from "@/features/churches/landing";
 import { breadcrumbJsonLd } from "@/lib/json-ld";
@@ -92,12 +93,17 @@ export default function DenominationHubPage() {
         </div>
 
         <h1 className="mt-3 text-t8 font-bold text-foreground">{TITLE}</h1>
+        {/*
+          **여기는 라벨-값 블록으로 바꾸지 않았다.** 분포가 한 줄뿐이라 라벨 열을
+          세우면 `교단` 한 단어를 위해 폭을 내주는 꼴이 된다. 다만 `순`은 두 랜딩과
+          함께 걷어냈다 — 셋 중 하나에만 남으면 같은 값을 화면마다 다르게 말하게 된다.
+        */}
         <p className="mt-2 text-t4 text-muted-foreground">
           <strong className="font-semibold text-foreground">
             {all.length}곳
           </strong>
           {" · "}
-          {facetPhrase(countBy(all, "denominationGroup"))} 순
+          {facetText(facetLine(countBy(all, "denominationGroup"), "종"))}
         </p>
 
         {/* ── 랜딩이 있는 계열 5개 ─────────────────────────────── */}

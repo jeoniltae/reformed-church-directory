@@ -18,11 +18,12 @@ import { JsonLd } from "@/components/shared/JsonLd";
 import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import { SiteMark } from "@/components/shared/SiteMark";
 import { ChurchCard } from "@/features/churches/components/ChurchCard";
+import { LandingFacts } from "@/features/churches/components/LandingFacts";
 import { getAllChurches } from "@/features/churches/data";
 import { groupContent } from "@/features/churches/denomination-content";
 import {
   countBy,
-  facetPhrase,
+  facetLine,
   groupFromSlug,
   groupSummary,
   hasRegionLanding,
@@ -150,15 +151,15 @@ export default async function GroupLandingPage({
 
         <h1 className="mt-3 text-t8 font-bold text-foreground">{title}</h1>
         {/*
-          h1이 이미 교단명을 말했으므로 되풀이하지 않는다. `순`을 남기는 이유와
-          `summary`를 JSON-LD용으로 남겨두는 이유는 지역 랜딩 주석 참고.
+          h1이 이미 교단명을 말했으므로 되풀이하지 않는다. `summary`를 JSON-LD용으로
+          남겨두는 이유와 라벨-값 블록으로 바꾼 경위는 지역 랜딩 주석 참고 —
+          **두 랜딩이 같은 블록을 쓴다.** 한쪽만 `순`이 남으면 같은 성격의 두 화면이
+          서로 다른 말을 하게 된다.
         */}
-        <p className="mt-2 text-t4 text-muted-foreground">
-          <strong className="font-semibold text-foreground">
-            {churches.length}곳
-          </strong>
-          {regionCounts.length > 0 && <> · {facetPhrase(regionCounts)} 순</>}
-        </p>
+        <LandingFacts
+          count={churches.length}
+          facts={[{ label: "지역", value: facetLine(regionCounts, "개") }]}
+        />
 
         {content?.lead && (
           <p className="mt-3 text-t5 text-foreground">{content.lead}</p>
@@ -201,8 +202,21 @@ export default async function GroupLandingPage({
               **빈칸을 침묵으로 두지 않는다.** 신앙고백이 없는 행이 섞여 있는데
               아무 말이 없으면 그 총회가 신조를 안 가진 것처럼 읽힌다. 한 줄로
               한꺼번에 밝혀 행마다 같은 말을 되풀이하지 않는다.
+
+              ⚠️ **`text-t3`이었는데 그런 단계가 없다** (2026-09-18 발견). `@theme`에도
+              `utils.ts` 등록 목록에도 없어서 **Tailwind가 클래스를 아예 만들지 않았고**,
+              이 문단만 브라우저 기본값(16px)으로 나가 **위 총회 행(t4)보다 커져 있었다.**
+              작게 쓰려던 안내가 그 절에서 가장 큰 글씨였던 셈이다.
+
+              **t2가 아니라 t4로 내린다.** t2는 전 화면 푸터(`DataNotice`)의 면책 고지가
+              쓰는 아래 층이고, 이 절이 본뜬 `/about`의 용어 정리는 **t4가 바닥**이다
+              (2026-09-12에 그쪽 작은 글씨를 한 단계씩 올린 판단).
+
+              ⚠️ **단계가 없는 `text-t*`는 조용히 사라진다** — 빌드도 lint도 통과한다.
+              새 단계가 필요하면 `globals.css`의 `@theme`과 `src/lib/utils.ts`에 **함께**
+              등록해야 한다(CLAUDE.md "코드 컨벤션").
             */}
-            <p className="mt-3 text-t3 text-muted-foreground">
+            <p className="mt-3 text-t4 text-muted-foreground">
               신앙고백은 총회가 공식 자료로 밝힌 것만 적었습니다. 비어 있는 것은
               채택한 신조가 없다는 뜻이 아니라 우리가 확인하지 못했다는 뜻입니다.
             </p>

@@ -24,14 +24,14 @@ import { JsonLd } from "@/components/shared/JsonLd";
 import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import { SiteMark } from "@/components/shared/SiteMark";
 import { ChurchCard } from "@/features/churches/components/ChurchCard";
+import { LandingFacts } from "@/features/churches/components/LandingFacts";
 import { getAllChurches } from "@/features/churches/data";
 import {
   countBy,
-  facetPhrase,
+  facetLine,
   landingRegions,
   regionSummary,
   slugFromGroup,
-  subRegionPhrase,
 } from "@/features/churches/landing";
 import { filterChurches } from "@/features/churches/search";
 import { decodeRouteParam } from "@/lib/church-utils";
@@ -97,8 +97,17 @@ export default async function RegionLandingPage({
       return slug ? `/denomination/${slug}` : "/denomination";
     })(),
   }));
-  // 상단 요약이 상위 3개만 보여주므로 시군구는 따로 한 줄을 쓴다 — 함수 주석 참고
-  const subRegions = subRegionPhrase(churches);
+  /*
+    **시군구를 상단에 한 행 세운다.** 이름들이 교회 카드 주소에도 들어 있지만 목록
+    아래쪽에 흩어져 있어, `은평구 개혁주의 교회` 같은 쿼리를 받기에는 위치가 낮다.
+    시군구 페이지를 따로 만들지 않고 이 행이 그 수요를 받는다 — `LANDING_MIN`을
+    어기지 않으면서 롱테일을 챙기는 방법이다.
+
+    ⚠️ **칩으로 만들지 않는다.** 눌리게 생겼는데 갈 곳이 없다 — 시군구 랜딩은
+    임계값 정책상 만들지 않기로 했다. `RegionTiles`가 같은 함정을 같은 말로
+    경고해 뒀다("칸으로 두면 눌러보게 되는데 눌러야 빈 목록").
+  */
+  const subRegionCounts = countBy(churches, "subRegion");
 
   const title = `${region} 개혁주의 교회`;
   const summary = regionSummary(region, churches);
@@ -145,35 +154,25 @@ export default async function RegionLandingPage({
         {/*
           **h1이 이미 말한 것을 되풀이하지 않는다.** 예전에는 `regionSummary()` 문장을
           그대로 찍어 `서울 개혁주의 교회` 바로 밑에 `서울에 있는 개혁주의 교회…`가
-          와서, 새 정보는 건수 하나뿐인데 회색 세 줄을 썼다.
-
-          **`순`을 남기는 이유** — `facetPhrase`는 상위 3개만 주고 `countBy`는 교단
-          없는 건을 세지 않아서 **뒤 숫자의 합이 총계와 맞지 않는다**(서울 29곳,
-          7+6+6=19). 문장일 때는 `순입니다`가 그 신호였다.
+          와서, 새 정보는 건수 하나뿐인데 회색 세 줄을 썼다. 그래서 헤드라인이
+          `4곳`뿐이고 지역명이 다시 나오지 않는다.
 
           **`summary`는 지우지 않았다** — 아래 JSON-LD의 description으로 계속 쓴다.
           구조화 데이터의 설명은 완결 문장이 낫고, "목록만 있으면 얇다"는 원래 의도도
           그대로 지켜진다. 화면만 압축한 것이다.
-        */}
-        <p className="mt-2 text-t4 text-muted-foreground">
-          <strong className="font-semibold text-foreground">
-            {churches.length}곳
-          </strong>
-          {groupCounts.length > 0 && <> · {facetPhrase(groupCounts)} 순</>}
-        </p>
-        {/*
-          **시군구를 한 줄 더 쓴다.** 이름들이 교회 카드 주소에도 들어 있지만 목록
-          아래쪽에 흩어져 있어, `은평구 개혁주의 교회` 같은 쿼리를 받기에는 위치가 낮다.
-          시군구 페이지를 따로 만들지 않고 이 줄이 그 수요를 받는다 — `LANDING_MIN`을
-          어기지 않으면서 롱테일을 챙기는 방법이다.
 
-          **위 줄과 합치지 않았다.** 한 줄에 몰면 교단·시군구 두 분포가 섞여 읽힌다.
-          예전에 이 자리를 세 줄에서 한 줄로 줄인 판단은 `h1이 이미 말한 것을
-          되풀이하지 않는다`는 것이었고, 이 줄은 되풀이가 아니라 새 정보다.
+          **라벨-값 블록으로 바꿨다 (2026-09-18).** 그전에는 회색 두 줄이 `4곳 · 교단
+          나열 순` / `4개 시군구 · 나열 순`으로 **형태가 똑같아 층이 없었고**, 작은
+          지역에서는 `순`이 거짓말을 했다(부산 3종이 전부인데 "순"). 규칙은
+          `facetLine` 주석에 있다.
         */}
-        {subRegions && (
-          <p className="mt-1 text-t4 text-muted-foreground">{subRegions}</p>
-        )}
+        <LandingFacts
+          count={churches.length}
+          facts={[
+            { label: "교단", value: facetLine(groupCounts, "종") },
+            { label: "시군구", value: facetLine(subRegionCounts, "개") },
+          ]}
+        />
 
         <ul className="mt-5 flex flex-col gap-2">
           {churches.map((church) => (

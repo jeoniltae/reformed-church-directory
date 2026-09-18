@@ -108,24 +108,80 @@ export function facetPhrase(counts: FacetCount[], limit = 3): string {
     .join(", ");
 }
 
+/** 랜딩 상단 분포 줄에 세우는 항목 수 */
+const FACET_LIMIT = 3;
+
+export interface FacetItem {
+  name: string;
+  /** `2곳` — 전부 1곳이라 건수를 생략한 줄에서는 없다 */
+  count?: string;
+}
+
+export interface FacetLine {
+  items: FacetItem[];
+  /** `외 3종` — 숨긴 것이 없으면 빈 문자열 */
+  rest: string;
+}
+
 /**
- * 지역 랜딩의 시군구 분포 조각 — `12개 시군구 · 마포구 4곳, 관악구 3곳, 노원구 3곳 순`.
+ * 랜딩 상단의 분포 줄 — `고신·고려 계열 2곳, 합신 계열 1곳, 합동 계열 1곳 외 3종`.
  *
- * **시군구 페이지를 따로 만들지 않고 `은평구 개혁주의 교회` 같은 쿼리를 이 줄이 받는다.**
- * `LANDING_MIN`을 어기지 않으면서 시군구 이름을 화면 위쪽으로 끌어올리는 방법이다
- * (교회 카드 주소에도 들어 있지만 목록 아래쪽에 흩어져 있다).
+ * **문자열이 아니라 조각으로 돌려준다.** 화면이 이름과 건수를 다르게 칠해야 하는데
+ * (`고신·고려 계열`은 `foreground`, `2곳`은 `muted`), 문자열로 넘기면 받는 쪽에서
+ * 다시 쪼개야 한다. **한 줄 문자열이 필요하면 아래 `facetText()`를 쓴다.**
  *
- * ⚠️ **`N개 구`라고 쓰지 않는다.** 접미사가 지역마다 다르다 — 서울·부산·인천은 `구`,
- * 경기·전북·충북·제주는 `시`, 전남광주는 둘이 섞여 있다. 그래서 `시군구`로 통일한다.
+ * **위 `facetPhrase`와 쓰는 자리가 다르다.** 그쪽은 문장(JSON-LD description) 안에
+ * 들어가는 조각이고, 이쪽은 **라벨과 짝지어 화면에 나가는 줄**이다. 규칙 넷이 다르다.
  *
- * 시군구가 하나뿐이면(제주가 그렇다) `제주시 4곳`처럼 건수를 붙인다. `1개 시군구 … 순`은
- * 말이 안 되고, **이름만 두면 `제주시`가 맥락 없이 떠 있어 무슨 뜻인지 읽히지 않는다.**
+ * - ⚠️ **`순`을 쓰지 않는다.** 예전 화면 줄은 `… 순`으로 **"뒤 숫자의 합이 총계와
+ *   맞지 않는다"**를 신호했는데, 작은 지역에서는 **나열이 곧 전부라 그 신호가 거짓**이
+ *   됐고(부산·인천·제주·전남광주·전북), 교단이 하나뿐인 충북에서는 `합신 계열 3곳 순`이
+ *   되어 **하나짜리에 순위를 매겼다.** 숨긴 것이 있으면 `외 N종`으로 밝히고 없으면
+ *   아무 말도 하지 않는다 — **없는 신호가 잘못된 신호보다 낫다.**
+ * - **꼬리가 한 개면 꼬리를 만들지 않는다.** `외 1개`는 그 이름을 적는 것보다 길다.
+ * - **전부 1곳이면 건수를 생략한다.** `동래구 1곳, 부산진구 1곳, 사하구 1곳`은
+ *   `1곳`을 세 번 쓰고도 분포를 말하지 못한다. 순서도 없으니 이름만 세운다.
+ *   건수 내림차순이라 **보이는 것이 전부 1이면 숨은 것도 전부 1이다.**
+ * - ⚠️ **항목은 쉼표로 가른다. `·`를 쓰지 않는다** — `고신·고려 계열`처럼 값 안에
+ *   이미 `·`가 있어 항목 경계가 무너진다.
+ *
+ * ⚠️ `unit`**에 `구`·`시`를 쓰지 않는다.** 시군구 접미사가 지역마다 다르다 —
+ * 서울·부산·인천은 `구`, 경기·전북·충북·제주는 `시`, 전남광주는 둘이 섞여 있다.
+ * 그래서 교단 묶음은 `종`, 지역·시군구는 `개`를 쓴다.
  */
-export function subRegionPhrase(churches: Church[]): string {
-  const counts = countBy(churches, "subRegion");
-  if (counts.length === 0) return "";
-  if (counts.length === 1) return facetPhrase(counts);
-  return `${counts.length}개 시군구 · ${facetPhrase(counts)} 순`;
+export function facetLine(
+  counts: FacetCount[],
+  unit: string,
+  limit = FACET_LIMIT,
+): FacetLine {
+  if (counts.length === 0) return { items: [], rest: "" };
+  // 숨길 것이 하나뿐이면 그것까지 세운다
+  const size = counts.length - limit === 1 ? limit + 1 : limit;
+  const head = counts.slice(0, size);
+  const namesOnly = head.every(({ count }) => count === 1);
+  const hidden = counts.length - head.length;
+
+  return {
+    items: head.map(({ value, count }) => ({
+      name: value,
+      count: namesOnly ? undefined : `${count}곳`,
+    })),
+    rest: hidden > 0 ? `외 ${hidden}${unit}` : "",
+  };
+}
+
+/**
+ * 위 줄을 문자열 하나로 납작하게 편다.
+ *
+ * **화면은 조각째 받아 이름과 건수를 다르게 칠한다**(`LandingFacts`) — 이름이
+ * `foreground`, 건수·쉼표·`외 N종`이 `muted`다. 그런데 **교단 허브는 라벨 없이 한
+ * 줄로 잇는 자리**라 그 구분이 필요 없다. 그래서 규칙은 한곳에 두고 표현만 가른다.
+ */
+export function facetText({ items, rest }: FacetLine): string {
+  const joined = items
+    .map(({ name, count }) => (count ? `${name} ${count}` : name))
+    .join(", ");
+  return rest ? `${joined} ${rest}` : joined;
 }
 
 /**

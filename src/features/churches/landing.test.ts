@@ -6,7 +6,9 @@ import type { Church } from "@/types/church";
 import {
   countBy,
   EXCLUDED_GROUP,
+  facetLine,
   facetPhrase,
+  facetText,
   groupFromSlug,
   groupSummary,
   hasRegionLanding,
@@ -15,8 +17,8 @@ import {
   landingRegions,
   regionSummary,
   slugFromGroup,
-  subRegionPhrase,
 } from "./landing";
+import type { FacetCount } from "./landing";
 
 // 서울 3곳(임계값 충족) · 경기 2곳 · 부산 1곳(둘 다 미달)
 const churches: Church[] = [
@@ -103,31 +105,85 @@ describe("countBy", () => {
   });
 });
 
-describe("subRegionPhrase", () => {
-  const seoul = churches.filter((c) => c.region === "서울");
+// 화면에 나가는 분포 줄. 실제 랜딩에서 나오던 문자열을 그대로 가져와 고정한다
+//
+// **규칙은 `facetLine`이 정하고 `facetText`는 그것을 납작하게 펼 뿐**이라, 규칙
+// 검증은 읽기 쉬운 `facetText` 쪽으로 쓴다. 조각으로 갈라 주는지는 따로 한 건 본다.
+describe("facetLine", () => {
+  const counts = (...pairs: [string, number][]): FacetCount[] =>
+    pairs.map(([value, count]) => ({ value, count }));
+  const line = (given: FacetCount[], unit: string) =>
+    facetText(facetLine(given, unit));
 
-  it("시군구 종수와 상위 분포를 함께 준다", () => {
-    expect(subRegionPhrase(seoul)).toMatch(/^3개 시군구 · /);
-    expect(subRegionPhrase(seoul)).toMatch(/순$/);
+  it("숨긴 것이 있으면 `외 N종`으로 밝힌다", () => {
+    const seoul = counts(
+      ["합동 계열", 7],
+      ["고신·고려 계열", 6],
+      ["기타", 6],
+      ["합신 계열", 5],
+      ["대신 계열", 3],
+    );
+
+    expect(line(seoul, "종")).toBe(
+      "합동 계열 7곳, 고신·고려 계열 6곳, 기타 6곳 외 2종",
+    );
   });
 
-  // ⚠️ 접미사가 지역마다 다르다 — 서울·부산·인천은 `구`, 경기·전북·충북·제주는 `시`,
-  // 전남광주는 둘이 섞여 있다. `N개 구`로 쓰면 경기에서 틀린 말이 된다.
-  it("`N개 구`가 아니라 `N개 시군구`라고 쓴다", () => {
-    expect(subRegionPhrase(seoul)).toContain("개 시군구");
-    expect(subRegionPhrase(seoul)).not.toMatch(/\d개 구/);
+  // 부산은 3종이 전부인데 `순`이 붙어 뒤에 더 있는 것처럼 읽혔다
+  it("전부 보여줬으면 아무 말도 붙이지 않는다 — `순`을 쓰지 않는다", () => {
+    const busan = counts(
+      ["고신·고려 계열", 2],
+      ["합신 계열", 1],
+      ["합동 계열", 1],
+    );
+
+    expect(line(busan, "종")).toBe(
+      "고신·고려 계열 2곳, 합신 계열 1곳, 합동 계열 1곳",
+    );
+    expect(line(busan, "종")).not.toContain("순");
   });
 
-  // 이름만 두면 `제주시`가 맥락 없이 떠 있어 무슨 뜻인지 읽히지 않는다
-  it("시군구가 하나뿐이면 건수를 붙인다 — `1개 시군구 … 순`은 말이 안 된다", () => {
-    const busan = churches.filter((c) => c.region === "부산");
-    expect(subRegionPhrase(busan)).toBe(`${busan[0].subRegion} 1곳`);
-    expect(subRegionPhrase(busan)).not.toContain("시군구");
+  // 충북이 `합신 계열 3곳 순`으로 나가 하나짜리에 순위를 매겼다
+  it("항목이 하나뿐이어도 순위를 매기지 않는다", () => {
+    expect(line(counts(["합신 계열", 3]), "종")).toBe("합신 계열 3곳");
   });
 
-  it("subRegion이 없는 건만 있으면 빈 문자열이다", () => {
-    const noSub = seoul.map((c) => ({ ...c, subRegion: undefined }));
-    expect(subRegionPhrase(noSub)).toBe("");
+  it("꼬리가 한 개면 꼬리를 만들지 않고 그것까지 세운다", () => {
+    const busan = counts(
+      ["동래구", 1],
+      ["부산진구", 1],
+      ["사하구", 1],
+      ["해운대구", 1],
+    );
+
+    expect(line(busan, "개")).toBe("동래구, 부산진구, 사하구, 해운대구");
+    expect(line(busan, "개")).not.toContain("외 1개");
+  });
+
+  // `1곳`을 세 번 써도 분포를 말하지 못한다. 건수 내림차순이라 숨은 것도 전부 1이다
+  it("전부 1곳이면 건수를 생략한다", () => {
+    expect(line(counts(["북구", 1], ["광양시", 1], ["목포시", 1]), "개")).toBe(
+      "북구, 광양시, 목포시",
+    );
+  });
+
+  it("셀 것이 없으면 빈 줄이다 — 그 행은 그려지지 않는다", () => {
+    expect(facetLine([], "개")).toEqual({ items: [], rest: "" });
+    expect(line([], "개")).toBe("");
+  });
+
+  // 화면이 이름과 건수를 다르게 칠하려면 문자열이 아니라 조각이어야 한다
+  it("이름과 건수를 갈라서 돌려준다", () => {
+    const seoul = counts(["마포구", 4], ["관악구", 3], ["노원구", 3], ["강동구", 2], ["은평구", 1]);
+
+    expect(facetLine(seoul, "개")).toEqual({
+      items: [
+        { name: "마포구", count: "4곳" },
+        { name: "관악구", count: "3곳" },
+        { name: "노원구", count: "3곳" },
+      ],
+      rest: "외 2개",
+    });
   });
 });
 
@@ -232,11 +288,18 @@ describe("실데이터와의 대조", () => {
     expect(landingRegions(real).length).toBeGreaterThan(0);
   });
 
-  it("랜딩 지역은 전부 시군구 문구를 만들 수 있다", () => {
-    // subRegion이 통째로 빈 지역이 랜딩에 오르면 그 줄이 빈칸으로 나간다.
+  it("랜딩 지역은 전부 시군구 행을 만들 수 있다", () => {
+    // subRegion이 통째로 빈 지역이 랜딩에 오르면 그 행이 통째로 사라진다.
     // 세종 2곳이 실제로 subRegion 없는 건이라, 그 지역이 임계값을 넘는 순간 걸린다.
     const empty = landingRegions(real).filter(
-      (region) => !subRegionPhrase(real.filter((c) => c.region === region)),
+      (region) =>
+        facetLine(
+          countBy(
+            real.filter((c) => c.region === region),
+            "subRegion",
+          ),
+          "개",
+        ).items.length === 0,
     );
 
     expect(empty).toEqual([]);

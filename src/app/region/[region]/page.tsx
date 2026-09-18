@@ -31,6 +31,7 @@ import {
   landingRegions,
   regionSummary,
   slugFromGroup,
+  subRegionPhrase,
 } from "@/features/churches/landing";
 import { filterChurches } from "@/features/churches/search";
 import { decodeRouteParam } from "@/lib/church-utils";
@@ -82,10 +83,12 @@ export default async function RegionLandingPage({
   // 상단 요약과 아래 교단 링크가 같은 집계를 쓴다 — 두 곳이 다른 숫자를 말하면 안 된다
   const groupCounts = countBy(churches, "denominationGroup");
   // 이 지역에 실제로 있는 교단만 링크한다. 랜딩이 없는 묶음(`기타`)은 slug가 없어 빠진다
-  const groupLinks = groupCounts.flatMap(({ value }) => {
+  const groupLinks = groupCounts.flatMap(({ value, count }) => {
     const slug = slugFromGroup(value);
-    return slug ? [{ label: value, slug }] : [];
+    return slug ? [{ label: value, slug, count }] : [];
   });
+  // 상단 요약이 상위 3개만 보여주므로 시군구는 따로 한 줄을 쓴다 — 함수 주석 참고
+  const subRegions = subRegionPhrase(churches);
 
   const title = `${region} 개혁주의 교회`;
   const summary = regionSummary(region, churches);
@@ -148,6 +151,19 @@ export default async function RegionLandingPage({
           </strong>
           {groupCounts.length > 0 && <> · {facetPhrase(groupCounts)} 순</>}
         </p>
+        {/*
+          **시군구를 한 줄 더 쓴다.** 이름들이 교회 카드 주소에도 들어 있지만 목록
+          아래쪽에 흩어져 있어, `은평구 개혁주의 교회` 같은 쿼리를 받기에는 위치가 낮다.
+          시군구 페이지를 따로 만들지 않고 이 줄이 그 수요를 받는다 — `LANDING_MIN`을
+          어기지 않으면서 롱테일을 챙기는 방법이다.
+
+          **위 줄과 합치지 않았다.** 한 줄에 몰면 교단·시군구 두 분포가 섞여 읽힌다.
+          예전에 이 자리를 세 줄에서 한 줄로 줄인 판단은 `h1이 이미 말한 것을
+          되풀이하지 않는다`는 것이었고, 이 줄은 되풀이가 아니라 새 정보다.
+        */}
+        {subRegions && (
+          <p className="mt-1 text-t4 text-muted-foreground">{subRegions}</p>
+        )}
 
         <ul className="mt-5 flex flex-col gap-2">
           {churches.map((church) => (
@@ -166,15 +182,22 @@ export default async function RegionLandingPage({
             <h2 className="text-t4 font-semibold text-foreground">
               교단으로 찾기
             </h2>
+            {/*
+              **건수를 칩에 붙여 이 줄이 교단 분포 전체가 되게 한다.** 위 요약은 상위
+              3개만 보여주므로, 이 칩들이 그 지역의 교단 구성을 끝까지 말하는 유일한 곳이다.
+              ⚠️ **`기타`는 여전히 빠진다** — 랜딩이 없어 slug가 없다. 서울 6곳처럼
+              적지 않은 수라, `/denomination` 허브가 생기면 그쪽으로 링크해 메운다.
+            */}
             <ul className="mt-2 flex flex-wrap gap-2">
-              {groupLinks.map(({ label, slug }) => (
+              {groupLinks.map(({ label, slug, count }) => (
                 <li key={slug}>
                   <Link
                     href={`/denomination/${slug}`}
                     transitionTypes={NAV_FORWARD}
                     className="inline-block rounded-lg bg-muted px-3 py-1.5 text-t4 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
                   >
-                    {label}
+                    {label}{" "}
+                    <span className="text-foreground">{count}곳</span>
                   </Link>
                 </li>
               ))}

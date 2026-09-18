@@ -63,11 +63,14 @@ export interface FacetCount {
 
 /**
  * 한 필드 기준으로 세어 건수 내림차순으로 돌려준다.
- * **값이 없는 건은 세지 않는다** — 교단이 없는 6건은 어느 묶음에도 잡히지 않는다.
+ *
+ * **값이 없는 건은 세지 않는다** — 교단이 없는 건은 어느 묶음에도 잡히지 않고,
+ * `subRegion`이 없는 건(세종 2곳)도 마찬가지다. 그래서 **합이 총계와 어긋날 수 있다.**
+ * 건수를 주석에 적어 두면 데이터가 바뀔 때 조용히 낡으므로 숫자를 쓰지 않는다.
  */
 export function countBy(
   churches: Church[],
-  key: "region" | "denominationGroup",
+  key: "region" | "subRegion" | "denomination" | "denominationGroup",
 ): FacetCount[] {
   const counts = new Map<string, number>();
   for (const church of churches) {
@@ -103,6 +106,26 @@ export function facetPhrase(counts: FacetCount[], limit = 3): string {
     .slice(0, limit)
     .map(({ value, count }) => `${value} ${count}곳`)
     .join(", ");
+}
+
+/**
+ * 지역 랜딩의 시군구 분포 조각 — `12개 시군구 · 마포구 4곳, 관악구 3곳, 노원구 3곳 순`.
+ *
+ * **시군구 페이지를 따로 만들지 않고 `은평구 개혁주의 교회` 같은 쿼리를 이 줄이 받는다.**
+ * `LANDING_MIN`을 어기지 않으면서 시군구 이름을 화면 위쪽으로 끌어올리는 방법이다
+ * (교회 카드 주소에도 들어 있지만 목록 아래쪽에 흩어져 있다).
+ *
+ * ⚠️ **`N개 구`라고 쓰지 않는다.** 접미사가 지역마다 다르다 — 서울·부산·인천은 `구`,
+ * 경기·전북·충북·제주는 `시`, 전남광주는 둘이 섞여 있다. 그래서 `시군구`로 통일한다.
+ *
+ * 시군구가 하나뿐이면(제주가 그렇다) `제주시 4곳`처럼 건수를 붙인다. `1개 시군구 … 순`은
+ * 말이 안 되고, **이름만 두면 `제주시`가 맥락 없이 떠 있어 무슨 뜻인지 읽히지 않는다.**
+ */
+export function subRegionPhrase(churches: Church[]): string {
+  const counts = countBy(churches, "subRegion");
+  if (counts.length === 0) return "";
+  if (counts.length === 1) return facetPhrase(counts);
+  return `${counts.length}개 시군구 · ${facetPhrase(counts)} 순`;
 }
 
 /**

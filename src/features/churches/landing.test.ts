@@ -15,6 +15,7 @@ import {
   landingRegions,
   regionSummary,
   slugFromGroup,
+  subRegionPhrase,
 } from "./landing";
 
 // 서울 3곳(임계값 충족) · 경기 2곳 · 부산 1곳(둘 다 미달)
@@ -99,6 +100,34 @@ describe("countBy", () => {
     // 교단 없는 새언약교회가 빠져 합계가 6이 아니라 5다
     const groups = countBy(churches, "denominationGroup");
     expect(groups.reduce((sum, g) => sum + g.count, 0)).toBe(5);
+  });
+});
+
+describe("subRegionPhrase", () => {
+  const seoul = churches.filter((c) => c.region === "서울");
+
+  it("시군구 종수와 상위 분포를 함께 준다", () => {
+    expect(subRegionPhrase(seoul)).toMatch(/^3개 시군구 · /);
+    expect(subRegionPhrase(seoul)).toMatch(/순$/);
+  });
+
+  // ⚠️ 접미사가 지역마다 다르다 — 서울·부산·인천은 `구`, 경기·전북·충북·제주는 `시`,
+  // 전남광주는 둘이 섞여 있다. `N개 구`로 쓰면 경기에서 틀린 말이 된다.
+  it("`N개 구`가 아니라 `N개 시군구`라고 쓴다", () => {
+    expect(subRegionPhrase(seoul)).toContain("개 시군구");
+    expect(subRegionPhrase(seoul)).not.toMatch(/\d개 구/);
+  });
+
+  // 이름만 두면 `제주시`가 맥락 없이 떠 있어 무슨 뜻인지 읽히지 않는다
+  it("시군구가 하나뿐이면 건수를 붙인다 — `1개 시군구 … 순`은 말이 안 된다", () => {
+    const busan = churches.filter((c) => c.region === "부산");
+    expect(subRegionPhrase(busan)).toBe(`${busan[0].subRegion} 1곳`);
+    expect(subRegionPhrase(busan)).not.toContain("시군구");
+  });
+
+  it("subRegion이 없는 건만 있으면 빈 문자열이다", () => {
+    const noSub = seoul.map((c) => ({ ...c, subRegion: undefined }));
+    expect(subRegionPhrase(noSub)).toBe("");
   });
 });
 
@@ -201,5 +230,15 @@ describe("실데이터와의 대조", () => {
 
   it("미리 구울 지역이 실제로 존재한다", () => {
     expect(landingRegions(real).length).toBeGreaterThan(0);
+  });
+
+  it("랜딩 지역은 전부 시군구 문구를 만들 수 있다", () => {
+    // subRegion이 통째로 빈 지역이 랜딩에 오르면 그 줄이 빈칸으로 나간다.
+    // 세종 2곳이 실제로 subRegion 없는 건이라, 그 지역이 임계값을 넘는 순간 걸린다.
+    const empty = landingRegions(real).filter(
+      (region) => !subRegionPhrase(real.filter((c) => c.region === region)),
+    );
+
+    expect(empty).toEqual([]);
   });
 });

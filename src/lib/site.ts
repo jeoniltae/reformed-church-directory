@@ -96,7 +96,30 @@ export interface PageMeta {
   description: string;
   /** canonical이자 `og:url`. 앞에 `/`를 붙인 경로 */
   path: string;
+  /**
+   * 자기 OG 이미지를 가진 화면만 `true` — **지금은 교회 상세 하나뿐이다**
+   * (`churches/[id]/opengraph-image.tsx`). 아래 `images` 설명을 볼 것.
+   */
+  ownImage?: boolean;
 }
+
+/**
+ * 기본 OG 이미지 — 루트 `app/opengraph-image.tsx`가 굽는 그림이다.
+ *
+ * ⚠️ **규격은 `lib/og.ts`의 `OG_SIZE`와 같아야 한다.** 저쪽을 import하지 않는 것은
+ * 그 파일이 `node:fs`(폰트 로딩)를 들고 있고 **이 파일은 화면 컴포넌트들이 함께
+ * 읽는 자리**라서다. 대신 `site.test.ts`가 두 값이 같은지 고정한다.
+ *
+ * **쿼리 없는 경로를 쓴다.** 파일 규칙이 붙이는 해시(`?7f32f2b4…`)는 빌드마다
+ * 달라진다 — 매니페스트 아이콘에서 같은 판단을 이미 했다.
+ */
+const DEFAULT_OG_IMAGE = {
+  url: "/opengraph-image",
+  width: 1200,
+  height: 630,
+  type: "image/png",
+  alt: SITE_NAME,
+};
 
 /**
  * 화면 하나의 메타데이터 한 벌 — 제목·설명·canonical·OG를 **한 값에서 만든다.**
@@ -121,12 +144,33 @@ export interface PageMeta {
  *
  * **홈은 이 함수를 쓰지 않는다.** 루트 메타데이터가 이미 홈을 가리키고 있고,
  * `title`을 선언하면 template이 걸려 `홈 · 개혁주의 교회 디렉토리`가 된다.
+ *
+ * ## ⚠️ `images`를 직접 얹는 이유
+ *
+ * **페이지가 `openGraph`를 선언하면 루트에서 물려받던 `images`까지 통째로 사라진다.**
+ * Next는 `openGraph` 객체를 통으로 갈아끼우기 때문이다. 이 함수를 처음 넣었을 때
+ * **랜딩·정적 화면 19개의 `og:image`가 실제로 사라졌다**(빌드 산출물로 확인).
+ * 공유 카드에서 그림이 빠지면 클릭률이 떨어지는데 **빌드도 lint도 통과한다.**
+ *
+ * **자기 이미지를 가진 화면은 `ownImage`로 비켜선다.** 교회 상세는 자기 세그먼트에
+ * `opengraph-image.tsx`가 있어 그쪽이 여전히 적용된다 — 여기서 기본 이미지를 얹으면
+ * 교회별 그림을 덮어쓴다.
  */
-export function pageMetadata({ title, description, path }: PageMeta): Metadata {
+export function pageMetadata({
+  title,
+  description,
+  path,
+  ownImage,
+}: PageMeta): Metadata {
   return {
     title,
     description,
     alternates: { canonical: path },
-    openGraph: { title: { absolute: title }, description, url: path },
+    openGraph: {
+      title: { absolute: title },
+      description,
+      url: path,
+      ...(ownImage ? {} : { images: [DEFAULT_OG_IMAGE] }),
+    },
   };
 }

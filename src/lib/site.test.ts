@@ -1,6 +1,7 @@
 // 사이트 상수 단위 테스트 — 소유확인 태그가 빈 채로 나가는 것을 막는다
 
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { OG_CONTENT_TYPE, OG_SIZE } from "./og";
 import {
   pageMetadata,
   SEARCH_VERIFICATION,
@@ -112,5 +113,41 @@ describe("pageMetadata", () => {
   it("canonical과 og:url이 같은 값에서 나온다", () => {
     expect(meta.alternates?.canonical).toBe("/churches/언약교회-하남시");
     expect(meta.openGraph?.url).toBe(meta.alternates?.canonical);
+  });
+
+  /**
+   * ⚠️ **페이지가 `openGraph`를 선언하면 루트에서 물려받던 `images`가 통째로
+   * 사라진다.** 이 함수를 처음 넣었을 때 **랜딩·정적 화면 19개의 `og:image`가
+   * 실제로 없어졌다.** 공유 카드에서 그림이 빠지는데 빌드도 lint도 통과한다.
+   */
+  const images = (given: ReturnType<typeof pageMetadata>) => {
+    const value = given.openGraph?.images;
+    return Array.isArray(value) ? value : [];
+  };
+
+  it("기본 OG 이미지를 잃지 않는다", () => {
+    expect(images(meta)).toHaveLength(1);
+    expect(images(meta)[0]).toMatchObject({ url: "/opengraph-image" });
+  });
+
+  // 교회 상세는 자기 세그먼트의 `opengraph-image.tsx`가 그린다 — 덮어쓰면 안 된다
+  it("자기 이미지를 가진 화면에는 기본 이미지를 얹지 않는다", () => {
+    const own = pageMetadata({
+      title: "언약교회",
+      description: "…",
+      path: "/churches/언약교회-하남시",
+      ownImage: true,
+    });
+
+    expect(own.openGraph?.images).toBeUndefined();
+  });
+
+  // `og.ts`는 `node:fs`를 들고 있어 `site.ts`에서 import하지 않는다. 대신 여기서 묶는다
+  it("기본 이미지 규격이 실제 OG 라우트와 같다", () => {
+    expect(images(meta)[0]).toMatchObject({
+      width: OG_SIZE.width,
+      height: OG_SIZE.height,
+      type: OG_CONTENT_TYPE,
+    });
   });
 });

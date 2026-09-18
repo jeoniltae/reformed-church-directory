@@ -64,6 +64,8 @@ export async function generateMetadata({
     title: church.name,
     description: `${place}에 있는 ${church.name} 정보입니다. 주소·담임목사·연락처를 확인하세요.`,
     path: `/churches/${church.id}`,
+    // 교회별 OG 이미지가 같은 세그먼트에 있다 — 기본 이미지를 얹으면 그것을 덮어쓴다
+    ownImage: true,
   });
 }
 

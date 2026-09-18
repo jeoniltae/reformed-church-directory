@@ -45,8 +45,10 @@ export function buildLlmsTxt(churches: Church[]): string {
 
   /**
    * **`기타`를 맨 뒤로 빼고 무엇인지 설명한다.** 건수 순으로 그냥 늘어놓으면
-   * 세 번째에 끼어들어 "기타 계열"이라는 교단이 있는 것처럼 읽히고, 아래
-   * "교단으로 찾기"에는 랜딩이 없어 링크가 하나 적으니 개수가 어긋나 보인다.
+   * 세 번째에 끼어들어 "기타 계열"이라는 교단이 있는 것처럼 읽힌다.
+   *
+   * **여전히 링크가 하나 적다** — `기타`에는 랜딩이 없기 때문이다(2026-09-18에도
+   * 만들지 않기로 했다). 대신 아래 "교단으로 찾기" 머리의 허브가 그 묶음을 받는다.
    */
   const groupNames = [
     ...landingGroups().map(({ group }) => group),
@@ -100,6 +102,7 @@ ${landingRegions(churches)
 
 ## 교단으로 찾기
 
+${link("교단으로 찾기", "/denomination", `수록 교단 전체 — 계열별 총회 목록, 정식 표기, 확인된 신앙고백. 랜딩이 없는 ${EXCLUDED_GROUP} 묶음도 여기 있습니다`)}
 ${landingGroups()
   .map(({ group, slug }) =>
     link(`${group} 교회`, `/denomination/${slug}`, `${groupCounts.get(group) ?? 0}곳`),

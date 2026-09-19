@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from "vitest";
 import type { Church } from "@/types/church";
-import { centerOf, FALLBACK_CENTER, toMapPoints } from "./points";
+import { centerOf, FALLBACK_CENTER, hasCoords, toMapPoints } from "./points";
 
 const church = (over: Partial<Church>): Church =>
   ({
@@ -58,6 +58,22 @@ describe("toMapPoints", () => {
     ]);
 
     expect(point.place).toBe("세종");
+  });
+});
+
+describe("hasCoords", () => {
+  /**
+   * ⚠️ **`/map`의 "지도에 표시되지 않는 교회 N곳"이 이 판정을 함께 쓴다.**
+   * 조건이 갈리면 **화면이 "없다"고 말한 교회가 지도에는 찍힌다.**
+   */
+  it("좌표가 둘 다 있어야 참이다", () => {
+    expect(hasCoords(church({ lat: 37.5, lng: 127 }))).toBe(true);
+    expect(hasCoords(church({ lat: 37.5 }))).toBe(false);
+    expect(hasCoords(church({}))).toBe(false);
+  });
+
+  it("`0`을 없는 값으로 취급하지 않는다", () => {
+    expect(hasCoords(church({ lat: 0, lng: 0 }))).toBe(true);
   });
 });
 

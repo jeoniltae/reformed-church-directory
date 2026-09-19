@@ -12,6 +12,23 @@ export interface MapPoint {
   lng: number;
 }
 
+/** 좌표가 채워진 교회. `Church`를 좁혀 `lat`/`lng`를 선택 필드에서 꺼낸다 */
+type LocatedChurch = Church & { lat: number; lng: number };
+
+/**
+ * 지도에 찍을 수 있는 교회인가.
+ *
+ * **판정을 이 함수 하나로 모은다.** 지도에 찍는 쪽(`toMapPoints`)과 **"지도에
+ * 표시되지 않는 교회 N곳"을 세는 쪽**(`/map`)이 조건을 따로 쓰면, 한쪽만 고쳐졌을 때
+ * **화면이 "없다"고 말한 교회가 지도에는 찍히는** 어긋남이 생긴다.
+ *
+ * **`0`을 버리지 않는다.** `!church.lat`로 거르면 적도·본초자오선이 사라진다.
+ * 국내 데이터에는 나올 수 없는 값이지만, **조건을 틀리게 쓰는 습관이 남는 쪽이 문제다.**
+ */
+export function hasCoords(church: Church): church is LocatedChurch {
+  return typeof church.lat === "number" && typeof church.lng === "number";
+}
+
 /** 전국을 담는 기본 시야 — 좌표가 하나도 없을 때만 쓴다 (대한민국 중앙부) */
 export const FALLBACK_CENTER = { lat: 36.5, lng: 127.8 };
 
@@ -22,13 +39,13 @@ export const FALLBACK_CENTER = { lat: 36.5, lng: 127.8 };
  * 남아야 한다**(`docs/지도-작업.md` 6단계). 지금은 1건(군산진성교회)이지만
  * **확장하면 비율이 달라질 수 있다** — 고신 KML의 좌표 확보율은 아직 모른다.
  *
- * **`0`을 버리지 않는다.** `!church.lat`로 거르면 적도·본초자오선이 사라진다.
- * 국내 데이터에는 나올 수 없는 값이지만, **조건을 틀리게 쓰는 습관이 남는 쪽이 문제다.**
+ * 판정은 `hasCoords`가 한다 — `/map`의 안내 줄과 같은 조건을 쓰기 위해서다.
  */
 export function toMapPoints(churches: Church[]): MapPoint[] {
   const points: MapPoint[] = [];
-  for (const { id, name, region, subRegion, lat, lng } of churches) {
-    if (typeof lat !== "number" || typeof lng !== "number") continue;
+  for (const church of churches) {
+    if (!hasCoords(church)) continue;
+    const { id, name, region, subRegion, lat, lng } = church;
     points.push({
       id,
       name,

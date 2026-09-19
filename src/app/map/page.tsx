@@ -1,54 +1,63 @@
-// 지도 — 좌표 확보와 지도 SDK 도입 전까지의 안내 화면
+// 지도 — 수록 교회를 전국 지도에 찍고, 같은 화면에서 목록으로 오갈 수 있다
 
 import type { Metadata } from "next";
-import { MapPin } from "lucide-react";
-import Link from "next/link";
-import { NAV_BACK, PageTransition } from "@/components/shared/PageTransition";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { DataNotice } from "@/components/shared/DataNotice";
+import { PageTransition } from "@/components/shared/PageTransition";
+import { ScrollToTop } from "@/components/shared/ScrollToTop";
+import { ChurchMapView } from "@/features/churches/components/ChurchMapView";
+import { getAllChurches } from "@/features/churches/data";
+import { hasCoords } from "@/features/churches/map/points";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = {
   ...pageMetadata({
     title: "지도",
-    description: "개혁주의 교회 지도는 준비 중입니다.",
+    description:
+      "국내 개혁주의 교회의 위치를 지도에서 봅니다. 목록 보기로 전환할 수 있습니다.",
     path: "/map",
   }),
   /**
-   * **색인하지 않는다 (2026-09-04 결정).** "준비 중" 안내만 있어 검색 노출 가치가
-   * 없고, 내용 없는 페이지는 soft 404로 판정될 위험이 있다. sitemap에서도 빠져 있다
-   * (`src/lib/indexable-paths.ts`).
+   * **아직 색인하지 않는다.** 2026-09-04에 "준비 중 안내라 soft 404 위험"을 근거로
+   * 막았고, **그 근거는 지도가 붙은 지금 사라졌다.** 다만 되돌리기는 sitemap 제외
+   * (`src/lib/indexable-paths.ts`)·`CLAUDE.md`와 함께 **출시 커밋 한 번에 푼다** —
+   * 나눠 하면 **지도는 떴는데 색인은 막힌 상태**가 남는다(`docs/지도-작업.md` 8단계).
    *
-   * `follow`는 남긴다 — 크롤러가 여기서 목록 화면으로 넘어가는 길은 막지 않는다.
-   * **실제 지도가 붙는 7단계에서 이 블록과 sitemap 제외를 함께 푼다.**
+   * `follow`는 그대로 남긴다 — 크롤러가 여기서 교회 상세로 넘어가는 길은 막지 않는다.
    */
   robots: { index: false, follow: true },
 };
 
 export default function MapPage() {
+  const churches = getAllChurches();
+  // 지도에 찍히는 수는 수록 수와 다르다. **판정은 `hasCoords` 하나로 모았다**
+  const located = churches.filter(hasCoords).length;
+
   return (
     <PageTransition>
-      <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center gap-3 px-4 py-16 text-center">
-        <MapPin aria-hidden className="size-8 text-muted-foreground" />
-        <h1 className="text-t6 font-semibold text-foreground">
-          지도는 준비 중입니다
-        </h1>
-        <p className="text-t4 text-muted-foreground">
-          교회 위치 좌표를 확보하고 있습니다. 준비되는 대로 지도에서 주변 교회를
-          찾을 수 있게 하겠습니다.
-        </p>
+      {/*
+        `SiteMark`를 넣지 않는다 — 탭 루트이고, 홈·`/not-found`와 함께 제외로 정해 뒀다
+        (`CLAUDE.md` "사이트명은 두 형태로만 나온다").
+      */}
+      <main className="mx-auto w-full max-w-2xl flex-1 px-4 pt-8">
+        {/* 탭 루트라 홈·`/churches`와 같은 t9다 */}
+        <h1 className="text-t9 font-bold text-foreground">지도</h1>
         {/*
-          Base UI Button은 네이티브 <button>을 전제하므로 링크에는 variant만 빌려 쓴다.
-          cn()을 거치지 않으면 base의 border-transparent가 outline의 border-border를 덮는다.
+          `/churches`의 수록 줄과 같은 문법이다. **여기서는 지도에 찍히는 수를 함께
+          말한다** — 두 숫자가 다른 이유는 아래 안내 줄이 잇는다.
         */}
-        {/* 지도(2) → 검색(1)이라 왼쪽으로 되돌아간다 */}
-        <Link
-          href="/churches"
-          transitionTypes={NAV_BACK}
-          className={cn(buttonVariants({ variant: "outline" }))}
-        >
-          목록에서 찾기
-        </Link>
+        <p className="mt-1 mb-5 text-t4 text-muted-foreground">
+          국내 개혁주의 교회{" "}
+          <strong className="font-semibold text-foreground">
+            {churches.length}곳
+          </strong>{" "}
+          · 지도에 {located}곳
+        </p>
+
+        <ChurchMapView churches={churches} />
+
+        {/* 목록 보기가 91장이라 길다. 지도 보기에서는 임계값에 못 닿아 뜨지 않는다 */}
+        <ScrollToTop />
+        <DataNotice />
       </main>
     </PageTransition>
   );

@@ -254,7 +254,14 @@ export function ChurchMap({
       */
       aria-hidden
       className={cn(
-        "rounded-lg bg-muted",
+        /*
+          ⚠️ **`isolate`가 없으면 지도가 자기 위에 얹은 것들을 덮는다** (2026-09-20 실측).
+          카카오 SDK는 컨테이너 **안쪽** 요소에 양수 `z-index`를 준다. 이 div가 쌓임
+          맥락을 만들지 않으면 그 값들이 **바깥까지 올라와**, 지도 위에 띄운 `/map`의
+          제목·안내 카드가 DOM 순서상 뒤에 있는데도 타일 밑에 깔린다. `isolation: isolate`
+          한 줄이 SDK의 z-index를 이 상자 안에 가둔다.
+        */
+        "isolate rounded-lg bg-muted",
         // 로드 전에는 회색 자리만 보인다. 뜬 뒤에 배경이 비치지 않도록 덮는다
         status === "ready" && "bg-transparent",
         className,

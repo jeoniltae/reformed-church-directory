@@ -1,12 +1,6 @@
 // 교회 상세 — 89건 전량을 빌드 시점에 정적 생성한다 (SSG)
 
-import {
-  ChevronLeft,
-  ExternalLink,
-  MapPin,
-  Navigation,
-  Phone,
-} from "lucide-react";
+import { ChevronLeft, ExternalLink, Navigation, Phone } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -16,6 +10,7 @@ import { NAV_BACK, PageTransition } from "@/components/shared/PageTransition";
 import { SiteMark } from "@/components/shared/SiteMark";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { ChurchMap } from "@/features/churches/components/ChurchMap";
 import { ChurchNotice } from "@/features/churches/components/ChurchNotice";
 import {
   getAllChurchIds,
@@ -110,14 +105,22 @@ export default async function ChurchDetailPage({
           <SiteMark />
         </div>
 
-        {/*
-          지도 자리. 실제 지도는 5단계(Kakao 지도 SDK 앱 키)에서 이 박스를 교체한다.
-          좌표 유무로 구분하지 않는다 — 지금은 지도가 없어 88건과 1건이 똑같이 보인다.
+{/*
+          지도 (2026-09-19). `docs/지도-작업.md` 3단계.
+
+          ⚠️ **좌표 유무로 화면이 갈리는 첫 지점이다.** 지도가 없던 동안에는 90건과
+          1건이 똑같이 보였는데, 이제 **좌표 없는 1건(군산진성교회)만 지도가 없다.**
+          그 자리는 빈 상자로 두지 않고 **아래 주소·길찾기가 그대로 남는다** —
+          `data/notices.json`의 안내도 그 화면에 이미 있다.
+
+          ⚠️ **`interactive`를 켜지 않는다.** 본문 중간의 지도가 움직이면 **세로로
+          스크롤하려던 손가락을 지도가 먹는다.** 모바일 우선 사이트에서 실제 사고다.
+
+          **정적 HTML은 그대로다** — 주소와 `geo` JSON-LD를 지도 안으로 옮기지 않는다.
         */}
-        <div className="mt-3 flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-lg bg-muted">
-          <MapPin aria-hidden className="size-6 text-muted-foreground" />
-          <p className="text-t4 text-muted-foreground">지도 준비 중</p>
-        </div>
+        {church.lat !== undefined && church.lng !== undefined && (
+          <ChurchMap churches={[church]} className="mt-3 aspect-video w-full" />
+        )}
 
         <div className="mt-5">
           {church.denomination && (

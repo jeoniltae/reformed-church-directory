@@ -11,10 +11,15 @@ import { hasCoords } from "@/features/churches/map/points";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = {
+  /*
+    ⚠️ **`title`과 아래 h1은 언제나 같은 이름이어야 한다.** `/churches`가 h1을
+    `교회 찾기`로 고치며 세운 규칙이고, 문서 제목·breadcrumb가 부르는 이름과 화면이
+    어긋나면 h1이 정보를 더하지 못한다. **여기를 고치면 h1도 함께 고친다.**
+  */
   ...pageMetadata({
-    title: "지도",
+    title: "전국 교회 지도",
     description:
-      "국내 개혁주의 교회의 위치를 지도에서 봅니다. 목록 보기로 전환할 수 있습니다.",
+      "전국 개혁주의 교회의 위치를 지도에서 봅니다. 목록 보기로 전환할 수 있습니다.",
     path: "/map",
   }),
   /**
@@ -46,8 +51,18 @@ export default function MapPage() {
           `SiteMark`가 만들어진 이유 그 자체다. 경위는 `docs/디자인-고도화.md`에 있다.
         */}
         <SiteMark className="mb-3" />
-        {/* 탭 루트라 홈·`/churches`와 같은 t9다 */}
-        <h1 className="text-t9 font-bold text-foreground">지도</h1>
+        {/*
+          탭 루트라 홈·`/churches`와 같은 t9다.
+
+          **이름은 `교회 + 화면이 하는 일` 형식이다** — `/churches`의 `교회 찾기`와
+          짝이 된다. ⚠️ **`개혁주의`를 넣지 않는다** — 바로 위 `SiteMark`가
+          `개혁주의 교회 디렉토리`라 글자가 겹친다(`/churches`가 같은 이유로
+          `개혁주의 교회 찾기`를 버렸다).
+
+          **`전국`은 과장이 아니다** — 수록 교회가 **시도 16곳 전부에 있다**(2026-09-20 실측).
+          한 곳이라도 비면 이 글자부터 다시 본다.
+        */}
+        <h1 className="text-t9 font-bold text-foreground">전국 교회 지도</h1>
         {/*
           `/churches`의 수록 줄과 같은 문법이다. **여기서는 지도에 찍히는 수를 함께
           말한다** — 두 숫자가 다른 이유는 아래 안내 줄이 잇는다.

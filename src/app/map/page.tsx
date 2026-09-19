@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { DataNotice } from "@/components/shared/DataNotice";
 import { PageTransition } from "@/components/shared/PageTransition";
 import { ScrollToTop } from "@/components/shared/ScrollToTop";
+import { SiteMark } from "@/components/shared/SiteMark";
 import { ChurchMapView } from "@/features/churches/components/ChurchMapView";
 import { getAllChurches } from "@/features/churches/data";
 import { hasCoords } from "@/features/churches/map/points";
@@ -34,11 +35,17 @@ export default function MapPage() {
 
   return (
     <PageTransition>
-      {/*
-        `SiteMark`를 넣지 않는다 — 탭 루트이고, 홈·`/not-found`와 함께 제외로 정해 뒀다
-        (`CLAUDE.md` "사이트명은 두 형태로만 나온다").
-      */}
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 pt-8">
+        {/*
+          되돌아가기 줄이 없는 화면이라 제목 위에 한 줄로 둔다 — `/churches`와 같다.
+
+          **2026-09-08에는 제외했다가 2026-09-20에 넣었다.** 그때 근거는 ①세로 중앙
+          정렬이라 상단 줄이 레이아웃과 싸운다 ②`noindex`라 검색 유입이 없다 였는데,
+          **지도가 붙으면서 둘 다 사라졌다**(흐름 레이아웃이 됐고 8단계에서 색인을 연다).
+          그러면 **검색으로 여기 바로 들어온 사람이 사이트명을 한 글자도 못 본다** —
+          `SiteMark`가 만들어진 이유 그 자체다. 경위는 `docs/디자인-고도화.md`에 있다.
+        */}
+        <SiteMark className="mb-3" />
         {/* 탭 루트라 홈·`/churches`와 같은 t9다 */}
         <h1 className="text-t9 font-bold text-foreground">지도</h1>
         {/*

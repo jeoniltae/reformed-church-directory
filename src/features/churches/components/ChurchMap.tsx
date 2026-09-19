@@ -40,6 +40,35 @@ function canDrag(): boolean {
   return window.matchMedia("(pointer: fine)").matches;
 }
 
+/**
+ * 마커를 묶기 시작하는 지도 레벨 (`level >= MIN_CLUSTER_LEVEL`이면 묶는다).
+ *
+ * ⚠️ **2,118건 확장을 전제로 처음부터 넣는다.** 2,000개를 그대로 찍으면 모바일에서
+ * 못 버틴다. 나중에 얹는 것이 아니라는 결정이 `docs/지도-작업.md` 4단계에 있다.
+ *
+ * **8은 축척 2km다.** 그보다 넓게 보는 동안(전국·시도)은 묶고, 더 당기면 낱개로 푼다
+ * — 동네를 보는 배율에서는 교회가 몇 곳 없어 겹치지 않는다. 전국 시야가 레벨 13이라
+ * 첫 화면은 언제나 묶인 상태로 열린다.
+ *
+ * **교회 상세의 지도에는 영향이 없다.** 그쪽은 마커 하나에 레벨 4라 임계값 아래다.
+ */
+const MIN_CLUSTER_LEVEL = 8;
+
+/**
+ * 묶음을 눌렀을 때 당길 레벨 수.
+ *
+ * ⚠️ **SDK 기본값(한 단계)으로는 너무 멀다 — 실측했다.** 전국(레벨 13)에서 시작하므로
+ * 묶임이 풀리는 레벨 7까지 **다섯 번을 눌러야 한다.** 모바일에서 다섯 번은 포기하는 수다.
+ *
+ * **경계에 맞추는 방법(`setBounds`)을 쓰지 않았다.** 수도권 묶음은 57곳이 서울·경기에
+ * 걸쳐 있어 **경계를 다 담으면 한두 단계밖에 안 당겨진다** — 가장 큰 묶음에서 가장
+ * 덜 듣는다. 3단계 고정이면 전국에서 **두 번**이면 낱개가 된다(13 → 10 → 7).
+ */
+const CLUSTER_ZOOM_STEP = 3;
+
+/** 카카오의 가장 가까운 레벨. 이보다 작은 값을 주면 안 된다 */
+const MAX_ZOOM_LEVEL = 1;
+
 interface ChurchMapProps {
   /** 좌표 없는 건이 섞여 있어도 된다 — `toMapPoints`가 걸러낸다 */
   churches: Church[];
@@ -80,6 +109,7 @@ export function ChurchMap({
     // 언마운트 뒤에 도착한 응답이 상태를 건드리지 않게 한다
     let alive = true;
     const markers: kakao.maps.Marker[] = [];
+    let clusterer: kakao.maps.MarkerClusterer | null = null;
     // 화면에 떠 있는 말풍선은 언제나 하나다
     let bubble: kakao.maps.CustomOverlay | null = null;
     const closeBubble = () => {
@@ -107,7 +137,6 @@ export function ChurchMap({
             title: point.name,
             clickable: linkToDetail,
           });
-          marker.setMap(map);
           markers.push(marker);
 
           if (!linkToDetail) continue;
@@ -135,6 +164,30 @@ export function ChurchMap({
           });
         }
 
+        /*
+          ⚠️ **마커를 지도에 직접 붙이지 않는다.** 클러스터러가 대신 붙이고 뗀다 —
+          `marker.setMap(map)`을 함께 부르면 **묶여야 할 마커가 낱개로도 남아** 같은
+          교회가 두 번 보인다.
+
+          **묶음을 누르면 우리가 직접 확대한다** — 기본 확대(한 단계)는 꺼 둔다.
+        */
+        clusterer = new kakao.maps.MarkerClusterer({
+          map,
+          markers,
+          minLevel: MIN_CLUSTER_LEVEL,
+          // 끄면 묶음이 첫 마커 자리에 붙어 **실제 무리보다 한쪽으로 치우쳐 보인다**
+          averageCenter: true,
+          disableClickZoom: true,
+        });
+
+        kakao.maps.event.addListener(clusterer, "clusterclick", (cluster) => {
+          // 누른 묶음을 손끝에 붙잡아 둔다 — anchor가 없으면 화면이 중심으로 튄다
+          map.setLevel(
+            Math.max(MAX_ZOOM_LEVEL, map.getLevel() - CLUSTER_ZOOM_STEP),
+            { anchor: cluster.getCenter() },
+          );
+        });
+
         // 빈 곳을 누르면 닫는다 — **모바일에서 말풍선을 끄는 유일한 길이다**
         if (linkToDetail) {
           kakao.maps.event.addListener(map, "click", closeBubble);
@@ -161,8 +214,9 @@ export function ChurchMap({
 
     return () => {
       alive = false;
-      // 지도 인스턴스에는 파괴 API가 없다. 마커만 떼면 나머지는 컨테이너와 함께 사라진다
-      for (const marker of markers) marker.setMap(null);
+      // 지도 인스턴스에는 파괴 API가 없다. 마커만 떼면 나머지는 컨테이너와 함께 사라진다.
+      // 마커는 클러스터러가 들고 있으므로 `clear()` 하나로 전부 떨어진다
+      clusterer?.clear();
       closeBubble();
     };
   }, [churches, level, interactive, linkToDetail, router]);

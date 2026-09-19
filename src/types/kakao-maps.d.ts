@@ -26,10 +26,17 @@ declare namespace kakao.maps {
     scrollwheel?: boolean;
   }
 
+  interface SetLevelOptions {
+    /** 이 좌표를 화면에서 붙잡은 채 확대한다. 누른 자리가 손끝에서 달아나지 않는다 */
+    anchor?: LatLng;
+  }
+
   class Map {
     constructor(container: HTMLElement, options: MapOptions);
     setCenter(latlng: LatLng): void;
     setBounds(bounds: LatLngBounds): void;
+    getLevel(): number;
+    setLevel(level: number, options?: SetLevelOptions): void;
     relayout(): void;
   }
 
@@ -62,6 +69,35 @@ declare namespace kakao.maps {
     setMap(map: Map | null): void;
   }
 
+  /**
+   * 마커 묶기. **`libraries=clusterer`로 함께 실어야 존재한다**(`load-kakao.ts`) —
+   * 로드된 뒤에는 라이브러리를 추가할 수 없어 스크립트를 다시 심어야 한다.
+   */
+  interface MarkerClustererOptions {
+    map: Map;
+    markers: Marker[];
+    /**
+     * 묶기 시작하는 지도 레벨. **`level >= minLevel`일 때 묶고, 더 확대하면 낱개로 푼다.**
+     * 카카오 레벨은 작을수록 확대다(1이 가장 가깝다).
+     */
+    minLevel: number;
+    /** 묶음의 중심을 속한 마커들의 평균으로 잡는다. 끄면 첫 마커 자리에 붙는다 */
+    averageCenter?: boolean;
+    /** 묶음을 눌렀을 때의 **기본 확대(한 단계)를 끈다.** 우리가 직접 확대하려면 켠다 */
+    disableClickZoom?: boolean;
+  }
+
+  /** 마커 묶음 하나. `clusterclick` 핸들러가 받는다 */
+  interface Cluster {
+    getCenter(): LatLng;
+  }
+
+  class MarkerClusterer {
+    constructor(options: MarkerClustererOptions);
+    /** 묶음과 마커를 전부 지운다. 정리(cleanup)는 이것 하나면 된다 */
+    clear(): void;
+  }
+
   function load(callback: () => void): void;
 
   namespace event {
@@ -72,5 +108,11 @@ declare namespace kakao.maps {
     ): void;
     /** 지도 빈 곳을 누른 경우. **말풍선을 닫는 유일한 통로다** */
     function addListener(target: Map, type: "click", handler: () => void): void;
+    /** 묶음을 누른 경우. `disableClickZoom`을 켜야 우리 확대만 걸린다 */
+    function addListener(
+      target: MarkerClusterer,
+      type: "clusterclick",
+      handler: (cluster: Cluster) => void,
+    ): void;
   }
 }

@@ -73,8 +73,21 @@ export function DataNotice({ source, churchId }: DataNoticeProps) {
 
         ⚠️ **`CC BY-NC 4.0`이라고만 적지 않는다.** 이 데이터는 CC BY-NC에 **추가 조건**
         (삭제 요청 승계)이 붙어 있고, 그 조항이 핵심이다. 기본 라이선스 이름만 적으면
-        재배포자가 그 의무를 모른 채 가져간다. `/privacy`의 `전체 이용 조건 보기`와
-        같은 어휘를 쓴다.
+        재배포자가 그 의무를 모른 채 가져간다.
+
+        **다만 라이선스 이름은 적는다 (2026-09-19).** 예전에는 `데이터 이용 조건`만
+        있어서 **`CC BY-NC`라는 글자가 화면 어디에도 없었다** — 가져가려는 사람이
+        링크를 눌러 보기 전에는 무슨 조건인지 알 수 없었다. 이름과 `+ 추가 조건`을
+        함께 적으면 **한 줄로 범위와 단서가 둘 다 드러난다.**
+
+        ⚠️ **배지(CC 버튼)는 여기 두지 않는다.** 이 블록은 t2 회색 세 층이고 이미지가
+        하나도 없다 — "법적 고지라 **장식이 격을 바꾼다**"며 이모지도 막은 자리다.
+        무엇보다 **배지만으로는 "데이터에만 적용된다"는 범위를 말할 수 없다**(코드는
+        MIT다). 배지는 그 범위를 문장으로 설명할 수 있는 `/privacy`에 둔다.
+
+        ⚠️ **`rel="license"`는 이 링크에만 단다.** `/privacy`의 배지는 CC 원문으로
+        나가지만, **이 사이트의 라이선스는 추가 조건이 붙은 우리 문서**다. 두 곳에
+        모두 달면 어느 것이 정본인지 신호가 갈린다.
       */}
       <div className="mt-6 border-t border-border pt-4 text-t2 text-muted-foreground">
         <p className="flex flex-wrap items-center gap-x-1.5">
@@ -85,10 +98,10 @@ export function DataNotice({ source, churchId }: DataNoticeProps) {
           <a
             href={DATA_LICENSE_URL}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="license noopener noreferrer"
             className="inline-flex items-center gap-1 rounded-lg text-foreground underline underline-offset-2 outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
           >
-            데이터 이용 조건
+            데이터 CC BY-NC 4.0 + 추가 조건
             <ExternalLink aria-hidden className="size-3" />
           </a>
         </p>

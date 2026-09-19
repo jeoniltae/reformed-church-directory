@@ -1,10 +1,16 @@
 // 개인정보 처리방침 — 로그인·DB가 없는 정적 사이트 기준. 공개에 따르는 의무의 일부
 
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { NAV_BACK, PageTransition } from "@/components/shared/PageTransition";
 import { SiteMark } from "@/components/shared/SiteMark";
-import { CONTACT_EMAIL, DATA_LICENSE_URL, pageMetadata } from "@/lib/site";
+import {
+  CC_DEED_URL,
+  CONTACT_EMAIL,
+  DATA_LICENSE_URL,
+  pageMetadata,
+} from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
   title: "개인정보 처리방침",
@@ -125,12 +131,56 @@ const SECTIONS = [
           이전에 개인정보보호법이 재배포자에게 직접 요구하는 의무이며, 저희가
           허락했다는 사실이 면책 사유가 되지 않습니다.
         </p>
-        <p className="mt-2">
-          {/* 저장소 밖으로 나가는 링크다. 내부 이동이 아니므로 화면 전환을 걸지 않는다 */}
+        {/*
+          **배지를 여기 둔다 (2026-09-19).** 푸터가 아니라 이 자리인 이유는
+          **범위를 문장으로 함께 말할 수 있어서**다 — 배지만 두면 "이 사이트 전부"로
+          읽히는데, 실제로는 `source`가 `자체 수집`인 데이터에만 적용되고 코드는
+          MIT다. 전 화면 푸터에는 글자로만 적는다(`DataNotice` 주석 참고).
+
+          ⚠️ **CC 공식 버튼을 `public/`에 두고 로컬 경로로 쓴다.**
+          `licensebuttons.net`에서 불러오면 **모든 방문자의 IP가 제3자에게 남는다** —
+          바로 이 문서가 "방문자로부터 아무것도 수집하지 않는다"고 말하는 사이트에서
+          스스로 만드는 예외가 된다. 마크는 상표라 직접 그리지 않고 원본을 쓴다.
+
+          **`unoptimized`다.** Next의 이미지 최적화는 SVG를 그대로 통과시키지 않고
+          (`dangerouslyAllowSVG` 설정이 필요하다), 이 파일은 15KB짜리 정적 마크라
+          최적화할 것도 없다. 설정을 건드리지 않고 원본을 그대로 내보낸다.
+        */}
+        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <a
+            href={CC_DEED_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+          >
+            <Image
+              src="/cc-by-nc.svg"
+              alt="크리에이티브 커먼즈 저작자표시-비영리 4.0"
+              width={120}
+              height={42}
+              unoptimized
+            />
+          </a>
+          {/*
+            배지 옆에 반드시 범위를 적는다 — 배지 혼자서는 "무엇에 적용되는지"를
+            말하지 못한다. 이 한 줄이 없으면 코드(MIT)까지 덮는 것으로 읽힌다.
+          */}
+          <p className="min-w-0 flex-1 text-t2">
+            교회 데이터에만 적용됩니다. 소스 코드는 MIT이며, 제3자에게서 받은
+            자료에는 이 조건을 적용할 수 없습니다.
+          </p>
+        </div>
+
+        <p className="mt-3">
+          {/*
+            저장소 밖으로 나가는 링크다. 내부 이동이 아니므로 화면 전환을 걸지 않는다.
+            ⚠️ `rel="license"`는 **위 배지가 아니라 여기**에 단다 — 이 사이트의 정본은
+            추가 조건이 붙은 우리 문서이고, 배지가 가리키는 CC 원문이 아니다.
+          */}
           <a
             href={DATA_LICENSE_URL}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="license noopener noreferrer"
             className="text-foreground underline underline-offset-2"
           >
             전체 이용 조건 보기

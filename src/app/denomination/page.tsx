@@ -12,7 +12,7 @@
 // `churches/[id]/opengraph-image.tsx` 주석이 이유를 적어 뒀다: 랜딩류는 요청 시
 // 렌더될 수 있는데 그 시점에 폰트 경로(`node_modules`)가 없을 수 있다.
 
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Info } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -155,29 +155,64 @@ export default function DenominationHubPage() {
               </p>
             )}
 
-            <dl className="mt-4 flex flex-col gap-3">
+            {/*
+              **선을 지우고 간격으로 나눈다 (2026-09-19).** 항목마다 `border-b`를 둬서
+              여덟 줄이 그어져 있었다 — `RegionTiles`에서 **"선이 많으면 내용보다 격자가
+              먼저 읽힌다"**며 테두리 열여섯을 걷어낸 기준이 여기엔 적용되지 않았다.
+              칩 덩어리가 이미 항목 경계를 만들어서 선이 할 일이 없다.
+
+              **간격이 `gap-8`(32px)이다.** 선을 지운 자리를 여백이 대신한다 —
+              24px일 때는 항목 머리가 어디서 시작하는지 눈이 잡지 못했다.
+
+              ⚠️ **총회마다 카드를 만들지 않는다.** 위 계열 5개와 같은 모양이 되는데
+              **저쪽은 눌러서 랜딩으로 가는 카드이고 이쪽은 눌리지 않는다** — 같은
+              모양에 다른 동작이 붙는다. 카드도 열세 장이 된다.
+            */}
+            <dl className="mt-4 flex flex-col gap-8">
               {ungrouped.synods.map((synod) => {
                 const churches = all.filter(
                   (church) => church.denomination === synod.denomination,
                 );
                 if (!churches.length) return null;
                 return (
-                  <div
-                    key={synod.denomination}
-                    className="border-b border-border pb-3 last:border-b-0 last:pb-0"
-                  >
-                    <dt className="flex items-baseline justify-between gap-3">
-                      <span className="text-t5 font-semibold text-foreground">
-                        {synod.official || synod.denomination}
-                      </span>
-                      <span className="shrink-0 text-t4 text-muted-foreground">
-                        {churches.length}곳
-                      </span>
+                  <div key={synod.denomination}>
+                    {/*
+                      **오른쪽 건수를 없앴다.** 계열 카드는 랜딩으로 넘어가니 건수가
+                      **"안 보이는 것의 요약"**이지만, 여기는 **교회 이름이 바로 아래
+                      전부 나열된다.** 칩 개수가 곧 건수이고 최대 4개라 셀 수 있다 —
+                      회색 숫자 여덟 개가 사라졌다.
+
+                      **크기가 아니라 굵기로 세운다 — `t5 bold` (2026-09-19, 3차).**
+                      선을 지운 뒤 총회명(t5 semibold)과 교회 칩(t4 medium)의 차이가
+                      2px뿐이라 항목 머리로 읽히지 않았다. "교단명 앞에 아이콘을
+                      넣자"는 요청이 나온 자리인데, **원인은 구분 표시가 없는 것이
+                      아니라 제목이 약한 것**이었다.
+
+                      ⚠️ **t6으로 올렸다가 되돌렸다.** 절 제목 `계열로 묶지 않은 교단`이
+                      t6 bold인데 **그것은 위 계열 카드 5개와 형제**(허브의 여섯 번째
+                      묶음)이고, 총회는 **그 안에 든 것**이다. 같은 급수를 주니 **부모와
+                      자식이 같은 크기**가 됐다 — 굵기만으로는 그 층이 읽히지 않는다.
+
+                      ⚠️ **부모를 올리는 쪽은 막혀 있다.** 절 제목만 t7로 올리면 형제인
+                      계열 카드와 어긋나고, 카드까지 함께 올리면 **h1(t8, 22px)과 2px
+                      차이**가 되어 이번에는 위쪽이 무너진다. 그래서 자식을 낮추고
+                      **굵기를 semibold → bold로 한 단 올려 보상했다.**
+
+                      결과는 세 단이다 — 절·계열 `t6 bold`(18) > 총회 `t5 bold`(16)
+                      > 칩 `t4 medium`(14).
+
+                      ⚠️ **아이콘을 붙이지 않는다.** 여덟이 같은 그림이면 구분이 아니라
+                      반복이고, 총회마다 다른 그림을 줄 근거가 데이터에 없다(로고는
+                      저작권이라 수집하지 않는다). 무엇보다 **아래 `Info`가 "안내"라는
+                      뜻으로 이미 쓰이고 있어** 같은 화면에서 층위가 섞인다.
+                    */}
+                    <dt className="text-t5 font-bold text-foreground">
+                      {synod.official || synod.denomination}
                     </dt>
                     <dd className="mt-1 text-t4 text-muted-foreground">
                       {synod.confession && <p>{synod.confession}</p>}
                       {synod.note && <p>{synod.note}</p>}
-                      <div className="mt-1">
+                      <div className="mt-2">
                         <ChurchLinks churches={churches} />
                       </div>
                     </dd>
@@ -194,16 +229,31 @@ export default function DenominationHubPage() {
           `DataNotice`가 지켜온 원칙과 같다.
         */}
         {noDenomination.length > 0 && (
-          <section className="mt-8 rounded-lg bg-muted p-4">
-            <h2 className="text-t5 font-semibold text-foreground">
-              교단을 확인하지 못한 교회 {noDenomination.length}곳
-            </h2>
-            <p className="mt-1 text-t4 text-muted-foreground">
-              원본 자료에 교단 표기가 없어 어느 계열에도 넣지 않았습니다. 교단이
-              없다는 뜻이 아니라 우리가 확인하지 못했다는 뜻입니다.
-            </p>
-            <div className="mt-2 text-t4">
-              <ChurchLinks churches={noDenomination} />
+          <section className="mt-8 flex gap-2.5 rounded-lg border border-border p-4">
+            {/*
+              ⚠️ **`bg-muted` 덩어리를 쓰지 않는다 (2026-09-19).** `ChurchNotice`가 같은
+              성격의 안내를 만들면서 **"회색 블록이 연달아 오면 '준비 중'으로 읽힌다"**며
+              배경 대신 테두리와 `Info`를 골랐는데, 이 상자만 그 판단에서 벗어나 있었다.
+              맞추고 나니 화면의 컨테이너 어휘가 **셋(카드·목록·회색상자)에서 둘로** 줄었다.
+
+              **경고가 아니라 안내다** — `destructive`를 쓰지 않는 이유도 저쪽과 같다.
+              확인하지 못한 것은 우리 데이터의 한계이지 그 교회의 결함이 아니다.
+            */}
+            <Info
+              aria-hidden
+              className="mt-0.5 size-4 shrink-0 text-muted-foreground"
+            />
+            <div className="min-w-0 flex-1">
+              <h2 className="text-t5 font-semibold text-foreground">
+                교단을 확인하지 못한 교회 {noDenomination.length}곳
+              </h2>
+              <p className="mt-1 text-t4 text-muted-foreground">
+                원본 자료에 교단 표기가 없어 어느 계열에도 넣지 않았습니다. 교단이
+                없다는 뜻이 아니라 우리가 확인하지 못했다는 뜻입니다.
+              </p>
+              <div className="mt-2">
+                <ChurchLinks churches={noDenomination} />
+              </div>
             </div>
           </section>
         )}

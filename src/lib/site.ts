@@ -174,3 +174,14 @@ export function pageMetadata({
     },
   };
 }
+
+/**
+ * 데이터 라이선스의 CC 공식 안내(deed).
+ *
+ * **`DATA_LICENSE_URL`과 가리키는 것이 다르다.** 그쪽은 **우리 조건 전문**이고
+ * (CC BY-NC에 **삭제 요청 승계**라는 추가 조건이 붙어 있다), 이쪽은 **CC 원문**이다.
+ * `/privacy`의 배지가 이 주소로 나가고, `rel="license"`는 **우리 조건 쪽에만** 단다 —
+ * 두 주소에 모두 달면 어느 것이 이 사이트의 라이선스인지 신호가 갈린다.
+ */
+export const CC_DEED_URL =
+  "https://creativecommons.org/licenses/by-nc/4.0/deed.ko";

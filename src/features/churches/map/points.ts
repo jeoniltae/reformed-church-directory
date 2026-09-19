@@ -6,6 +6,8 @@ import type { Church } from "@/types/church";
 export interface MapPoint {
   id: string;
   name: string;
+  /** 말풍선의 둘째 줄. `서울 강동구`처럼 이미 합쳐 둔다 — `ChurchRow`와 같은 표기다 */
+  place: string;
   lat: number;
   lng: number;
 }
@@ -25,9 +27,15 @@ export const FALLBACK_CENTER = { lat: 36.5, lng: 127.8 };
  */
 export function toMapPoints(churches: Church[]): MapPoint[] {
   const points: MapPoint[] = [];
-  for (const { id, name, lat, lng } of churches) {
+  for (const { id, name, region, subRegion, lat, lng } of churches) {
     if (typeof lat !== "number" || typeof lng !== "number") continue;
-    points.push({ id, name, lat, lng });
+    points.push({
+      id,
+      name,
+      place: subRegion ? `${region} ${subRegion}` : region,
+      lat,
+      lng,
+    });
   }
   return points;
 }

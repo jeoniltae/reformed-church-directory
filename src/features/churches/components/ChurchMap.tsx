@@ -10,9 +10,12 @@
 // 언제 마운트되는지가 곧 성능 문제**가 된다(`docs/지도-작업.md` 7단계).
 
 import { MapPin } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { NAV_FORWARD } from "@/components/shared/PageTransition";
 import { cn } from "@/lib/utils";
 import type { Church } from "@/types/church";
+import { createChurchBubble } from "../map/bubble";
 import { loadKakaoMaps } from "../map/load-kakao";
 import { centerOf, toMapPoints } from "../map/points";
 
@@ -52,6 +55,13 @@ interface ChurchMapProps {
    * `canDrag()` 참고.
    */
   interactive?: boolean;
+  /**
+   * 마커를 누르면 말풍선이 뜨고, 말풍선을 누르면 그 교회 상세로 간다.
+   *
+   * **상세 화면에서는 켜지 않는다** — 마커가 지금 보고 있는 교회 하나뿐이라
+   * 자기 자신으로 가는 링크가 된다. `/map`처럼 **여러 교회를 늘어놓는 화면**의 것이다.
+   */
+  linkToDetail?: boolean;
   className?: string;
 }
 
@@ -59,15 +69,23 @@ export function ChurchMap({
   churches,
   level = 4,
   interactive = false,
+  linkToDetail = false,
   className,
 }: ChurchMapProps) {
   const container = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<Status>("loading");
+  const router = useRouter();
 
   useEffect(() => {
     // 언마운트 뒤에 도착한 응답이 상태를 건드리지 않게 한다
     let alive = true;
     const markers: kakao.maps.Marker[] = [];
+    // 화면에 떠 있는 말풍선은 언제나 하나다
+    let bubble: kakao.maps.CustomOverlay | null = null;
+    const closeBubble = () => {
+      bubble?.setMap(null);
+      bubble = null;
+    };
 
     loadKakaoMaps()
       .then(() => {
@@ -87,9 +105,39 @@ export function ChurchMap({
           const marker = new kakao.maps.Marker({
             position: new kakao.maps.LatLng(point.lat, point.lng),
             title: point.name,
+            clickable: linkToDetail,
           });
           marker.setMap(map);
           markers.push(marker);
+
+          if (!linkToDetail) continue;
+
+          kakao.maps.event.addListener(marker, "click", () => {
+            // 한 번에 하나만 띄운다 — 옆 마커를 누르면 그쪽으로 옮겨간다
+            closeBubble();
+            bubble = new kakao.maps.CustomOverlay({
+              position: new kakao.maps.LatLng(point.lat, point.lng),
+              content: createChurchBubble(point, () => {
+                /*
+                  ⚠️ **`transitionTypes`를 빠뜨리면 화면 전환이 조용히 죽는다.**
+                  `<Link>`가 아니라 라우터로 이동하므로 방향을 직접 실어야 한다
+                  (`CLAUDE.md` "화면 전환"). `router.push`의 두 번째 인자로 간다.
+                */
+                router.push(`/churches/${point.id}`, {
+                  transitionTypes: NAV_FORWARD,
+                });
+              }),
+              yAnchor: 1,
+              // 기본값이 `false`라 이걸 빼면 말풍선 안의 링크가 눌리지 않는다
+              clickable: true,
+            });
+            bubble.setMap(map);
+          });
+        }
+
+        // 빈 곳을 누르면 닫는다 — **모바일에서 말풍선을 끄는 유일한 길이다**
+        if (linkToDetail) {
+          kakao.maps.event.addListener(map, "click", closeBubble);
         }
 
         /*
@@ -115,8 +163,9 @@ export function ChurchMap({
       alive = false;
       // 지도 인스턴스에는 파괴 API가 없다. 마커만 떼면 나머지는 컨테이너와 함께 사라진다
       for (const marker of markers) marker.setMap(null);
+      closeBubble();
     };
-  }, [churches, level, interactive]);
+  }, [churches, level, interactive, linkToDetail, router]);
 
   /*
     ⚠️ **실패 문구를 한 가지로 쓴다.** 로더는 `no-key`와 `script-failed`를 구분하지만

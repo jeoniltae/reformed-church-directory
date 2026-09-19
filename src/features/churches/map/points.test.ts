@@ -30,17 +30,34 @@ describe("toMapPoints", () => {
     expect(toMapPoints([church({ lat: 0, lng: 0 })])).toHaveLength(1);
   });
 
-  it("id·이름·좌표만 남긴다 — 컴포넌트가 볼 것을 좁힌다", () => {
+  it("id·이름·지역·좌표만 남긴다 — 컴포넌트가 볼 것을 좁힌다", () => {
     const [point] = toMapPoints([
-      church({ id: "언약교회-하남시", name: "언약교회", lat: 37.5, lng: 127.2 }),
+      church({
+        id: "언약교회-하남시",
+        name: "언약교회",
+        region: "경기",
+        subRegion: "하남시",
+        lat: 37.5,
+        lng: 127.2,
+      }),
     ]);
 
     expect(point).toEqual({
       id: "언약교회-하남시",
       name: "언약교회",
+      place: "경기 하남시",
       lat: 37.5,
       lng: 127.2,
     });
+  });
+
+  // 말풍선 둘째 줄이 `서울 `처럼 끊긴 채 나가지 않게 한다
+  it("시군구가 없으면 시도만 적는다", () => {
+    const [point] = toMapPoints([
+      church({ region: "세종", subRegion: undefined, lat: 36.5, lng: 127.2 }),
+    ]);
+
+    expect(point.place).toBe("세종");
   });
 });
 
@@ -51,10 +68,10 @@ describe("centerOf", () => {
    */
   it("한쪽에 몰린 점들에 끌려가지 않는다", () => {
     const seoulHeavy = [
-      { id: "a", name: "a", lat: 37.5, lng: 127.0 },
-      { id: "b", name: "b", lat: 37.5, lng: 127.0 },
-      { id: "c", name: "c", lat: 37.5, lng: 127.0 },
-      { id: "d", name: "d", lat: 33.5, lng: 126.5 }, // 제주
+      { id: "a", name: "a", place: "어딘가", lat: 37.5, lng: 127.0 },
+      { id: "b", name: "b", place: "어딘가", lat: 37.5, lng: 127.0 },
+      { id: "c", name: "c", place: "어딘가", lat: 37.5, lng: 127.0 },
+      { id: "d", name: "d", place: "어딘가", lat: 33.5, lng: 126.5 }, // 제주
     ];
 
     // 평균이라면 위도가 37.0 근처로 서울에 붙는다
@@ -62,7 +79,7 @@ describe("centerOf", () => {
   });
 
   it("점이 하나면 그 점이 중심이다", () => {
-    expect(centerOf([{ id: "a", name: "a", lat: 35.1, lng: 129.0 }])).toEqual({
+    expect(centerOf([{ id: "a", name: "a", place: "어딘가", lat: 35.1, lng: 129.0 }])).toEqual({
       lat: 35.1,
       lng: 129.0,
     });

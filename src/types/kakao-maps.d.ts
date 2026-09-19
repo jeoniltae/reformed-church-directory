@@ -44,6 +44,24 @@ declare namespace kakao.maps {
     setMap(map: Map | null): void;
   }
 
+  /**
+   * 마커 위에 얹는 말풍선. **내용으로 우리가 만든 DOM을 그대로 넣는다** —
+   * SDK 기본 `InfoWindow`는 흰 상자 모양이 고정이라 디자인 토큰을 따르지 못한다.
+   */
+  interface CustomOverlayOptions {
+    position: LatLng;
+    content: HTMLElement;
+    /** 세로 기준점. `1`이면 `content`의 **아래변**이 좌표에 닿는다 */
+    yAnchor?: number;
+    /** ⚠️ **기본값이 `false`다.** 말풍선 안의 링크를 누르려면 켜야 한다 */
+    clickable?: boolean;
+  }
+
+  class CustomOverlay {
+    constructor(options: CustomOverlayOptions);
+    setMap(map: Map | null): void;
+  }
+
   function load(callback: () => void): void;
 
   namespace event {
@@ -52,5 +70,7 @@ declare namespace kakao.maps {
       type: "click",
       handler: () => void,
     ): void;
+    /** 지도 빈 곳을 누른 경우. **말풍선을 닫는 유일한 통로다** */
+    function addListener(target: Map, type: "click", handler: () => void): void;
   }
 }

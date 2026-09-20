@@ -10,12 +10,10 @@
 // 언제 마운트되는지가 곧 성능 문제**가 된다(`docs/지도-작업.md` 7단계).
 
 import { MapPin } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { NAV_FORWARD } from "@/components/shared/PageTransition";
 import { cn } from "@/lib/utils";
 import type { Church } from "@/types/church";
-import { createChurchBubble } from "../map/bubble";
+import { createChurchLabel, setLabelSelected } from "../map/label";
 import { loadKakaoMaps } from "../map/load-kakao";
 import { centerOf, toMapPoints } from "../map/points";
 
@@ -69,6 +67,21 @@ const CLUSTER_ZOOM_STEP = 3;
 /** 카카오의 가장 가까운 레벨. 이보다 작은 값을 주면 안 된다 */
 const MAX_ZOOM_LEVEL = 1;
 
+/*
+  **이름표는 줌 레벨이 아니라 "묶였는가"로 켠다** (2026-09-21 고침).
+
+  ⚠️ **처음에는 `level <= 7`로 줬다가 되돌렸다.** 그러면 **첫 화면(전국, 레벨 13)에서
+  이름표가 하나도 안 뜬다** — 낱개로 서 있는 마커가 세 곳이나 있는데도 그렇다.
+  "항상 보이게" 하려던 것이 "두 번 확대해야 보이는" 것이 됐다.
+
+  **클러스터러는 묶은 마커를 지도에서 떼어 둔다**(`marker.getMap()`이 `null`이다).
+  그래서 **묶이지 않은 마커에만 이름표를 붙이면** 줌과 무관하게 언제나 맞다 —
+  묶음 위에 글자가 겹치는 사고도 구조적으로 막힌다.
+
+  ⚠️ **고신 2,118건이 들어오면 다시 봐야 한다.** 묶임이 풀린 도심에서는 이름표 수십
+  개가 한 화면에 뜬다 — 그때는 뷰포트 안만 만들고 겹침을 솎아낸다.
+*/
+
 interface ChurchMapProps {
   /** 좌표 없는 건이 섞여 있어도 된다 — `toMapPoints`가 걸러낸다 */
   churches: Church[];
@@ -85,12 +98,24 @@ interface ChurchMapProps {
    */
   interactive?: boolean;
   /**
-   * 마커를 누르면 말풍선이 뜨고, 말풍선을 누르면 그 교회 상세로 간다.
+   * 마커를 누르면 그 교회 id를, 빈 곳을 누르면 `null`을 돌려준다.
    *
-   * **상세 화면에서는 켜지 않는다** — 마커가 지금 보고 있는 교회 하나뿐이라
-   * 자기 자신으로 가는 링크가 된다. `/map`처럼 **여러 교회를 늘어놓는 화면**의 것이다.
+   * **넘기면 이름표도 함께 켜진다** — 고르는 화면이라는 뜻이기 때문이다.
+   * **상세 화면에서는 넘기지 않는다**(마커가 지금 보고 있는 그 교회 하나뿐이다).
+   *
+   * ⚠️ **이 컴포넌트는 고른 결과로 무엇을 할지 모른다.** `/map`에서는 하단 시트가
+   * 받아서 보여준다 — 지도가 화면 구성을 알지 않게 두려는 것이다.
    */
-  linkToDetail?: boolean;
+  onSelect?: (id: string | null) => void;
+  /** 지금 고른 교회. 그 이름표만 브랜드색으로 뒤집고 시트에 가리지 않게 지도를 민다 */
+  selectedId?: string | null;
+  /**
+   * 골랐을 때 아래에서 올라오는 판의 높이(px).
+   *
+   * **지도를 그만큼 밀어 올려** 고른 마커가 판 뒤로 숨지 않게 한다. 값을 부르는 쪽이
+   * 주는 이유는 **판의 높이를 아는 것이 지도가 아니라 화면**이기 때문이다.
+   */
+  selectionInset?: number;
   className?: string;
 }
 
@@ -98,24 +123,40 @@ export function ChurchMap({
   churches,
   level = 4,
   interactive = false,
-  linkToDetail = false,
+  onSelect,
+  selectedId = null,
+  selectionInset = 0,
   className,
 }: ChurchMapProps) {
   const container = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<Status>("loading");
-  const router = useRouter();
+  /**
+   * 지도와 이름표를 **다시 만들지 않고 손보기 위해** 들고 있는 것들.
+   *
+   * ⚠️ **`selectedId`를 아래 effect의 의존성에 넣지 않는다.** 넣으면 교회를 고를 때마다
+   * 지도가 통째로 다시 만들어져 **보고 있던 자리와 확대가 초기화된다.**
+   */
+  const mapRef = useRef<kakao.maps.Map | null>(null);
+  const labelRefs = useRef(new Map<string, HTMLElement>());
+  /** 콜백이 바뀌어도 지도를 다시 만들지 않게 최신 것만 들고 본다 */
+  const selectRef = useRef(onSelect);
+  useEffect(() => {
+    selectRef.current = onSelect;
+  }, [onSelect]);
 
   useEffect(() => {
     // 언마운트 뒤에 도착한 응답이 상태를 건드리지 않게 한다
     let alive = true;
     const markers: kakao.maps.Marker[] = [];
     let clusterer: kakao.maps.MarkerClusterer | null = null;
-    // 화면에 떠 있는 말풍선은 언제나 하나다
-    let bubble: kakao.maps.CustomOverlay | null = null;
-    const closeBubble = () => {
-      bubble?.setMap(null);
-      bubble = null;
-    };
+    /** 마커와 이름표를 짝지어 들고 있는다 — 묶였는지 물어보려면 마커가 필요하다 */
+    const labeled: {
+      marker: kakao.maps.Marker;
+      label: kakao.maps.CustomOverlay;
+    }[] = [];
+    // cleanup이 돌 때쯤 ref가 다른 것을 가리킬 수 있어 지금 것을 붙잡아 둔다
+    const labelEls = labelRefs.current;
+    const selectable = Boolean(selectRef.current);
 
     loadKakaoMaps()
       .then(() => {
@@ -131,38 +172,50 @@ export function ChurchMap({
           scrollwheel: interactive,
         });
 
+        mapRef.current = map;
+        labelEls.clear();
+
         for (const point of points) {
+          const position = new kakao.maps.LatLng(point.lat, point.lng);
           const marker = new kakao.maps.Marker({
-            position: new kakao.maps.LatLng(point.lat, point.lng),
+            position,
             title: point.name,
-            clickable: linkToDetail,
+            clickable: selectable,
           });
           markers.push(marker);
 
-          if (!linkToDetail) continue;
+          if (!selectable) continue;
 
+          // 마커를 누르면 고른 교회를 바깥에 알린다. 화면에 무엇을 띄울지는 바깥이 정한다
           kakao.maps.event.addListener(marker, "click", () => {
-            // 한 번에 하나만 띄운다 — 옆 마커를 누르면 그쪽으로 옮겨간다
-            closeBubble();
-            bubble = new kakao.maps.CustomOverlay({
-              position: new kakao.maps.LatLng(point.lat, point.lng),
-              content: createChurchBubble(point, () => {
-                /*
-                  ⚠️ **`transitionTypes`를 빠뜨리면 화면 전환이 조용히 죽는다.**
-                  `<Link>`가 아니라 라우터로 이동하므로 방향을 직접 실어야 한다
-                  (`CLAUDE.md` "화면 전환"). `router.push`의 두 번째 인자로 간다.
-                */
-                router.push(`/churches/${point.id}`, {
-                  transitionTypes: NAV_FORWARD,
-                });
-              }),
+            selectRef.current?.(point.id);
+          });
+
+          const content = createChurchLabel(point);
+          labelEls.set(point.id, content);
+          labeled.push({
+            marker,
+            label: new kakao.maps.CustomOverlay({
+              position,
+              content,
+              // `1`이면 아랫변이 좌표에 닿는다 — 이름표가 마커 **위**에 선다(`label.ts`)
               yAnchor: 1,
-              // 기본값이 `false`라 이걸 빼면 말풍선 안의 링크가 눌리지 않는다
-              clickable: true,
-            });
-            bubble.setMap(map);
+            }),
           });
         }
+
+        /*
+          ⚠️ **이름표는 클러스터러가 관리하지 않는다.** 마커는 묶이면 지도에서 떨어지지만
+          오버레이는 그대로 남으므로, 이 처리가 없으면 **묶음 위에 이름표가 겹쳐 뜬다.**
+
+          **묶인 마커는 `getMap()`이 `null`이다** — 그것만 보고 이름표를 함께 떼면
+          줌 레벨을 따로 따질 필요가 없다.
+        */
+        const syncLabels = () => {
+          for (const { marker, label } of labeled) {
+            label.setMap(marker.getMap() ? map : null);
+          }
+        };
 
         /*
           ⚠️ **마커를 지도에 직접 붙이지 않는다.** 클러스터러가 대신 붙이고 뗀다 —
@@ -180,6 +233,14 @@ export function ChurchMap({
           disableClickZoom: true,
         });
 
+        /*
+          ⚠️ **묶기가 끝난 뒤에 맞춰야 한다.** `zoom_changed`에서 하면 클러스터러가 아직
+          마커를 떼기 전이라 **한 박자 늦은 상태**를 보게 된다. `clustered`는 묶기가
+          끝난 시점이라 `getMap()`이 정확하다.
+        */
+        kakao.maps.event.addListener(clusterer, "clustered", syncLabels);
+        syncLabels();
+
         kakao.maps.event.addListener(clusterer, "clusterclick", (cluster) => {
           // 누른 묶음을 손끝에 붙잡아 둔다 — anchor가 없으면 화면이 중심으로 튄다
           map.setLevel(
@@ -188,9 +249,12 @@ export function ChurchMap({
           );
         });
 
-        // 빈 곳을 누르면 닫는다 — **모바일에서 말풍선을 끄는 유일한 길이다**
-        if (linkToDetail) {
-          kakao.maps.event.addListener(map, "click", closeBubble);
+
+        // 빈 곳을 누르면 고른 것을 푼다 — **모바일에서 선택을 끄는 유일한 길이다**
+        if (selectable) {
+          kakao.maps.event.addListener(map, "click", () => {
+            selectRef.current?.(null);
+          });
         }
 
         /*
@@ -217,9 +281,33 @@ export function ChurchMap({
       // 지도 인스턴스에는 파괴 API가 없다. 마커만 떼면 나머지는 컨테이너와 함께 사라진다.
       // 마커는 클러스터러가 들고 있으므로 `clear()` 하나로 전부 떨어진다
       clusterer?.clear();
-      closeBubble();
+      for (const { label } of labeled) label.setMap(null);
+      labelEls.clear();
+      mapRef.current = null;
     };
-  }, [churches, level, interactive, linkToDetail, router]);
+  }, [churches, level, interactive]);
+
+  /*
+    고른 교회를 화면에 반영한다. **지도를 다시 만들지 않는다** — 이름표 색만 바꾸고
+    필요한 만큼 지도를 민다.
+
+    ⚠️ **미는 방향이 핵심이다.** 고른 마커는 화면 한가운데로 오는데, 아래에서 판이
+    올라오면 **그 판 뒤에 숨는다.** 판 높이의 절반만큼 위로 올려 놓는다.
+  */
+  useEffect(() => {
+    for (const [id, el] of labelRefs.current) {
+      setLabelSelected(el, id === selectedId);
+    }
+
+    const map = mapRef.current;
+    if (!map || !selectedId) return;
+
+    const point = toMapPoints(churches).find((p) => p.id === selectedId);
+    if (!point) return;
+
+    map.setCenter(new kakao.maps.LatLng(point.lat, point.lng));
+    if (selectionInset > 0) map.panBy(0, selectionInset / 2);
+  }, [churches, selectedId, selectionInset, status]);
 
   /*
     ⚠️ **실패 문구를 한 가지로 쓴다.** 로더는 `no-key`와 `script-failed`를 구분하지만

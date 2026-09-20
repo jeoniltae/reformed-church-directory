@@ -37,6 +37,8 @@ declare namespace kakao.maps {
     setBounds(bounds: LatLngBounds): void;
     getLevel(): number;
     setLevel(level: number, options?: SetLevelOptions): void;
+    /** 화면 픽셀만큼 지도를 민다. 고른 마커가 하단 시트에 가리지 않게 올릴 때 쓴다 */
+    panBy(dx: number, dy: number): void;
     relayout(): void;
   }
 
@@ -49,6 +51,11 @@ declare namespace kakao.maps {
   class Marker {
     constructor(options: MarkerOptions);
     setMap(map: Map | null): void;
+    /**
+     * 지금 지도에 붙어 있는가. **묶인 마커는 클러스터러가 떼어 두므로 `null`이다** —
+     * 이름표를 켤지 끌지를 이 값으로 판단한다(`ChurchMap`).
+     */
+    getMap(): Map | null;
   }
 
   /**
@@ -58,7 +65,7 @@ declare namespace kakao.maps {
   interface CustomOverlayOptions {
     position: LatLng;
     content: HTMLElement;
-    /** 세로 기준점. `1`이면 `content`의 **아래변**이 좌표에 닿는다 */
+    /** 세로 기준점. `1`이면 `content`의 **아래변**, `0`이면 **윗변**이 좌표에 닿는다 */
     yAnchor?: number;
     /** ⚠️ **기본값이 `false`다.** 말풍선 안의 링크를 누르려면 켜야 한다 */
     clickable?: boolean;
@@ -106,13 +113,27 @@ declare namespace kakao.maps {
       type: "click",
       handler: () => void,
     ): void;
-    /** 지도 빈 곳을 누른 경우. **말풍선을 닫는 유일한 통로다** */
-    function addListener(target: Map, type: "click", handler: () => void): void;
+    /**
+     * 지도 자체의 사건.
+     * - `click` — 빈 곳을 누른 경우. **고른 교회를 푸는 유일한 통로다**
+     * - `zoom_changed` — 확대·축소. **이름표를 켜고 끄는 기준이다**
+     */
+    function addListener(
+      target: Map,
+      type: "click" | "zoom_changed",
+      handler: () => void,
+    ): void;
     /** 묶음을 누른 경우. `disableClickZoom`을 켜야 우리 확대만 걸린다 */
     function addListener(
       target: MarkerClusterer,
       type: "clusterclick",
       handler: (cluster: Cluster) => void,
+    ): void;
+    /** 묶기가 끝난 시점. **이름표를 다시 맞추는 기준이다** */
+    function addListener(
+      target: MarkerClusterer,
+      type: "clustered",
+      handler: () => void,
     ): void;
   }
 }

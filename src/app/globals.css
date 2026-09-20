@@ -713,3 +713,17 @@ textarea {
     opacity: 1;
   }
 }
+/*
+  지도 이름표가 마커 클릭을 먹지 않게 한다 (2026-09-21).
+
+  ⚠️ **우리 엘리먼트에 `pointer-events: none`을 주는 것만으로는 부족하다.**
+  카카오 `CustomOverlay`는 넘긴 내용을 **자기 컨테이너로 한 번 더 감싸는데**, 그
+  컨테이너는 `pointer-events: auto`다. 이름표를 마커 **위**로 올리면서 그 상자가
+  마커를 덮게 됐고, **마커 중심을 눌러도 마커가 아니라 그 div가 잡혔다**(실측).
+
+  **부모를 직접 고를 수 없으므로 `:has()`로 집는다.** 표식 클래스는
+  `src/features/churches/map/label.ts`가 붙인다 — **한쪽만 바꾸면 조용히 다시 막힌다.**
+*/
+:has(> .church-label) {
+  pointer-events: none;
+}

@@ -8,8 +8,7 @@
 import type { Metadata } from "next";
 import { PageTransition } from "@/components/shared/PageTransition";
 import { SiteMark } from "@/components/shared/SiteMark";
-import { ChurchListSheet } from "@/features/churches/components/ChurchListSheet";
-import { ChurchMap } from "@/features/churches/components/ChurchMap";
+import { MapScreen } from "@/features/churches/components/MapScreen";
 import { getAllChurches } from "@/features/churches/data";
 import { hasCoords } from "@/features/churches/map/points";
 import { pageMetadata } from "@/lib/site";
@@ -57,21 +56,15 @@ export default function MapPage() {
       */}
       <main className="relative h-[calc(100svh-4rem)] w-full">
         {/*
-          `rounded-none` — 다른 화면에서는 카드처럼 모서리를 둥글게 두지만 여기서는
-          화면에 꽉 차므로 둥글면 네 귀퉁이에 바탕색이 비친다
+          **지도와 목록 시트.** 둘이 "고른 교회" 하나를 나눠 쓰므로 클라이언트 래퍼가
+          감싼다(`MapScreen`). 마커를 누르면 시트가 그 교회를 띄우고, 이름표는
+          **묶이지 않은 마커에 언제나** 붙는다.
+
+          ⚠️ **아래 제목 카드보다 먼저 와야 한다.** 지도는 `absolute inset-0`이라
+          **DOM에서 뒤에 두면 카드를 덮는다**(2026-09-21에 실제로 그렇게 만들었다).
+          둘 다 z-index를 쓰지 않고 순서로만 겹침을 정한다.
         */}
-        {/*
-          ⚠️ **`inset-0`이 아니라 `bottom-14`다 — 접힌 시트 높이만큼 비운다.**
-          카카오는 로고와 축척을 **컨테이너 아래 20px쯤**에 그리는데, 지도를 바닥까지
-          늘리면 시트가 그 위에 올라앉는다. **약관이 로고·저작권 표기를 가리는 것을
-          금지한다.** 시트를 펼치는 동안 가려지는 것은 사용자가 연 판이라 다른 문제다.
-        */}
-        <ChurchMap
-          churches={churches}
-          interactive
-          linkToDetail
-          className="absolute inset-x-0 top-0 bottom-14 rounded-none"
-        />
+        <MapScreen churches={churches} />
 
         {/*
           제목 — **지도 위에 띄운다.** 세로를 먹지 않으면서 이 화면이 어느 사이트의
@@ -102,12 +95,6 @@ export default function MapPage() {
           </div>
         </div>
 
-        {/*
-          **목록 시트.** 접으면 손잡이 한 줄이라 지도가 그대로 화면을 차지하고,
-          펼치면 화면의 60%까지 올라와 **시트 안에서만** 스크롤된다 — 페이지 세로
-          스크롤은 끝까지 0이다. 좌표 없는 교회 안내도 이 안으로 들어갔다.
-        */}
-        <ChurchListSheet churches={churches} />
       </main>
     </PageTransition>
   );

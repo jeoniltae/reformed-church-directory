@@ -94,7 +94,15 @@ export function ChurchListSheet({
         onClick={onToggle}
         // 폭은 사이트 공통(`max-w-2xl`)에 맞춘다 — 데스크톱에서 행이 화면 끝까지 늘어지면
         // 교회명과 교단 배지가 멀어져 한 줄로 읽히지 않는다
-        className="relative mx-auto flex h-14 w-full max-w-2xl shrink-0 items-center justify-between rounded-t-2xl px-4 outline-none transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 active:bg-muted"
+        /*
+          ⚠️ **`h-14`가 아니라 `min-h-14`다.** 펼쳤을 때 설명 문장이 들어오는데,
+          모바일 폭에서 두 줄이 되므로 고정 높이면 글자가 잘린다. 접힘·고름 상태는
+          한 줄이라 예전과 같은 56px로 남는다.
+
+          **위 패딩이 아래보다 크다**(`pt-5 pb-3`) — 손잡이 막대가 위쪽 8px 자리에
+          떠 있어서, 같은 값을 주면 **막대와 글자가 4px까지 붙는다**(실측).
+        */
+        className="relative mx-auto flex min-h-14 w-full max-w-2xl shrink-0 items-center justify-between gap-3 rounded-t-2xl px-4 pt-5 pb-3 text-left outline-none transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 active:bg-muted"
       >
         {/* 끌어올릴 수 있어 보이게 하는 표시. 장식이라 스크린리더에서 감춘다 */}
         <span
@@ -102,24 +110,39 @@ export function ChurchListSheet({
           className="absolute top-2 left-1/2 h-1 w-10 -translate-x-1/2 rounded-full bg-border"
         />
         {/*
-          ⚠️ **`수록 교회 N곳`은 접혔을 때만 쓴다.** 펼치면 바로 아래 설명 문장이
-          `수록 교회 92곳의 위치를…`으로 같은 말을 반복해 **한 화면에 같은 숫자가 두 번**
-          나온다. 접힌 상태에서는 그 문장이 안 보이므로 여기가 유일한 안내다.
+          **손잡이 줄이 곧 시트의 제목이다** (2026-09-21). 상태마다 다른 것을 말한다 —
+          접힘은 `수록 교회 92곳`, 고름은 `선택한 교회`, 펼침은 설명 문장이다.
 
-          **빈 채로라도 남겨 둔다** — `justify-between`의 왼쪽 칸이라 지우면 오른쪽
-          화살표가 왼쪽으로 끌려간다.
+          ⚠️ **설명 문장을 목록 위가 아니라 여기에 둔다.** 목록 쪽에 두면 스크롤과 함께
+          흘러가고(고정하면 같은 자리를 두 번 쓰게 된다), 무엇보다 **접었다 펴는 조작의
+          대상과 그 설명이 떨어져 있었다.**
+
+          ⚠️ **둘 다 DOM에 남긴다**(`hidden`으로만 가린다). 첫 렌더는 접힘 상태라
+          **설명 문장이 정적 HTML에서 빠지면 색인 글자가 그만큼 줄어든다.**
         */}
         <span className="mt-1 text-t4 text-muted-foreground">
-          {selecting
-            ? "선택한 교회"
-            : !open && (
-                <>
-                  수록 교회{" "}
-                  <strong className="font-semibold text-foreground">
-                    {churches.length}곳
-                  </strong>
-                </>
-              )}
+          {selecting ? (
+            "선택한 교회"
+          ) : (
+            <>
+              <span hidden={open}>
+                수록 교회{" "}
+                <strong className="font-semibold text-foreground">
+                  {churches.length}곳
+                </strong>
+              </span>
+              <span hidden={!open}>
+                수록 교회{" "}
+                <strong className="font-semibold text-foreground">
+                  {churches.length}곳
+                </strong>
+                {located < churches.length
+                  ? ` 가운데 좌표를 확인한 ${located}곳을 지도에 표시합니다.`
+                  : "의 위치를 지도에 표시합니다."}{" "}
+                마커를 누르면 그 교회가 여기 뜹니다.
+              </span>
+            </>
+          )}
         </span>
         <ChevronUp
           aria-hidden
@@ -141,36 +164,6 @@ export function ChurchListSheet({
         inert={!shown}
         className="mx-auto min-h-0 w-full max-w-2xl flex-1 overflow-y-auto px-4 pb-4"
       >
-        {/*
-          ⚠️ **좌표가 전부 있으면 "가운데 N곳"을 말하지 않는다** — 같은 숫자를 두 번
-          읽히는 꼴이 된다(2026-09-20에 군산진성교회가 빠지며 실제로 그렇게 됐다).
-          **조건을 지우지 않는다** — 확장하면 좌표 없는 교회가 다시 생긴다.
-
-          고른 교회가 있을 때는 감춘다 — 그 화면에서는 한 곳만 말해야 한다.
-        */}
-        {/*
-          **스크롤해도 맨 위에 붙어 있는 타이틀 줄이다** (2026-09-21).
-
-          예전에는 목록과 함께 흘러가 버려서, 몇 줄만 내려도 **이 시트가 무엇인지 말하는
-          문장이 사라졌다.** 손잡이 줄 바로 아래에 고정해 두면 그 역할을 계속한다.
-
-          ⚠️ **`bg-background`와 `-mx-4`가 함께 있어야 한다.** 배경이 없으면 교회 행이
-          글자 뒤로 비쳐 지나가고, 음수 여백이 없으면 **좌우 16px 패딩 자리로 행이
-          삐져나와 보인다.**
-        */}
-        <p
-          hidden={selecting}
-          className="sticky top-0 z-10 -mx-4 border-b border-border bg-background px-4 pb-2 text-t4 text-muted-foreground"
-        >
-          수록 교회{" "}
-          <strong className="font-semibold text-foreground">
-            {churches.length}곳
-          </strong>
-          {located < churches.length
-            ? ` 가운데 좌표를 확인한 ${located}곳을 지도에 표시합니다.`
-            : "의 위치를 지도에 표시합니다."}{" "}
-          마커를 누르면 그 교회가 여기 뜹니다.
-        </p>
 
         {/*
           좌표 없는 교회 — `CLAUDE.md`가 **"지도에서 빠지므로 목록에는 반드시 보여야
@@ -178,7 +171,7 @@ export function ChurchListSheet({
           안 보이는지**는 여기서만 말할 수 있다.
         */}
         {missing.length > 0 && (
-          <p hidden={selecting} className="mt-3 text-t2 text-muted-foreground">
+          <p hidden={selecting} className="text-t2 text-muted-foreground">
             좌표를 확인하지 못해 지도에 표시되지 않는 교회 {missing.length}곳 —{" "}
             {named.map((church, index) => (
               <span key={church.id}>

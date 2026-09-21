@@ -9,6 +9,7 @@ import type { Metadata } from "next";
 import { PageTransition } from "@/components/shared/PageTransition";
 import { SiteMark } from "@/components/shared/SiteMark";
 import { MapScreen } from "@/features/churches/components/MapScreen";
+import { FLOATING_PANEL } from "@/features/churches/map/panel";
 import { getAllChurches } from "@/features/churches/data";
 import { hasCoords } from "@/features/churches/map/points";
 import { pageMetadata } from "@/lib/site";
@@ -36,10 +37,6 @@ export const metadata: Metadata = {
    */
   robots: { index: false, follow: true },
 };
-
-/** 지도 위에 띄우는 판의 공통 표면 — 지도 위에서도 글자가 읽혀야 한다 */
-const FLOATING =
-  "pointer-events-auto rounded-lg border border-border bg-background/95 shadow-md backdrop-blur-sm";
 
 export default function MapPage() {
   const churches = getAllChurches();
@@ -74,7 +71,9 @@ export default function MapPage() {
           끌어도 지도가 따라오지 않는다 — **조작을 먹는 띠가 생긴다.**
         */}
         <div className="pointer-events-none absolute inset-x-3 top-3 flex">
-          <div className={cn(FLOATING, "max-w-full px-3 py-2")}>
+          <div
+            className={cn(FLOATING_PANEL, "pointer-events-auto max-w-full px-3 py-2")}
+          >
             <SiteMark />
             {/* 탭 루트라 홈·`/churches`와 같은 t9다. 이름 규칙은 위 `title` 주석 참고 */}
             <h1 className="mt-1 text-t9 font-bold text-foreground">

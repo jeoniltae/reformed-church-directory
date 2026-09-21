@@ -62,6 +62,14 @@ const SECTIONS = [
           브라우저에 무엇을 저장하거나 방문자를 식별해 추적하지 않습니다.
         </li>
         <li>
+          지도 화면의{" "}
+          <strong className="font-medium text-foreground">
+            내 위치 기능은 좌표를 저장하거나 전송하지 않습니다.
+          </strong>{" "}
+          브라우저가 알려준 위치는 지도의 중심을 옮기는 데에만 쓰이고, 화면을
+          벗어나면 사라집니다. 위치를 묻는 것은 그 버튼을 눌렀을 때뿐입니다.
+        </li>
+        <li>
           다만 어떤 화면이 얼마나 열렸는지, 그리고 화면이 얼마나 빨리 열렸는지
           알기 위해{" "}
           <strong className="font-medium text-foreground">

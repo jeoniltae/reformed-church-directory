@@ -15,6 +15,8 @@ import { cn } from "@/lib/utils";
 import type { Church } from "@/types/church";
 import { createChurchLabel, setLabelSelected } from "../map/label";
 import { loadKakaoMaps } from "../map/load-kakao";
+import { LOCATE_LEVEL } from "../map/locate";
+import { createLocationDot } from "../map/location-dot";
 import { centerOf, toMapPoints } from "../map/points";
 
 type Status = "loading" | "ready" | "failed";
@@ -110,6 +112,13 @@ interface ChurchMapProps {
   /** 지금 고른 교회. 그 이름표만 브랜드색으로 뒤집고 시트에 가리지 않게 지도를 민다 */
   selectedId?: string | null;
   /**
+   * 브라우저가 알려준 내 위치. 넘어오면 **점을 찍고 그 자리로 이동한다.**
+   *
+   * ⚠️ **`at`(요청 시각)이 값에 들어 있다.** 좌표가 같아도 버튼을 다시 누르면 새 객체가
+   * 되어 **지도가 다시 그 자리로 돌아온다** — 없으면 한 번 움직인 뒤로는 반응이 없다.
+   */
+  myLocation?: { lat: number; lng: number; at: number } | null;
+  /**
    * 골랐을 때 아래에서 올라오는 판의 높이(px).
    *
    * **지도를 그만큼 밀어 올려** 고른 마커가 판 뒤로 숨지 않게 한다. 값을 부르는 쪽이
@@ -125,6 +134,7 @@ export function ChurchMap({
   interactive = false,
   onSelect,
   selectedId = null,
+  myLocation = null,
   selectionInset = 0,
   className,
 }: ChurchMapProps) {
@@ -138,6 +148,8 @@ export function ChurchMap({
    */
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const labelRefs = useRef(new Map<string, HTMLElement>());
+  /** 내 위치 점은 언제나 하나다 — 새로 찍기 전에 앞의 것을 뗀다 */
+  const dotRef = useRef<kakao.maps.CustomOverlay | null>(null);
   /** 콜백이 바뀌어도 지도를 다시 만들지 않게 최신 것만 들고 본다 */
   const selectRef = useRef(onSelect);
   useEffect(() => {
@@ -290,6 +302,8 @@ export function ChurchMap({
       clusterer?.clear();
       for (const { label } of labeled) label.setMap(null);
       labelEls.clear();
+      dotRef.current?.setMap(null);
+      dotRef.current = null;
       mapRef.current = null;
     };
   }, [churches, level, interactive]);
@@ -315,6 +329,35 @@ export function ChurchMap({
     map.setCenter(new kakao.maps.LatLng(point.lat, point.lng));
     if (selectionInset > 0) map.panBy(0, selectionInset / 2);
   }, [churches, selectedId, selectionInset, status]);
+
+  /*
+    내 위치로 이동하고 그 자리에 점을 찍는다.
+
+    ⚠️ **확대를 먼저, 이동을 나중에 한다.** `setLevel`은 지금 중심을 기준으로 당기므로
+    순서를 바꾸면 **엉뚱한 곳을 확대한 뒤 이동**하게 되어 화면이 두 번 튄다.
+
+    ⚠️ **`LOCATE_LEVEL`은 묶임이 풀리는 배율이어야 한다**(`locate.ts`). 그보다 넓으면
+    주변 교회가 묶음 속에 들어가 **"내 위치로 왔는데 아무것도 없다"**가 된다.
+  */
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !myLocation) return;
+
+    const position = new kakao.maps.LatLng(myLocation.lat, myLocation.lng);
+
+    dotRef.current?.setMap(null);
+    const dot = new kakao.maps.CustomOverlay({
+      position,
+      content: createLocationDot(),
+      // 점의 한가운데가 좌표에 놓인다 — 마커처럼 아래를 가리키는 모양이 아니다
+      yAnchor: 0.5,
+    });
+    dot.setMap(map);
+    dotRef.current = dot;
+
+    map.setLevel(LOCATE_LEVEL);
+    map.setCenter(position);
+  }, [myLocation, status]);
 
   /*
     ⚠️ **실패 문구를 한 가지로 쓴다.** 로더는 `no-key`와 `script-failed`를 구분하지만

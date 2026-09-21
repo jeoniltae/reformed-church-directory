@@ -116,11 +116,11 @@ declare namespace kakao.maps {
     /**
      * 지도 자체의 사건.
      * - `click` — 빈 곳을 누른 경우. **고른 교회를 푸는 유일한 통로다**
-     * - `zoom_changed` — 확대·축소. **이름표를 켜고 끄는 기준이다**
+     * - `idle` — 이동·확대가 끝난 시점. **이름표를 다시 맞추는 기준이다**
      */
     function addListener(
       target: Map,
-      type: "click" | "zoom_changed",
+      type: "click" | "idle",
       handler: () => void,
     ): void;
     /** 묶음을 누른 경우. `disableClickZoom`을 켜야 우리 확대만 걸린다 */

@@ -234,11 +234,18 @@ export function ChurchMap({
         });
 
         /*
-          ⚠️ **묶기가 끝난 뒤에 맞춰야 한다.** `zoom_changed`에서 하면 클러스터러가 아직
-          마커를 떼기 전이라 **한 박자 늦은 상태**를 보게 된다. `clustered`는 묶기가
-          끝난 시점이라 `getMap()`이 정확하다.
+          ⚠️ **두 곳에서 맞춘다 — `clustered`만으로는 이름표가 사라진다.**
+
+          `clustered`는 **묶을 것이 있을 때만** 발동한다. 확대해서 묶임이 전부 풀리면
+          그 사건이 오지 않아, **마지막 동기화 때 꺼 둔 이름표가 켜지지 않은 채 굳는다**
+          — 실측: 레벨 7에서 묶음 0개·마커 18개인데 **이름표가 0개**였다(2026-09-21).
+
+          `idle`은 이동·확대가 끝날 때마다 오고 그 시점엔 클러스터러 작업도 끝나 있어
+          `getMap()`이 정확하다. **둘 다 둔다** — 묶임이 생기는 순간은 `clustered`가
+          더 빠르고, 나머지 전부는 `idle`이 받는다.
         */
         kakao.maps.event.addListener(clusterer, "clustered", syncLabels);
+        kakao.maps.event.addListener(map, "idle", syncLabels);
         syncLabels();
 
         kakao.maps.event.addListener(clusterer, "clusterclick", (cluster) => {

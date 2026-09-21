@@ -1,18 +1,20 @@
 "use client";
-// 지도 탭의 화면 구성 — 지도와 하단 시트가 "고른 교회" 하나를 나눠 쓴다
+// 지도 탭의 화면 구성 — 지도·제목·검색·내 위치·시트가 "고른 교회" 하나를 나눠 쓴다
 //
 // **왜 래퍼가 필요한가** (2026-09-21). 마커를 누르면 시트가 그 교회를 띄우려면 두
 // 컴포넌트가 같은 상태를 봐야 하는데, `/map`은 서버 컴포넌트라 상태를 들 수 없다.
-// 그래서 둘을 감싸는 클라이언트 컴포넌트를 하나 둔다.
+// 그래서 둘을 감싸는 클라이언트 컴포넌트를 하나 둔다. **검색이 붙으면서 제목 카드까지
+// 이리로 들어왔다** (2026-09-22) — 검색어가 곧 화면 상태라 서버가 들 수 없다.
 //
-// **색인에는 영향이 없다** — 클라이언트 컴포넌트도 서버에서 한 번 그려지므로 교회 92곳의
-// 링크가 정적 HTML에 그대로 들어간다(`docs/지도-작업.md`의 "지도 디자인 고도화").
+// **색인에는 영향이 없다** — 클라이언트 컴포넌트도 서버에서 한 번 그려지므로 h1과 교회
+// 92곳의 링크가 정적 HTML에 그대로 들어간다(`docs/지도-작업.md`의 "지도 디자인 고도화").
 //
 // ⚠️ **Zustand를 쓰지 않았다.** 이 상태는 화면 하나 안에서만 쓰이고 다른 화면이 알 필요가
 // 없다 — 전역 저장소는 모달·토스트처럼 **화면을 가로지르는 것**에만 쓴다(`CLAUDE.md`).
 
 import { Loader2, LocateFixed } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { SiteMark } from "@/components/shared/SiteMark";
 import { cn } from "@/lib/utils";
 import type { Church } from "@/types/church";
 import {
@@ -21,15 +23,30 @@ import {
   LOCATE_OPTIONS,
   locateErrorKind,
 } from "../map/locate";
+import { matchChurches, searchChurches, SEARCH_LEVEL } from "../map/map-search";
 import { FLOATING_PANEL } from "../map/panel";
 import { ChurchListSheet, SHEET_PEEK } from "./ChurchListSheet";
 import { ChurchMap } from "./ChurchMap";
+import { ChurchSearchBar } from "./ChurchSearchBar";
 
 export function MapScreen({ churches }: { churches: Church[] }) {
   /** 지도에서 고른 교회. 시트가 이걸 받아 한 곳만 보여준다 */
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  /**
+   * 고를 때 함께 맞출 확대 단계. **검색으로 고를 때만 값이 들어간다** — 마커를 눌러
+   * 고를 때 지도가 제멋대로 당기면 주변을 훑던 맥락이 날아간다(`ChurchMap` 주석).
+   */
+  const [selectionLevel, setSelectionLevel] = useState<number | null>(null);
   /** 손잡이로 펼친 상태. 고른 교회가 있으면 시트 쪽에서 그쪽을 우선한다 */
   const [open, setOpen] = useState(false);
+  /**
+   * 검색어.
+   *
+   * ⚠️ **URL에 넣지 않는다.** `searchParams`를 받으면 `/map`이 Dynamic이 되고
+   * `useSearchParams()`는 Suspense 경계를 요구해 **교회 목록이 정적 HTML에서 빠진다**
+   * (`CLAUDE.md` "상태 관리" · `/churches?region=`을 초기값 전용으로 둔 결정과 같다).
+   */
+  const [query, setQuery] = useState("");
 
   /** 브라우저가 알려준 내 위치. `at`은 같은 자리에서 버튼을 다시 눌러도 반응하게 한다 */
   const [myLocation, setMyLocation] = useState<{
@@ -39,6 +56,38 @@ export function MapScreen({ churches }: { churches: Church[] }) {
   } | null>(null);
   const [locating, setLocating] = useState(false);
   const [locateError, setLocateError] = useState<LocateError | null>(null);
+
+  /** 지도가 데려다 줄 수 있는 후보(상한 8). 고르라고 주는 목록이다 */
+  const candidates = useMemo(
+    () => searchChurches(churches, query),
+    [churches, query],
+  );
+
+  /**
+   * 검색에 걸린 교회 전부. **시트가 목록을 좁히는 데 쓴다.**
+   *
+   * 후보와 달리 **좌표 없는 교회도 들어간다** — 지도에 못 찍는 것과 검색에 안 걸리는
+   * 것은 다른 일이다(`map-search.ts`).
+   */
+  const matchedIds = useMemo(() => {
+    if (!query.trim()) return null;
+    return new Set(matchChurches(churches, query).map((church) => church.id));
+  }, [churches, query]);
+
+  /** 후보는 **고르고 나면 닫는다** — 고른 교회는 시트가 보여주므로 둘 다 뜰 이유가 없다 */
+  const showCandidates = candidates.length > 0 && !selectedId;
+
+  /** 마커를 눌러 고른 경우. **배율은 건드리지 않는다** */
+  const selectOnMap = (id: string | null) => {
+    setSelectionLevel(null);
+    setSelectedId(id);
+  };
+
+  /** 후보를 골라 고른 경우. **묶임이 풀리는 배율까지 데려간다** */
+  const selectFromSearch = (id: string) => {
+    setSelectionLevel(SEARCH_LEVEL);
+    setSelectedId(id);
+  };
 
   /*
     내 위치를 묻는다. **좌표는 지도 중심을 옮기는 데만 쓰고 어디로도 보내지 않는다**
@@ -87,12 +136,86 @@ export function MapScreen({ churches }: { churches: Church[] }) {
       <ChurchMap
         churches={churches}
         interactive
-        onSelect={setSelectedId}
+        onSelect={selectOnMap}
         selectedId={selectedId}
+        selectionLevel={selectionLevel}
         myLocation={myLocation}
         selectionInset={SHEET_PEEK}
         className="absolute inset-x-0 top-0 bottom-14 rounded-none"
       />
+
+      {/*
+        제목 + 검색 — **지도 위에 띄운다.** 세로를 먹지 않으면서 이 화면이 어느 사이트의
+        무엇인지 말하고, 찾는 길까지 같은 카드에서 연다.
+
+        ⚠️ **바깥 상자는 `pointer-events-none`이다.** 안 그러면 카드 옆 빈 자리를 끌어도
+        지도가 따라오지 않는다 — **조작을 먹는 띠가 생긴다.**
+
+        ⚠️ **수록 줄(`국내 개혁주의 교회 92곳`)을 여기 두지 않는다** — 접힌 시트 머리가
+        이미 같은 말을 한다. 검색 입력이 들어오며 카드가 길어졌으니 그만큼 덜어낸다.
+      */}
+      {/*
+        **넓은 화면에서는 가운데로 보낸다.** 모바일에서는 카드가 화면 폭을 꽉 채워
+        (`w-full max-w-sm` · 366px < 384px) 정렬이 아무 차이를 내지 않지만, 데스크톱에서는
+        **왼쪽 구석에 384px 카드 하나만 덩그러니 남아** 화면이 한쪽으로 쏠려 보인다.
+      */}
+      <div className="pointer-events-none absolute inset-x-3 top-3 flex sm:justify-center">
+        <div
+          className={cn(
+            FLOATING_PANEL,
+            "pointer-events-auto w-full max-w-sm px-3 py-2",
+          )}
+        >
+          <SiteMark />
+          {/* 탭 루트라 홈·`/churches`와 같은 t9다. 이름 규칙은 `page.tsx`의 `title` 주석 참고 */}
+          <h1 className="mt-1 text-t9 font-bold text-foreground">
+            전국 교회 지도
+          </h1>
+
+          <div className="mt-2">
+            <ChurchSearchBar
+              value={query}
+              onChange={(value) => {
+                setQuery(value);
+                // 검색어를 고치면 고른 것을 푼다 — 그래야 후보가 다시 열린다
+                setSelectedId(null);
+              }}
+            />
+          </div>
+
+          {showCandidates && (
+            /*
+              후보 목록 — **링크가 아니라 버튼이다.** 여기서 하는 일은 화면 이동이 아니라
+              **지도를 그 자리로 데려가는 것**이다. 상세로 가는 길은 시트의 교회 행이 맡는다.
+            */
+            <ul
+              aria-label="검색 결과"
+              className="mt-2 max-h-56 divide-y divide-border overflow-y-auto border-t border-border"
+            >
+              {candidates.map((church) => (
+                <li key={church.id}>
+                  <button
+                    type="button"
+                    onClick={() => selectFromSearch(church.id)}
+                    className="w-full px-1 py-2 text-left outline-none transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 active:bg-muted"
+                  >
+                    <span className="block truncate text-t4 font-semibold text-foreground">
+                      {church.name}
+                    </span>
+                    <span className="mt-0.5 block truncate text-t2 text-muted-foreground">
+                      {church.subRegion
+                        ? `${church.region} ${church.subRegion}`
+                        : church.region}
+                      {" · "}
+                      {church.pastor} 목사
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
 
       {/*
         내 위치 버튼 — **오른쪽 아래, 접힌 시트 바로 위다.**
@@ -143,6 +266,7 @@ export function MapScreen({ churches }: { churches: Church[] }) {
         churches={churches}
         selectedId={selectedId}
         open={open}
+        matchedIds={matchedIds}
         /*
           손잡이를 누르면 — 고른 교회가 있을 때는 그것을 풀고 목록을 편다.
           **한 번의 탭으로 "고름 → 목록"이 끝나야** 아래 `다른 교회 N곳 보기`와

@@ -7,13 +7,9 @@
 
 import type { Metadata } from "next";
 import { PageTransition } from "@/components/shared/PageTransition";
-import { SiteMark } from "@/components/shared/SiteMark";
 import { MapScreen } from "@/features/churches/components/MapScreen";
-import { FLOATING_PANEL } from "@/features/churches/map/panel";
 import { getAllChurches } from "@/features/churches/data";
-import { hasCoords } from "@/features/churches/map/points";
 import { pageMetadata } from "@/lib/site";
-import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   /*
@@ -40,8 +36,6 @@ export const metadata: Metadata = {
 
 export default function MapPage() {
   const churches = getAllChurches();
-  // 지도에 찍히는 수는 수록 수와 다르다. **판정은 `hasCoords` 하나로 모았다**
-  const located = churches.filter(hasCoords).length;
 
   return (
     <PageTransition>
@@ -53,46 +47,14 @@ export default function MapPage() {
       */}
       <main className="relative h-[calc(100svh-4rem)] w-full">
         {/*
-          **지도와 목록 시트.** 둘이 "고른 교회" 하나를 나눠 쓰므로 클라이언트 래퍼가
-          감싼다(`MapScreen`). 마커를 누르면 시트가 그 교회를 띄우고, 이름표는
-          **묶이지 않은 마커에 언제나** 붙는다.
+          **화면 전체가 `MapScreen` 하나다** — 지도·제목·검색·내 위치·목록 시트가
+          "고른 교회"와 검색어를 나눠 쓰므로 클라이언트 래퍼가 감싼다.
 
-          ⚠️ **아래 제목 카드보다 먼저 와야 한다.** 지도는 `absolute inset-0`이라
-          **DOM에서 뒤에 두면 카드를 덮는다**(2026-09-21에 실제로 그렇게 만들었다).
-          둘 다 z-index를 쓰지 않고 순서로만 겹침을 정한다.
+          ⚠️ **h1도 그 안에 있다.** 클라이언트 컴포넌트라도 서버에서 한 번 그려지므로
+          **정적 HTML에는 그대로 들어간다** — 색인에 영향이 없다.
         */}
         <MapScreen churches={churches} />
 
-        {/*
-          제목 — **지도 위에 띄운다.** 세로를 먹지 않으면서 이 화면이 어느 사이트의
-          무엇인지 말한다. 카카오맵·네이버지도가 검색창을 띄우는 자리와 같다.
-
-          ⚠️ **바깥 상자는 `pointer-events-none`이다.** 안 그러면 제목 옆 빈 자리를
-          끌어도 지도가 따라오지 않는다 — **조작을 먹는 띠가 생긴다.**
-        */}
-        <div className="pointer-events-none absolute inset-x-3 top-3 flex">
-          <div
-            className={cn(FLOATING_PANEL, "pointer-events-auto max-w-full px-3 py-2")}
-          >
-            <SiteMark />
-            {/* 탭 루트라 홈·`/churches`와 같은 t9다. 이름 규칙은 위 `title` 주석 참고 */}
-            <h1 className="mt-1 text-t9 font-bold text-foreground">
-              전국 교회 지도
-            </h1>
-            {/*
-              ⚠️ **두 숫자가 같으면 뒷말을 붙이지 않는다.** 좌표가 전부 채워지면
-              `92곳 · 지도에 92곳`이 되어 같은 값을 두 번 읽히는 꼴이다. 지금은
-              전부 채워져 있지만 **확장하면 다시 갈린다** — 조건을 지워 두지 않는다.
-            */}
-            <p className="mt-0.5 text-t2 text-muted-foreground">
-              국내 개혁주의 교회{" "}
-              <strong className="font-semibold text-foreground">
-                {churches.length}곳
-              </strong>
-              {located < churches.length && ` · 지도에 ${located}곳`}
-            </p>
-          </div>
-        </div>
 
       </main>
     </PageTransition>

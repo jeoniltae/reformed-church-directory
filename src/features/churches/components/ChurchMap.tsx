@@ -112,6 +112,14 @@ interface ChurchMapProps {
   /** 지금 고른 교회. 그 이름표만 브랜드색으로 뒤집고 시트에 가리지 않게 지도를 민다 */
   selectedId?: string | null;
   /**
+   * 고를 때 함께 맞출 확대 단계. **검색으로 고른 경우에만 넘긴다.**
+   *
+   * ⚠️ **마커를 눌러 고를 때는 넘기지 않는다** — 이미 보고 있는 배율이 사용자가 고른
+   * 것인데 지도가 제멋대로 당기면 **주변을 훑던 맥락이 날아간다.** 검색은 반대로,
+   * **묶임이 풀리는 배율까지 당겨 주지 않으면 찾아간 교회가 묶음 속에 숨는다.**
+   */
+  selectionLevel?: number | null;
+  /**
    * 브라우저가 알려준 내 위치. 넘어오면 **점을 찍고 그 자리로 이동한다.**
    *
    * ⚠️ **`at`(요청 시각)이 값에 들어 있다.** 좌표가 같아도 버튼을 다시 누르면 새 객체가
@@ -134,6 +142,7 @@ export function ChurchMap({
   interactive = false,
   onSelect,
   selectedId = null,
+  selectionLevel = null,
   myLocation = null,
   selectionInset = 0,
   className,
@@ -326,9 +335,11 @@ export function ChurchMap({
     const point = toMapPoints(churches).find((p) => p.id === selectedId);
     if (!point) return;
 
+    // ⚠️ 확대를 먼저 — `setLevel`은 지금 중심 기준이라 순서를 바꾸면 화면이 두 번 튄다
+    if (selectionLevel) map.setLevel(selectionLevel);
     map.setCenter(new kakao.maps.LatLng(point.lat, point.lng));
     if (selectionInset > 0) map.panBy(0, selectionInset / 2);
-  }, [churches, selectedId, selectionInset, status]);
+  }, [churches, selectedId, selectionLevel, selectionInset, status]);
 
   /*
     내 위치로 이동하고 그 자리에 점을 찍는다.

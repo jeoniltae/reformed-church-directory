@@ -55,6 +55,13 @@ interface ChurchListSheetProps {
   onToggle: () => void;
   /** `다른 교회 N곳 보기` — 고른 것을 풀고 평소 목록으로 돌아간다 */
   onShowAll: () => void;
+  /**
+   * 검색에 걸린 교회 id. **검색 중이 아니면 `null`이다.**
+   *
+   * ⚠️ **목록에서 빼는 것이 아니라 가리는 것이다** — DOM 92개는 그대로 둔다. 빼면
+   * 정적 HTML의 글자와 링크가 줄어 **색인을 열려던 근거가 무너진다.**
+   */
+  matchedIds: Set<string> | null;
 }
 
 export function ChurchListSheet({
@@ -63,6 +70,7 @@ export function ChurchListSheet({
   open,
   onToggle,
   onShowAll,
+  matchedIds,
 }: ChurchListSheetProps) {
   /** 한 번 펼치면 접기로 되돌리지 않는다 — `/churches`와 같은 판단이다 */
   const [expanded, setExpanded] = useState(false);
@@ -77,6 +85,26 @@ export function ChurchListSheet({
   /** 고른 교회가 있으면 그 모드가 손잡이 상태를 이긴다 */
   const selecting = Boolean(selectedId);
   const shown = selecting || open;
+  const searching = matchedIds !== null;
+
+  /**
+   * 검색 중 목록에서 **몇 번째로 보이는 교회인지**. `모두 보기` 전에 보여줄 10곳을
+   * 고르는 데 쓴다.
+   *
+   * ⚠️ **원본 순서를 그대로 쓴다** — 가나다순은 `/about`의 "평가하거나 순위를 매기지
+   * 않습니다"를 지키는 장치라(`data.ts`), 검색 결과라고 순서를 바꾸지 않는다.
+   */
+  const orderInResult = useMemo(() => {
+    const order = new Map<string, number>();
+    let index = 0;
+    for (const church of churches) {
+      if (matchedIds && !matchedIds.has(church.id)) continue;
+      order.set(church.id, index++);
+    }
+    return order;
+  }, [churches, matchedIds]);
+
+  const matchCount = matchedIds ? orderInResult.size : churches.length;
 
   return (
     <section
@@ -123,6 +151,14 @@ export function ChurchListSheet({
         <span className="mt-1 text-t4 text-muted-foreground">
           {selecting ? (
             "선택한 교회"
+          ) : searching ? (
+            /* 검색 중에는 펼침·접힘과 무관하게 결과 수를 말한다 — 목록이 좁혀진 이유다 */
+            <>
+              검색 결과{" "}
+              <strong className="font-semibold text-foreground">
+                {matchCount}곳
+              </strong>
+            </>
           ) : (
             <>
               <span hidden={open}>
@@ -191,6 +227,13 @@ export function ChurchListSheet({
           </p>
         )}
 
+        {/* 검색이 빈손일 때 — 목록이 통째로 비어 보이는 것을 그냥 두지 않는다 */}
+        {searching && matchCount === 0 && (
+          <p className="py-6 text-center text-t4 text-muted-foreground">
+            검색 결과가 없어요.
+          </p>
+        )}
+
         {/*
           홈 미리보기와 같은 행 어휘다 — `/churches`의 카드를 복제하지 않는다.
 
@@ -205,7 +248,10 @@ export function ChurchListSheet({
               hidden={
                 selecting
                   ? church.id !== selectedId
-                  : !expanded && index >= INITIAL_VISIBLE
+                  : !orderInResult.has(church.id) ||
+                    (!expanded &&
+                      (orderInResult.get(church.id) ?? index) >=
+                        INITIAL_VISIBLE)
               }
             >
               <ChurchRow church={church} />
@@ -224,18 +270,19 @@ export function ChurchListSheet({
             className="mt-3 w-full text-t4"
             onClick={onShowAll}
           >
-            다른 교회 {churches.length - 1}곳 보기
+            {/* ⚠️ 검색 중이면 **결과 기준**으로 센다 — 결과가 6곳인데 91곳이라 적으면 거짓말이다 */}
+            다른 교회 {matchCount - 1}곳 보기
           </Button>
         ) : (
           !expanded &&
-          churches.length > INITIAL_VISIBLE && (
+          matchCount > INITIAL_VISIBLE && (
             <Button
               variant="outline"
               size="lg"
               className="mt-3 w-full text-t4"
               onClick={() => setExpanded(true)}
             >
-              교회 {churches.length - INITIAL_VISIBLE}곳 모두 보기
+              교회 {matchCount - INITIAL_VISIBLE}곳 모두 보기
             </Button>
           )
         )}

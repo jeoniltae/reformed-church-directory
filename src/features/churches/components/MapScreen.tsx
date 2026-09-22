@@ -73,8 +73,20 @@ export function MapScreen({ churches }: { churches: Church[] }) {
     return new Set(matchChurches(churches, query).map((church) => church.id));
   }, [churches, query]);
 
-  /** 후보는 **고르고 나면 닫는다** — 고른 교회는 시트가 보여주므로 둘 다 뜰 이유가 없다 */
-  const showCandidates = candidates.length > 0 && !selectedId;
+  /**
+   * 후보는 **고르고 나면 닫는다** — 고른 교회는 시트가 보여주므로 둘 다 뜰 이유가 없다.
+   *
+   * ⚠️ **시트를 펼친 동안에도 닫는다.** `!selectedId`만 보던 때, 후보를 골라 시트에
+   * 교회가 뜬 상태에서 **손잡이를 누르면 후보 목록이 되살아났다** — 손잡이가 고른 것을
+   * 풀면서(`onToggle`) `selectedId`가 `null`이 되는데 **검색어는 그대로 남기 때문이다.**
+   * 시트는 같은 순간 화면의 60%로 커지므로, 위의 후보 목록과 합쳐 **화면이 거의 다
+   * 덮였다.** `다른 교회 N곳 보기`(`onShowAll`)도 같은 두 줄이라 증상이 같았다.
+   *
+   * **감추기만 하면 잃는 것이 없다** — 시트는 이미 `matchedIds`로 같은 검색 결과를
+   * 목록으로 보여주고 있고, 후보의 일("지도를 그 자리로 데려간다")은 **지도가 60%
+   * 가려진 동안에는 할 일이 아니다.** 시트를 접으면 후보가 다시 열린다.
+   */
+  const showCandidates = candidates.length > 0 && !selectedId && !open;
 
   /** 마커를 눌러 고른 경우. **배율은 건드리지 않는다** */
   const selectOnMap = (id: string | null) => {

@@ -14,7 +14,6 @@
 
 import { Loader2, LocateFixed } from "lucide-react";
 import { useMemo, useState } from "react";
-import { SiteMark } from "@/components/shared/SiteMark";
 import { cn } from "@/lib/utils";
 import type { Church } from "@/types/church";
 import {
@@ -145,34 +144,29 @@ export function MapScreen({ churches }: { churches: Church[] }) {
       />
 
       {/*
-        제목 + 검색 — **지도 위에 띄운다.** 세로를 먹지 않으면서 이 화면이 어느 사이트의
-        무엇인지 말하고, 찾는 길까지 같은 카드에서 연다.
+        검색 — **지도 위에 띄우는 것은 이것 하나다** (2026-09-22).
+
+        ⚠️ **사이트마크와 제목을 걷어냈다.** 세로 150px짜리 카드가 모바일에서 지도의
+        18%를 덮고 있었다. **h1은 사라진 것이 아니라 `page.tsx`로 옮겨 `sr-only`로 남았다**
+        — 문서 구조와 보조기기에는 그대로 있고 화면에서만 빠진다. 사이트명은 시트를 열면
+        푸터(`DataNotice`) 닫는 줄에 나온다.
 
         ⚠️ **바깥 상자는 `pointer-events-none`이다.** 안 그러면 카드 옆 빈 자리를 끌어도
         지도가 따라오지 않는다 — **조작을 먹는 띠가 생긴다.**
 
-        ⚠️ **수록 줄(`국내 개혁주의 교회 92곳`)을 여기 두지 않는다** — 접힌 시트 머리가
-        이미 같은 말을 한다. 검색 입력이 들어오며 카드가 길어졌으니 그만큼 덜어낸다.
-      */}
-      {/*
-        **넓은 화면에서는 가운데로 보낸다.** 모바일에서는 카드가 화면 폭을 꽉 채워
-        (`w-full max-w-sm` · 366px < 384px) 정렬이 아무 차이를 내지 않지만, 데스크톱에서는
-        **왼쪽 구석에 384px 카드 하나만 덩그러니 남아** 화면이 한쪽으로 쏠려 보인다.
+        **넓은 화면에서는 가운데로 보낸다** — 모바일은 카드가 폭을 꽉 채워 정렬이 아무
+        차이를 내지 않지만, 데스크톱에서는 왼쪽 구석에 카드 하나만 남아 쏠려 보인다.
       */}
       <div className="pointer-events-none absolute inset-x-3 top-3 flex sm:justify-center">
         <div
           className={cn(
             FLOATING_PANEL,
-            "pointer-events-auto w-full max-w-sm px-3 py-2",
+            // 폭은 **하단 탭바·시트와 같은 `max-w-2xl`**이다 — 화면에 떠 있는 것들이
+            // 저마다 다른 폭이면 **같은 화면인데 자로 잰 기준이 여럿인 것처럼 읽힌다**
+            "pointer-events-auto w-full max-w-2xl p-2",
           )}
         >
-          <SiteMark />
-          {/* 탭 루트라 홈·`/churches`와 같은 t9다. 이름 규칙은 `page.tsx`의 `title` 주석 참고 */}
-          <h1 className="mt-1 text-t9 font-bold text-foreground">
-            전국 교회 지도
-          </h1>
-
-          <div className="mt-2">
+          <div>
             <ChurchSearchBar
               value={query}
               onChange={(value) => {

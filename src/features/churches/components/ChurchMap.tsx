@@ -17,7 +17,7 @@ import { createChurchLabel, setLabelSelected } from "../map/label";
 import { loadKakaoMaps } from "../map/load-kakao";
 import { LOCATE_LEVEL } from "../map/locate";
 import { createLocationDot } from "../map/location-dot";
-import { centerOf, toMapPoints } from "../map/points";
+import { boundsAround, centerOf, toMapPoints } from "../map/points";
 
 type Status = "loading" | "ready" | "failed";
 
@@ -69,6 +69,14 @@ const CLUSTER_ZOOM_STEP = 3;
 /** 카카오의 가장 가까운 레벨. 이보다 작은 값을 주면 안 된다 */
 const MAX_ZOOM_LEVEL = 1;
 
+/**
+ * 지연 로드에서 **뷰포트 경계를 얼마나 미리 앞당겨 볼지**.
+ *
+ * **0이면 지도가 화면에 닿는 순간 요청이 시작돼** SDK를 받는 동안 회색 상자를 보게
+ * 된다. 한 화면 남짓 먼저 시작하면 스크롤이 닿을 즈음에는 대개 그려져 있다.
+ */
+const LAZY_ROOT_MARGIN = "400px";
+
 /*
   **이름표는 줌 레벨이 아니라 "묶였는가"로 켠다** (2026-09-21 고침).
 
@@ -102,8 +110,13 @@ interface ChurchMapProps {
   /**
    * 마커를 누르면 그 교회 id를, 빈 곳을 누르면 `null`을 돌려준다.
    *
-   * **넘기면 이름표도 함께 켜진다** — 고르는 화면이라는 뜻이기 때문이다.
-   * **상세 화면에서는 넘기지 않는다**(마커가 지금 보고 있는 그 교회 하나뿐이다).
+   * ⚠️ **이름표와는 별개다** (2026-09-23에 갈랐다). 예전에는 이 prop이 이름표까지
+   * 켰는데, **교회 상세는 "고르는 화면은 아니면서 이름표는 필요한" 자리**다 —
+   * 주변 교회를 함께 찍으면서 어느 것이 이 교회인지 말해야 한다. 이름표는 `labels`가
+   * 맡고 이 prop은 **마커 클릭만** 결정한다.
+   *
+   * **상세 화면에서는 넘기지 않는다** — 마커는 손끝보다 작아 **오탭이 엉뚱한 교회로
+   * 데려간다.** 이동은 지도 아래 목록이 맡는다.
    *
    * ⚠️ **이 컴포넌트는 고른 결과로 무엇을 할지 모른다.** `/map`에서는 하단 시트가
    * 받아서 보여준다 — 지도가 화면 구성을 알지 않게 두려는 것이다.
@@ -133,6 +146,32 @@ interface ChurchMapProps {
    * 주는 이유는 **판의 높이를 아는 것이 지도가 아니라 화면**이기 때문이다.
    */
   selectionInset?: number;
+  /**
+   * 마커 이름표를 띄울지. **기본값은 `onSelect`를 넘겼는지를 따른다** — 고르는
+   * 화면이면 이름이 보여야 한다는 기존 동작 그대로다.
+   *
+   * **명시하면 그쪽이 이긴다.** 교회 상세가 `labels`만 켜고 `onSelect`는 넘기지 않는다.
+   */
+  labels?: boolean;
+  /**
+   * **이 지도의 주인공.** 교회 상세처럼 "한 교회를 보여주면서 주변도 곁들이는" 화면에서 쓴다.
+   *
+   * 셋을 한꺼번에 바꾼다.
+   * 1. **그 교회를 화면 한가운데 고정한다** — `boundsAround`로 나머지를 대칭으로 담는다
+   * 2. **그 이름표를 뒤집는다** — 어느 것이 지금 보고 있는 교회인지 말하는 유일한 표시다
+   * 3. ⚠️ **마커를 묶지 않는다** — 아래 클러스터러 주석 참고
+   */
+  focusId?: string;
+  /**
+   * 컨테이너가 **뷰포트에 들어올 때까지 SDK를 받지 않는다.**
+   *
+   * ⚠️ **첫 화면 밖에 있는 지도에만 의미가 있다.** 화면 맨 위에 있는 지도에 켜 봐야
+   * 진입 즉시 교차하므로 아무것도 미뤄지지 않는다 — 교회 상세가 지도를 아래로 내린
+   * 이유의 절반이 이것이다(`docs/지도-작업.md` 7단계).
+   *
+   * **`/map`은 켜지 않는다**(기본 `false`) — 지도가 곧 그 화면이다.
+   */
+  lazy?: boolean;
   className?: string;
 }
 
@@ -145,6 +184,9 @@ export function ChurchMap({
   selectionLevel = null,
   myLocation = null,
   selectionInset = 0,
+  labels,
+  focusId,
+  lazy = false,
   className,
 }: ChurchMapProps) {
   const container = useRef<HTMLDivElement>(null);
@@ -165,6 +207,20 @@ export function ChurchMap({
     selectRef.current = onSelect;
   }, [onSelect]);
 
+  /**
+   * 이름표를 띄울지. **명시하지 않으면 예전 규칙(고르는 화면이면 켠다)을 따른다** —
+   * `/map` 호출부는 이 값을 넘기지 않으므로 동작이 그대로다.
+   */
+  const showLabels = labels ?? Boolean(onSelect);
+  /**
+   * 이름표를 뒤집어 둘 하나. **고른 것이 우선이고, 없으면 주인공이다.**
+   *
+   * ⚠️ **둘을 한 값으로 모으지 않으면 상세에서 주인공 표시가 지워진다** — 아래 선택
+   * effect가 `selectedId`(상세에서는 늘 `null`)만 보고 이름표를 **전부 기본형으로
+   * 되돌리기** 때문이다.
+   */
+  const highlightId = selectedId ?? focusId ?? null;
+
   useEffect(() => {
     // 언마운트 뒤에 도착한 응답이 상태를 건드리지 않게 한다
     let alive = true;
@@ -178,13 +234,54 @@ export function ChurchMap({
     // cleanup이 돌 때쯤 ref가 다른 것을 가리킬 수 있어 지금 것을 붙잡아 둔다
     const labelEls = labelRefs.current;
     const selectable = Boolean(selectRef.current);
+    let observer: IntersectionObserver | null = null;
 
-    loadKakaoMaps()
+    /*
+      지연 로드 — **컨테이너가 뷰포트에 들어올 때까지 SDK 요청을 미룬다.**
+
+      ⚠️ **`IntersectionObserver`가 없으면 그냥 바로 받는다.** 지연은 최적화이지
+      기능이 아니라서, 못 쓰는 환경에서 **지도가 영영 안 뜨는 쪽이 훨씬 나쁘다.**
+
+      ⚠️ **끝내 보이지 않으면 이 Promise는 풀리지 않는다.** 의도한 것이다 — cleanup이
+      관찰을 끊고 매달린 Promise는 그대로 버려진다. 상태를 건드리지 않으므로 해가 없다.
+    */
+    const ready = new Promise<void>((resolve) => {
+      if (
+        !lazy ||
+        !container.current ||
+        typeof IntersectionObserver === "undefined"
+      ) {
+        resolve();
+        return;
+      }
+
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((entry) => entry.isIntersecting)) return;
+          observer?.disconnect();
+          observer = null;
+          resolve();
+        },
+        { rootMargin: LAZY_ROOT_MARGIN },
+      );
+      observer.observe(container.current);
+    });
+
+    ready
+      .then(loadKakaoMaps)
       .then(() => {
         if (!alive || !container.current) return;
 
         const points = toMapPoints(churches);
-        const center = centerOf(points);
+        /** 이 지도의 주인공. 있으면 시야·묶음·이름표가 전부 이 점을 기준으로 바뀐다 */
+        const focus = focusId
+          ? points.find((point) => point.id === focusId)
+          : undefined;
+        /*
+          **주인공이 있으면 그 자리에서 연다.** 아래에서 어차피 경계를 맞추지만,
+          경계 상자의 중심으로 한 번 그렸다가 옮기면 **첫 프레임이 눈에 띄게 튄다.**
+        */
+        const center = focus ?? centerOf(points);
 
         const map = new kakao.maps.Map(container.current, {
           center: new kakao.maps.LatLng(center.lat, center.lng),
@@ -205,14 +302,19 @@ export function ChurchMap({
           });
           markers.push(marker);
 
-          if (!selectable) continue;
+          if (selectable) {
+            // 마커를 누르면 고른 교회를 바깥에 알린다. 화면에 무엇을 띄울지는 바깥이 정한다
+            kakao.maps.event.addListener(marker, "click", () => {
+              selectRef.current?.(point.id);
+            });
+          }
 
-          // 마커를 누르면 고른 교회를 바깥에 알린다. 화면에 무엇을 띄울지는 바깥이 정한다
-          kakao.maps.event.addListener(marker, "click", () => {
-            selectRef.current?.(point.id);
-          });
+          // ⚠️ **이름표는 클릭과 따로 켠다** — 상세는 고르지 않으면서 이름표만 쓴다
+          if (!showLabels) continue;
 
           const content = createChurchLabel(point);
+          // 주인공은 처음부터 뒤집어 둔다 — 아래 선택 effect가 돌기 전에도 맞아야 한다
+          if (point.id === focusId) setLabelSelected(content, true);
           labelEls.set(point.id, content);
           labeled.push({
             marker,
@@ -230,7 +332,8 @@ export function ChurchMap({
           오버레이는 그대로 남으므로, 이 처리가 없으면 **묶음 위에 이름표가 겹쳐 뜬다.**
 
           **묶인 마커는 `getMap()`이 `null`이다** — 그것만 보고 이름표를 함께 떼면
-          줌 레벨을 따로 따질 필요가 없다.
+          줌 레벨을 따로 따질 필요가 없다. **묶지 않는 지도에서는 언제나 참이라** 이름표가
+          늘 켜진 상태로 남는다.
         */
         const syncLabels = () => {
           for (const { marker, label } of labeled) {
@@ -239,20 +342,41 @@ export function ChurchMap({
         };
 
         /*
-          ⚠️ **마커를 지도에 직접 붙이지 않는다.** 클러스터러가 대신 붙이고 뗀다 —
-          `marker.setMap(map)`을 함께 부르면 **묶여야 할 마커가 낱개로도 남아** 같은
-          교회가 두 번 보인다.
+          ⚠️ **주인공이 있는 지도는 묶지 않는다** (2026-09-23).
+
+          교회 상세는 반경 15km까지 담을 수 있어 **시야가 클러스터 임계값(레벨 8)을 넘는다.**
+          그대로 두면 **마커 다섯 개가 묶음 하나로 합쳐져**, 주변 교회를 보여주려고 만든
+          지도가 동그라미 한 개가 된다. 마커 수는 `NEARBY_LIMIT`이 이미 묶어 두었으므로
+          묶을 이유도 없다.
+
+          ⚠️ **묶지 않을 때는 마커를 직접 붙여야 한다** — 평소에는 클러스터러가 그 일을
+          한다. 반대로 아래 `else` 쪽에서 `marker.setMap(map)`을 함께 부르면 **묶여야 할
+          마커가 낱개로도 남아 같은 교회가 두 번 보인다.**
 
           **묶음을 누르면 우리가 직접 확대한다** — 기본 확대(한 단계)는 꺼 둔다.
         */
-        clusterer = new kakao.maps.MarkerClusterer({
-          map,
-          markers,
-          minLevel: MIN_CLUSTER_LEVEL,
-          // 끄면 묶음이 첫 마커 자리에 붙어 **실제 무리보다 한쪽으로 치우쳐 보인다**
-          averageCenter: true,
-          disableClickZoom: true,
-        });
+        if (focus) {
+          for (const marker of markers) marker.setMap(map);
+        } else {
+          clusterer = new kakao.maps.MarkerClusterer({
+            map,
+            markers,
+            minLevel: MIN_CLUSTER_LEVEL,
+            // 끄면 묶음이 첫 마커 자리에 붙어 **실제 무리보다 한쪽으로 치우쳐 보인다**
+            averageCenter: true,
+            disableClickZoom: true,
+          });
+
+          kakao.maps.event.addListener(clusterer, "clustered", syncLabels);
+
+          kakao.maps.event.addListener(clusterer, "clusterclick", (cluster) => {
+            // 누른 묶음을 손끝에 붙잡아 둔다 — anchor가 없으면 화면이 중심으로 튄다
+            map.setLevel(
+              Math.max(MAX_ZOOM_LEVEL, map.getLevel() - CLUSTER_ZOOM_STEP),
+              { anchor: cluster.getCenter() },
+            );
+          });
+        }
 
         /*
           ⚠️ **두 곳에서 맞춘다 — `clustered`만으로는 이름표가 사라진다.**
@@ -265,18 +389,8 @@ export function ChurchMap({
           `getMap()`이 정확하다. **둘 다 둔다** — 묶임이 생기는 순간은 `clustered`가
           더 빠르고, 나머지 전부는 `idle`이 받는다.
         */
-        kakao.maps.event.addListener(clusterer, "clustered", syncLabels);
         kakao.maps.event.addListener(map, "idle", syncLabels);
         syncLabels();
-
-        kakao.maps.event.addListener(clusterer, "clusterclick", (cluster) => {
-          // 누른 묶음을 손끝에 붙잡아 둔다 — anchor가 없으면 화면이 중심으로 튄다
-          map.setLevel(
-            Math.max(MAX_ZOOM_LEVEL, map.getLevel() - CLUSTER_ZOOM_STEP),
-            { anchor: cluster.getCenter() },
-          );
-        });
-
 
         // 빈 곳을 누르면 고른 것을 푼다 — **모바일에서 선택을 끄는 유일한 길이다**
         if (selectable) {
@@ -288,12 +402,22 @@ export function ChurchMap({
         /*
           **두 곳 이상이면 전부 보이도록 맞춘다.** `level`로는 몇 개가 어디에 있는지에
           따라 화면 밖으로 나가는 점이 생긴다. 한 곳일 때는 경계가 점 하나라
-          `setBounds`가 최대 확대로 튀므로 쓰지 않는다.
+          `setBounds`가 최대 확대로 튀므로 쓰지 않는다 — 그때는 `level`이 정한 배율이 맞다.
+
+          ⚠️ **주인공이 있으면 `boundsAround`가 만든 경계를 쓴다.** 점을 전부 담는
+          방식으로 맞추면 **지금 보고 있는 그 교회가 화면 한가운데에서 밀려난다** —
+          상세 화면에 주인공이 있다는 것이 `/map`과 다른 점이다.
         */
         if (points.length > 1) {
           const bounds = new kakao.maps.LatLngBounds();
-          for (const point of points) {
-            bounds.extend(new kakao.maps.LatLng(point.lat, point.lng));
+          if (focus) {
+            const { sw, ne } = boundsAround(focus, points);
+            bounds.extend(new kakao.maps.LatLng(sw.lat, sw.lng));
+            bounds.extend(new kakao.maps.LatLng(ne.lat, ne.lng));
+          } else {
+            for (const point of points) {
+              bounds.extend(new kakao.maps.LatLng(point.lat, point.lng));
+            }
           }
           map.setBounds(bounds);
         }
@@ -306,16 +430,19 @@ export function ChurchMap({
 
     return () => {
       alive = false;
+      observer?.disconnect();
       // 지도 인스턴스에는 파괴 API가 없다. 마커만 떼면 나머지는 컨테이너와 함께 사라진다.
-      // 마커는 클러스터러가 들고 있으므로 `clear()` 하나로 전부 떨어진다
+      // 묶는 지도는 클러스터러가 마커를 들고 있고, 묶지 않는 지도는 우리가 직접 붙였다 —
+      // **둘 다 떼야 한다.** 이미 떨어진 마커에 `setMap(null)`을 불러도 해가 없다
       clusterer?.clear();
+      for (const marker of markers) marker.setMap(null);
       for (const { label } of labeled) label.setMap(null);
       labelEls.clear();
       dotRef.current?.setMap(null);
       dotRef.current = null;
       mapRef.current = null;
     };
-  }, [churches, level, interactive]);
+  }, [churches, level, interactive, focusId, showLabels, lazy]);
 
   /*
     고른 교회를 화면에 반영한다. **지도를 다시 만들지 않는다** — 이름표 색만 바꾸고
@@ -326,7 +453,7 @@ export function ChurchMap({
   */
   useEffect(() => {
     for (const [id, el] of labelRefs.current) {
-      setLabelSelected(el, id === selectedId);
+      setLabelSelected(el, id === highlightId);
     }
 
     const map = mapRef.current;
@@ -339,7 +466,14 @@ export function ChurchMap({
     if (selectionLevel) map.setLevel(selectionLevel);
     map.setCenter(new kakao.maps.LatLng(point.lat, point.lng));
     if (selectionInset > 0) map.panBy(0, selectionInset / 2);
-  }, [churches, selectedId, selectionLevel, selectionInset, status]);
+  }, [
+    churches,
+    selectedId,
+    highlightId,
+    selectionLevel,
+    selectionInset,
+    status,
+  ]);
 
   /*
     내 위치로 이동하고 그 자리에 점을 찍는다.

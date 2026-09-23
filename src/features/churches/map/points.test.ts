@@ -1,8 +1,15 @@
-// 지도 점 추리기 단위 테스트 — 좌표 없는 교회와 쏠린 분포를 고정한다
+// 지도 점 추리기 단위 테스트 — 좌표 없는 교회·쏠린 분포·주인공 중심 경계를 고정한다
 
 import { describe, expect, it } from "vitest";
 import type { Church } from "@/types/church";
-import { centerOf, FALLBACK_CENTER, hasCoords, toMapPoints } from "./points";
+import {
+  boundsAround,
+  centerOf,
+  FALLBACK_CENTER,
+  hasCoords,
+  MIN_HALF_SPAN_DEG,
+  toMapPoints,
+} from "./points";
 
 const church = (over: Partial<Church>): Church =>
   ({
@@ -103,5 +110,90 @@ describe("centerOf", () => {
 
   it("점이 없으면 전국 기본 시야다", () => {
     expect(centerOf([])).toBe(FALLBACK_CENTER);
+  });
+});
+
+describe("boundsAround", () => {
+  const CENTER = { lat: 37.5663, lng: 126.9779 };
+
+  const point = (lat: number, lng: number) => ({
+    id: `${lat},${lng}`,
+    name: "교회",
+    place: "서울",
+    lat,
+    lng,
+  });
+
+  /**
+   * ⚠️ **이것이 `centerOf` + `setBounds`와 갈리는 지점이다.** 상세 화면에는 주인공이
+   * 있는데, 경계 상자의 중심으로 맞추면 **지금 보고 있는 그 교회가 화면 한가운데에서
+   * 밀려난다.** 대칭으로 만들면 주인공이 언제나 정중앙이다.
+   */
+  it("중심이 경계의 정확한 한가운데다", () => {
+    // 북동쪽으로만 퍼진 분포 — 경계 상자의 중심이라면 그쪽으로 끌려간다
+    const { sw, ne } = boundsAround(CENTER, [
+      point(CENTER.lat + 0.1, CENTER.lng + 0.08),
+      point(CENTER.lat + 0.05, CENTER.lng + 0.02),
+    ]);
+
+    expect((sw.lat + ne.lat) / 2).toBeCloseTo(CENTER.lat, 10);
+    expect((sw.lng + ne.lng) / 2).toBeCloseTo(CENTER.lng, 10);
+  });
+
+  it("모든 점이 경계 안에 들어온다", () => {
+    const points = [
+      point(CENTER.lat + 0.1, CENTER.lng - 0.03),
+      point(CENTER.lat - 0.04, CENTER.lng + 0.09),
+      point(CENTER.lat + 0.02, CENTER.lng + 0.01),
+    ];
+    const { sw, ne } = boundsAround(CENTER, points);
+
+    for (const p of points) {
+      expect(p.lat).toBeGreaterThanOrEqual(sw.lat);
+      expect(p.lat).toBeLessThanOrEqual(ne.lat);
+      expect(p.lng).toBeGreaterThanOrEqual(sw.lng);
+      expect(p.lng).toBeLessThanOrEqual(ne.lng);
+    }
+  });
+
+  /** 가장 먼 점이 양쪽을 함께 정한다 — 가까운 쪽에 맞추면 먼 점이 화면 밖으로 나간다 */
+  it("한쪽으로만 퍼져도 먼 쪽이 폭을 정한다", () => {
+    const { sw, ne } = boundsAround(CENTER, [
+      point(CENTER.lat + 0.1, CENTER.lng),
+    ]);
+
+    expect(ne.lat - CENTER.lat).toBeCloseTo(0.1, 10);
+    expect(CENTER.lat - sw.lat).toBeCloseTo(0.1, 10);
+  });
+
+  /**
+   * ⚠️ **최소 span이 없으면 `setBounds`가 최대 확대로 튄다.** 주변 교회가 300m 옆에
+   * 한 곳뿐인 상세에서 실제로 일어나는 일이다 — 건물 몇 채만 보이는 지도가 된다.
+   */
+  it("아주 가까운 점뿐이어도 최소 폭을 지킨다", () => {
+    const { sw, ne } = boundsAround(CENTER, [
+      point(CENTER.lat + 0.0002, CENTER.lng),
+    ]);
+
+    expect(ne.lat - CENTER.lat).toBeCloseTo(MIN_HALF_SPAN_DEG, 10);
+    expect(CENTER.lat - sw.lat).toBeCloseTo(MIN_HALF_SPAN_DEG, 10);
+    expect(ne.lng - CENTER.lng).toBeCloseTo(MIN_HALF_SPAN_DEG, 10);
+  });
+
+  /** 함수는 총체적이어야 한다 — 화면이 이 경우를 거르더라도 여기서 무너지지 않는다 */
+  it("점이 없으면 최소 폭짜리 상자를 돌려준다", () => {
+    const { sw, ne } = boundsAround(CENTER, []);
+
+    expect(ne.lat - sw.lat).toBeCloseTo(MIN_HALF_SPAN_DEG * 2, 10);
+    expect(ne.lng - sw.lng).toBeCloseTo(MIN_HALF_SPAN_DEG * 2, 10);
+  });
+
+  /** 주인공 자신이 목록에 섞여 있어도 결과가 달라지지 않는다 — 부르는 쪽이 그렇게 넘긴다 */
+  it("중심과 같은 점이 섞여 있어도 폭을 흔들지 않는다", () => {
+    const far = point(CENTER.lat + 0.05, CENTER.lng);
+    const withSelf = boundsAround(CENTER, [point(CENTER.lat, CENTER.lng), far]);
+    const without = boundsAround(CENTER, [far]);
+
+    expect(withSelf).toEqual(without);
   });
 });

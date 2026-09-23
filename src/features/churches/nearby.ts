@@ -8,7 +8,7 @@
 // 뿐이고, 정본은 화면에 글자로 나가는 목록이다(지도 컨테이너는 `aria-hidden`이다).
 
 import type { Church } from "@/types/church";
-import { hasCoords } from "./map/points";
+import { type Coords, hasCoords } from "./map/points";
 
 /**
  * "가깝다"고 부를 반경(km).
@@ -27,11 +27,6 @@ export const NEARBY_RADIUS_KM = 15;
  * 주인공이 묻힌다.
  */
 export const NEARBY_LIMIT = 4;
-
-export interface Coords {
-  lat: number;
-  lng: number;
-}
 
 /** 지구 평균 반지름(km) */
 const EARTH_RADIUS_KM = 6371;

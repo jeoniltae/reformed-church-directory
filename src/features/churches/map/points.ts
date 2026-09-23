@@ -2,6 +2,15 @@
 
 import type { Church } from "@/types/church";
 
+/**
+ * 위경도 한 쌍. **이 모듈이 좌표의 원산지다** — `nearby.ts`도 여기서 가져다 쓴다.
+ * 같은 모양을 파일마다 다시 적으면 어느 것이 정본인지 알 수 없어진다.
+ */
+export interface Coords {
+  lat: number;
+  lng: number;
+}
+
 /** 좌표가 확인된 교회. `lat`/`lng`가 선택 필드라 좁혀 두면 컴포넌트가 단순해진다 */
 export interface MapPoint {
   id: string;
@@ -30,7 +39,7 @@ export function hasCoords(church: Church): church is LocatedChurch {
 }
 
 /** 전국을 담는 기본 시야 — 좌표가 하나도 없을 때만 쓴다 (대한민국 중앙부) */
-export const FALLBACK_CENTER = { lat: 36.5, lng: 127.8 };
+export const FALLBACK_CENTER: Coords = { lat: 36.5, lng: 127.8 };
 
 /**
  * 좌표가 있는 교회만 남긴다.
@@ -63,7 +72,7 @@ export function toMapPoints(churches: Church[]): MapPoint[] {
  *
  * 점이 하나면 그 점이 곧 중심이고, 없으면 전국 기본 시야를 돌려준다.
  */
-export function centerOf(points: MapPoint[]): { lat: number; lng: number } {
+export function centerOf(points: MapPoint[]): Coords {
   if (points.length === 0) return FALLBACK_CENTER;
 
   let minLat = points[0].lat;
@@ -79,4 +88,47 @@ export function centerOf(points: MapPoint[]): { lat: number; lng: number } {
   }
 
   return { lat: (minLat + maxLat) / 2, lng: (minLng + maxLng) / 2 };
+}
+
+/**
+ * `boundsAround`가 보장하는 **반쪽 폭의 하한**(도). 약 500m라 상자 한 변이 1km쯤 된다.
+ *
+ * ⚠️ **없으면 `setBounds`가 최대 확대로 튄다.** 주변 교회가 300m 옆에 한 곳뿐인
+ * 상세에서 실제로 일어나는 일이고, 그러면 **건물 몇 채만 보이는 지도**가 된다.
+ *
+ * **위도·경도에 같은 값을 쓴다.** 위도 1도(약 111km)와 국내 경도 1도(약 88km)가
+ * 달라 상자가 정확한 정사각형은 아니지만, 이 크기에서 차이는 100m 남짓이라 화면에서
+ * 구분되지 않는다. 삼각함수를 들이는 대신 단순하게 둔다.
+ */
+export const MIN_HALF_SPAN_DEG = 0.0045;
+
+/** 지도에 넘길 경계 상자 — 카카오 `LatLngBounds(sw, ne)`와 같은 짜임이다 */
+export interface MapBounds {
+  sw: Coords;
+  ne: Coords;
+}
+
+/**
+ * **중심을 한가운데 고정한 채** 모든 점을 담는 경계.
+ *
+ * ⚠️ **`centerOf` + `setBounds`와 갈리는 지점이다.** 그쪽은 경계 상자의 중심을 쓰므로
+ * `/map`처럼 **주인공이 없는 화면**에 맞다. 교회 상세에는 주인공이 있어서, 같은 방식을
+ * 쓰면 **지금 보고 있는 그 교회가 화면 한가운데에서 밀려난다.**
+ *
+ * 중심에서 가장 먼 점까지의 거리를 **양쪽에 똑같이** 주면 대칭이 되어, 주인공이 언제나
+ * 정중앙에 서고 나머지도 전부 들어온다. 폭은 `MIN_HALF_SPAN_DEG` 아래로 내려가지 않는다.
+ */
+export function boundsAround(center: Coords, points: MapPoint[]): MapBounds {
+  let halfLat = MIN_HALF_SPAN_DEG;
+  let halfLng = MIN_HALF_SPAN_DEG;
+
+  for (const { lat, lng } of points) {
+    halfLat = Math.max(halfLat, Math.abs(lat - center.lat));
+    halfLng = Math.max(halfLng, Math.abs(lng - center.lng));
+  }
+
+  return {
+    sw: { lat: center.lat - halfLat, lng: center.lng - halfLng },
+    ne: { lat: center.lat + halfLat, lng: center.lng + halfLng },
+  };
 }

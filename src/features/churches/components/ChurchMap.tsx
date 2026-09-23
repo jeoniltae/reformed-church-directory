@@ -70,6 +70,18 @@ const CLUSTER_ZOOM_STEP = 3;
 const MAX_ZOOM_LEVEL = 1;
 
 /**
+ * 주인공(`focusId`)의 마커와 이름표가 설 층.
+ *
+ * ⚠️ **없으면 주인공이 이웃 뒤에 깔린다** (2026-09-23 실측: 군포 예숲교회의 이름표가
+ * 1km 옆 금정제일교회에 가려 **거의 보이지 않았다**). 이름표는 만들어진 순서대로
+ * 쌓이는데 그 순서는 가나다순이라, **주인공이 앞에 설 이유가 아무것도 없었다.**
+ *
+ * **주인공에게만 준다.** 나머지는 값을 넘기지 않아 SDK 기본값에 남는다 — `/map`의
+ * 마커 92개는 이 변경에 영향받지 않는다.
+ */
+const FOCUS_Z_INDEX = 10;
+
+/**
  * 지연 로드에서 **뷰포트 경계를 얼마나 미리 앞당겨 볼지**.
  *
  * **0이면 지도가 화면에 닿는 순간 요청이 시작돼** SDK를 받는 동안 회색 상자를 보게
@@ -295,10 +307,17 @@ export function ChurchMap({
 
         for (const point of points) {
           const position = new kakao.maps.LatLng(point.lat, point.lng);
+          /*
+            주인공은 마커도 이름표도 **이웃보다 앞에 세운다.** 겹치면 뒤에 깔려
+            **어느 것이 지금 보고 있는 교회인지 안 보인다** — 이름표 색을 뒤집어 둔
+            것이 통째로 헛일이 된다. 나머지에는 값을 넘기지 않아 기본 순서 그대로다.
+          */
+          const front = point.id === focusId ? { zIndex: FOCUS_Z_INDEX } : {};
           const marker = new kakao.maps.Marker({
             position,
             title: point.name,
             clickable: selectable,
+            ...front,
           });
           markers.push(marker);
 
@@ -323,6 +342,7 @@ export function ChurchMap({
               content,
               // `1`이면 아랫변이 좌표에 닿는다 — 이름표가 마커 **위**에 선다(`label.ts`)
               yAnchor: 1,
+              ...front,
             }),
           });
         }

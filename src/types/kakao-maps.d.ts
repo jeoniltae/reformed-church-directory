@@ -46,6 +46,11 @@ declare namespace kakao.maps {
     position: LatLng;
     title?: string;
     clickable?: boolean;
+    /**
+     * 겹칠 때 앞에 설 순서. **주인공이 있는 지도에서만 쓴다**(`ChurchMap`의 `focusId`).
+     * 빼면 SDK 기본값이므로, **넘기지 않는 마커의 순서는 건드리지 않는다.**
+     */
+    zIndex?: number;
   }
 
   class Marker {
@@ -69,6 +74,11 @@ declare namespace kakao.maps {
     yAnchor?: number;
     /** ⚠️ **기본값이 `false`다.** 말풍선 안의 링크를 누르려면 켜야 한다 */
     clickable?: boolean;
+    /**
+     * 겹칠 때 앞에 설 순서. **이름표가 서로 가리는 것을 가르는 유일한 수단이다** —
+     * 같은 값이면 만들어진 순서대로 깔린다. `MarkerOptions.zIndex`와 짝이다.
+     */
+    zIndex?: number;
   }
 
   class CustomOverlay {

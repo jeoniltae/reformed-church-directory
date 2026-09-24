@@ -1,12 +1,6 @@
 // 교회 상세 — 89건 전량을 빌드 시점에 정적 생성한다 (SSG)
 
-import {
-  ChevronLeft,
-  ExternalLink,
-  MapPin,
-  Navigation,
-  Phone,
-} from "lucide-react";
+import { ChevronLeft, ExternalLink, Navigation, Phone } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -16,7 +10,9 @@ import { NAV_BACK, PageTransition } from "@/components/shared/PageTransition";
 import { SiteMark } from "@/components/shared/SiteMark";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { ChurchMap } from "@/features/churches/components/ChurchMap";
 import { ChurchNotice } from "@/features/churches/components/ChurchNotice";
+import { ChurchRow } from "@/features/churches/components/ChurchRow";
 import {
   getAllChurchIds,
   getAllChurches,
@@ -26,6 +22,11 @@ import {
   hasRegionLanding,
   slugFromGroup,
 } from "@/features/churches/landing";
+import { hasCoords } from "@/features/churches/map/points";
+import {
+  NEARBY_RADIUS_KM,
+  nearbyChurches,
+} from "@/features/churches/nearby";
 import { decodeRouteParam } from "@/lib/church-utils";
 import { breadcrumbJsonLd, churchJsonLd } from "@/lib/json-ld";
 import { cn } from "@/lib/utils";
@@ -87,6 +88,15 @@ export default async function ChurchDetailPage({
     ? slugFromGroup(church.denominationGroup)
     : undefined;
 
+  /*
+    가까운 교회 — **아래 섹션에서 제목·기준 문장·목록을 켜는 조건이다.**
+
+    ⚠️ **지도까지 이 값으로 가르지 않는다.** 좌표가 있으면 이웃이 없어도 그린다 —
+    이웃이 없다는 것은 *목록*에 대한 사실이지 **그 교회의 위치를 못 보여줄 이유가
+    아니다.** 섹션 주석의 표를 볼 것.
+  */
+  const nearby = nearbyChurches(getAllChurches(), church);
+
   return (
     <PageTransition>
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 pt-4 pb-8">
@@ -110,15 +120,6 @@ export default async function ChurchDetailPage({
           <SiteMark />
         </div>
 
-        {/*
-          지도 자리. 실제 지도는 5단계(Kakao 지도 SDK 앱 키)에서 이 박스를 교체한다.
-          좌표 유무로 구분하지 않는다 — 지금은 지도가 없어 88건과 1건이 똑같이 보인다.
-        */}
-        <div className="mt-3 flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-lg bg-muted">
-          <MapPin aria-hidden className="size-6 text-muted-foreground" />
-          <p className="text-t4 text-muted-foreground">지도 준비 중</p>
-        </div>
-
         <div className="mt-5">
           {church.denomination && (
             <Badge variant="secondary">{church.denomination}</Badge>
@@ -137,42 +138,14 @@ export default async function ChurchDetailPage({
           {church.notice && <ChurchNotice notice={church.notice} />}
         </div>
 
-        {/* 교단과 주소는 위 헤더에만 둔다. 여기 또 넣으면 같은 화면에 두 번 나온다 */}
-        <section className="mt-6 border-t border-border pt-5">
-          <h2 className="text-t4 font-semibold text-foreground">교회 정보</h2>
-          <dl className="mt-3 flex flex-col gap-3">
-            <div className="flex items-baseline justify-between gap-4">
-              <dt className="shrink-0 text-t4 text-muted-foreground">
-                담임목사
-              </dt>
-              <dd className="text-right text-t4 text-foreground">
-                {church.pastor} 목사
-              </dd>
-            </div>
-            {church.homepage && (
-              <div className="flex items-baseline justify-between gap-4">
-                <dt className="shrink-0 text-t4 text-muted-foreground">
-                  홈페이지
-                </dt>
-                <dd className="text-t4">
-                  <a
-                    href={church.homepage}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 rounded-lg text-foreground underline outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-                  >
-                    홈페이지 열기
-                    <ExternalLink aria-hidden className="size-3.5" />
-                  </a>
-                </dd>
-              </div>
-            )}
-          </dl>
-        </section>
-
         {/*
           전화 걸기가 이 화면의 유일한 brand-solid다.
-          CLAUDE.md가 "탭 한 번으로 전화"를 핵심 동선으로 규정했다.
+
+          **2026-09-23에 `교회 정보` 앞으로 올렸다.** 지도가 화면 맨 위를 차지하던
+          동안에는 **이 두 버튼이 첫 화면 밖에 있었다** — `CLAUDE.md`가 "탭 한 번으로
+          전화"를 핵심 동선으로 규정해 둔 것과 어긋난다. 지도를 아래로 내리면서
+          **주소 → 길찾기·전화**가 스크롤 없이 이어진다.
+
           Base UI Button은 네이티브 <button>을 전제하므로 링크에는 variant만 빌려 쓴다.
           phone이 없는 1건은 넓은 화면에서도 1열이라 길찾기가 전체 너비를 쓴다.
 
@@ -216,6 +189,114 @@ export default async function ChurchDetailPage({
           )}
         </div>
 
+        {/* 교단과 주소는 위 헤더에만 둔다. 여기 또 넣으면 같은 화면에 두 번 나온다 */}
+        <section className="mt-6 border-t border-border pt-5">
+          <h2 className="text-t4 font-semibold text-foreground">교회 정보</h2>
+          <dl className="mt-3 flex flex-col gap-3">
+            <div className="flex items-baseline justify-between gap-4">
+              <dt className="shrink-0 text-t4 text-muted-foreground">
+                담임목사
+              </dt>
+              <dd className="text-right text-t4 text-foreground">
+                {church.pastor} 목사
+              </dd>
+            </div>
+            {church.homepage && (
+              <div className="flex items-baseline justify-between gap-4">
+                <dt className="shrink-0 text-t4 text-muted-foreground">
+                  홈페이지
+                </dt>
+                <dd className="text-t4">
+                  <a
+                    href={church.homepage}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 rounded-lg text-foreground underline outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                  >
+                    홈페이지 열기
+                    <ExternalLink aria-hidden className="size-3.5" />
+                  </a>
+                </dd>
+              </div>
+            )}
+          </dl>
+        </section>
+
+        {/*
+          가까운 교회 (2026-09-23) — **지도가 화면 맨 위에서 여기로 내려왔다.**
+
+          **지도의 성격이 "주소 확인"에서 "주변 탐색"으로 바뀌었다.** 마커 하나를 띄우던
+          동안에는 바로 아래 적힌 주소를 그림으로 한 번 더 보여주는 것이 전부였는데,
+          그것이 첫 화면에서 세로 211px(375px 기준)을 쓰고 있었다. 지금은 반경 안의
+          교회를 함께 찍고 목록으로 잇는다 — **상세에서 다른 교회로 가는 첫 길이다**
+          (그전에는 아래 `비슷한 교회 찾기`의 시도 단위 랜딩뿐이었고, 강동구에서 보고
+          있는 사람에게 `서울 교회 30곳`은 답이 아니다).
+
+          ⚠️ **목록이 정본이고 지도는 그것을 그린 것이다.** 지도 컨테이너는 `aria-hidden`
+          이라 **지도에만 있는 정보를 만들지 않는다.** 정적 HTML에 남는 것도 이 목록이고,
+          내부 링크가 되는 것도 이쪽이다.
+
+          ⚠️ **`interactive`를 켜지 않는다.** 본문 중간의 지도가 움직이면 **세로로
+          스크롤하려던 손가락을 지도가 먹는다.** 모바일 우선 사이트에서 실제 사고다.
+
+          ⚠️ **`onSelect`를 넘기지 않는다** — 마커는 손끝보다 작아 **오탭이 엉뚱한 교회로
+          데려간다.** 이동은 아래 목록이 맡고, 지도는 `labels`로 이름만 말한다.
+
+          **첫 화면 밖이라 `lazy`가 실제로 듣는다** — 지도를 여기로 내린 이유의 절반이다.
+
+          ⚠️ **두 조건이 겹쳐 있다. 섞지 말 것** (2026-09-23에 한 번 섞어서 고쳤다).
+
+          | 무엇 | 조건 |
+          |---|---|
+          | 섹션과 **지도** | `hasCoords(church)` — 좌표만 있으면 언제나 그린다 |
+          | 제목·기준 문장·**목록** | `nearby.length > 0` |
+
+          **반경 안이 비어도 지도는 남는다.** 처음에 `nearby.length > 0` 하나로 묶었다가
+          **좌표가 멀쩡한 19건이 원래 있던 지도까지 잃었다** — 이웃이 없다는 것은
+          *목록*에 대한 사실이지 *그 교회의 위치*를 못 보여줄 이유가 아니다.
+
+          **"근처에 없다"고 적지는 않는다** — 우리 수록 범위의 한계가 그 지역의 결함처럼
+          읽힌다(`ChurchNotice`가 붉은 상자를 버린 것과 같은 판단이다). 대신 제목이
+          `위치`로 바뀌어 **그 화면이 무엇을 보여주는지만** 말한다.
+
+          **이름표도 이웃이 있을 때만 켠다** — 이름표는 여럿을 가려 보라고 있는 것이라
+          마커가 하나뿐이면 바로 위 h1과 같은 글자가 한 번 더 찍힐 뿐이다.
+        */}
+        {hasCoords(church) && (
+          <section className="mt-8 border-t border-border pt-5">
+            <h2 className="text-t4 font-semibold text-foreground">
+              {nearby.length > 0 ? "가까운 교회" : "위치"}
+            </h2>
+            {/*
+              고르는 기준을 밝힌다 — `/about`의 **"평가하거나 순위를 매기지 않습니다"**와
+              짝이다. 거리 하나로 정해졌다는 것이 보이면 추천 목록으로 읽히지 않는다.
+              **숫자는 상수에서 온다** — 반경을 조정하면 문장도 따라온다.
+            */}
+            {nearby.length > 0 && (
+              <p className="mt-1 text-t2 text-muted-foreground">
+                직선거리 {NEARBY_RADIUS_KM}km 안에 있는 교회를 가까운 순으로
+                보여줍니다.
+              </p>
+            )}
+            <ChurchMap
+              churches={[church, ...nearby]}
+              focusId={church.id}
+              labels={nearby.length > 0}
+              lazy
+              className="mt-3 aspect-video w-full"
+            />
+            {/* 홈 미리보기와 같은 행 어휘다 — 상세만의 목록 모양을 새로 만들지 않는다 */}
+            {nearby.length > 0 && (
+              <ul className="mt-1 divide-y divide-border">
+                {nearby.map((neighbor) => (
+                  <li key={neighbor.id}>
+                    <ChurchRow church={neighbor} />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        )}
         {(regionHref || groupSlug) && (
           <nav className="mt-8 border-t border-border pt-5">
             <h2 className="text-t4 font-semibold text-foreground">

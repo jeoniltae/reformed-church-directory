@@ -182,6 +182,22 @@
   html {
     @apply font-sans;
   }
+  /*
+    Tailwind v4가 프리플라이트에서 버튼 커서를 **브라우저 기본값으로 되돌렸다.**
+    되살리는 것이 공식 업그레이드 가이드의 권장 대응이다.
+
+    ⚠️ **`@layer base` 안에 둔다.** 레이어 밖에 두면 유틸리티보다 세져서, 특정 버튼에
+    `cursor-*`를 줘도 **조용히 무시된다.**
+
+    **`:not(:disabled)`는 오늘은 아무 일도 하지 않는다** — 이 프로젝트의 비활성 버튼은
+    shadcn `Button`의 `disabled:pointer-events-none`에 이미 걸린다. 다만 그것이 없는
+    네이티브 `<button disabled>`가 생기면 **비활성인데 누를 수 있어 보이는 상태**가
+    되므로 미리 막아 둔다.
+  */
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
 }
 
 /*
@@ -712,4 +728,18 @@ textarea {
     max-width: 10em;
     opacity: 1;
   }
+}
+/*
+  지도 이름표가 마커 클릭을 먹지 않게 한다 (2026-09-21).
+
+  ⚠️ **우리 엘리먼트에 `pointer-events: none`을 주는 것만으로는 부족하다.**
+  카카오 `CustomOverlay`는 넘긴 내용을 **자기 컨테이너로 한 번 더 감싸는데**, 그
+  컨테이너는 `pointer-events: auto`다. 이름표를 마커 **위**로 올리면서 그 상자가
+  마커를 덮게 됐고, **마커 중심을 눌러도 마커가 아니라 그 div가 잡혔다**(실측).
+
+  **부모를 직접 고를 수 없으므로 `:has()`로 집는다.** 표식 클래스는
+  `src/features/churches/map/label.ts`가 붙인다 — **한쪽만 바꾸면 조용히 다시 막힌다.**
+*/
+:has(> .church-label) {
+  pointer-events: none;
 }

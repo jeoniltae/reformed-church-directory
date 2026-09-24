@@ -57,6 +57,28 @@
       "address": "제주특별자치도 제주시 애월읍 애납로 155",
       "homepage": "https://www.mareca.org",
       "addedAt": "2026-09-18"
+    },
+    {
+      "region": "서울",
+      "subRegion": "영등포구",
+      "name": "서울에스라교회",
+      "pastor": "남궁현우",
+      "denomination": "합동",
+      "phone": "070-4105-3927",
+      "address": "서울 영등포구 선유로 252",
+      "homepage": "https://ezrachurch.kr",
+      "addedAt": "2026-09-20"
+    },
+    {
+      "region": "전남광주",
+      "subRegion": "서구",
+      "name": "벧샬롬교회",
+      "pastor": "김형익",
+      "denomination": "합동",
+      "phone": "062-364-7118",
+      "address": "전남광주 서구 상무대로1081번길 3 2층",
+      "homepage": "http://bschurch.net",
+      "addedAt": "2026-09-20"
     }
   ]
 }

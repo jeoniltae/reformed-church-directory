@@ -1045,26 +1045,6 @@
     "homepage": "http://hangyulcmi.org/"
   },
   {
-    "id": "군산진성교회-군산시",
-    "name": "군산진성교회",
-    "region": "전북",
-    "address": "전북 군산시 삼학동 884",
-    "pastor": "이판용",
-    "source": "자체 수집",
-    "subRegion": "군산시",
-    "denomination": "합동",
-    "denominationGroup": "합동 계열",
-    "phone": "070-8774-9332",
-    "homepage": "http://cafe.daum.net/gsjsrc/",
-    "notice": {
-      "message": "정확한 주소를 확인하지 못했습니다. 표시된 주소만으로는 찾아가기 어려울 수 있습니다.",
-      "contact": {
-        "label": "소속 노회(예장 합동 군산남노회)",
-        "phone": "063-445-5645"
-      }
-    }
-  },
-  {
     "id": "내흥교회-군산시",
     "name": "내흥교회",
     "region": "전북",
@@ -1337,5 +1317,35 @@
     "denominationGroup": "기타",
     "phone": "010-8466-7247",
     "homepage": "https://www.mareca.org"
+  },
+  {
+    "id": "서울에스라교회-영등포구",
+    "name": "서울에스라교회",
+    "region": "서울",
+    "address": "서울특별시 영등포구 선유로 252 (양평동4가)",
+    "pastor": "남궁현우",
+    "source": "자체 수집",
+    "lat": 37.534841,
+    "lng": 126.897662,
+    "subRegion": "영등포구",
+    "denomination": "합동",
+    "denominationGroup": "합동 계열",
+    "phone": "070-4105-3927",
+    "homepage": "https://ezrachurch.kr"
+  },
+  {
+    "id": "벧샬롬교회-서구",
+    "name": "벧샬롬교회",
+    "region": "전남광주",
+    "address": "전남광주통합특별시 서구 상무대로1081번길 3 (화정동)",
+    "pastor": "김형익",
+    "source": "자체 수집",
+    "lat": 35.153028,
+    "lng": 126.879985,
+    "subRegion": "서구",
+    "denomination": "합동",
+    "denominationGroup": "합동 계열",
+    "phone": "062-364-7118",
+    "homepage": "http://bschurch.net"
   }
 ]

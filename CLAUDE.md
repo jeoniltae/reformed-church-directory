@@ -125,7 +125,7 @@ npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32�
 
 ```
 src/app/          Next.js App Router
-src/components/   ui/ (shadcn 관리 영역) · shared/ (BottomTabBar, PageTransition, SiteMark, JsonLd)
+src/components/   ui/ (shadcn 관리 영역) · shared/ (BottomTabBar, PageTransition, SiteMark, JsonLd, NoticeDialog)
 src/features/     기능별 슬라이스 — churches/ (조회·검색) · reports/ (제보 → GitHub Issues)
 src/lib/          cn() · church-utils · json-ld · site · indexable-paths · llms-txt · og
 src/types/        전역 타입
@@ -178,7 +178,7 @@ data/             앱이 직접 읽는 유일한 데이터 소스
 - **공개(2026-09-06) 이전에 id가 바뀐 건은 넣지 않는다** — 색인된 적이 없다. `우리개혁교회→서울개혁교회` 등 3건이 여기 해당한다.
 - 늘어나면 `data/`의 매핑 파일로 옮긴다. 지금은 한 건(`언약교회-강동구`)이라 설정에 직접 적어 뒀다.
 
-**상단 헤더가 없다.** 전역 이동은 `src/components/shared/BottomTabBar.tsx`(홈·검색·지도)가 전담하고, `layout.tsx`는 탭바와 `pb-16` 여백만 얹는다. **헤더를 다시 만들지 않는다** — 시안이 정한 구조다.
+**상단 헤더가 없다.** 전역 이동은 `src/components/shared/BottomTabBar.tsx`(홈·검색·지도·**더보기**)가 전담하고, `layout.tsx`는 탭바와 `pb-16` 여백만 얹는다. **헤더를 다시 만들지 않는다** — 시안이 정한 구조다.
 
 **사이트명은 두 형태로만 나온다** (2026-09-08). 홈 히어로의 **로고 락업**(마크 + `개혁주의 교회 디렉토리` + 영문 서브라인, `src/app/page.tsx`)과 안쪽 화면의 축약형 **`SiteMark`**(마크 + 사이트명 한 줄)다. **경위와 버린 선택지는 `docs/디자인-고도화.md`의 2026-09-08 항목들에 있다** — 전역 헤더를 만들지 않은 이유의 계산도 그쪽이다.
 
@@ -209,7 +209,7 @@ data/             앱이 직접 읽는 유일한 데이터 소스
 ## 상태 관리
 
 - 로컬 상태: useState
-- 전역 상태: Zustand (UI 상태만 — 모달, 토스트 등)
+- 전역 상태: Zustand (UI 상태만 — 모달, 토스트 등). **지금 있는 유일한 store는 공통 안내 모달이다** — `src/components/shared/notice.ts`의 `showNotice()` 한 줄로 어디서든 띄운다(`layout.tsx`에 `NoticeDialog` 한 벌). ⚠️ **화면 하나 안에서만 쓰는 상태는 여기 넣지 않는다** — `/map`의 선택·검색어가 `useState`인 이유다
 - 서버 상태: Next.js App Router 캐싱 (React Query/SWR 사용 안 함, 의도적 결정)
 - URL 상태: Next.js 라우터 (searchParams)
 
@@ -249,6 +249,7 @@ data/             앱이 직접 읽는 유일한 데이터 소스
 설치된 컴포넌트는 Radix가 아니라 **Base UI** 기반이므로 인터넷의 고전 shadcn 스니펫이 그대로 통하지 않는다. 실제로 밟은 함정 둘.
 
 - **`Button`에 `render={<Link/>}`를 넘기지 않는다.** `nativeButton`이 기본 `true`라 네이티브 `<button>`을 기대하고, 링크를 렌더하면 접근성 경고가 난다. 링크에는 `buttonVariants`를 쓴다.
+- ⚠️ **공통 안내 모달(`shared/NoticeDialog`)은 Base UI가 아니라 네이티브 `<dialog>`다** (2026-09-24). **되돌리지 않는다** — Base UI dialog는 **모든 화면에 21KB(gzip)를 얹는데**(실측) 모양과 움직임은 원래 전부 CSS라 얻는 것이 없었다. 포커스 트랩·Escape·top layer는 `showModal()`이 준다. 경위는 `docs/context-notes.md`
 - **`buttonVariants()`는 반드시 `cn()`으로 감싼다.** 직접 쓰면 tailwind-merge가 돌지 않아 base의 `border-transparent`가 variant의 `border-border`를 덮어 테두리가 사라진다.
 
 ---

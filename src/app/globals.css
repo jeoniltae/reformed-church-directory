@@ -743,3 +743,73 @@ textarea {
 :has(> .church-label) {
   pointer-events: none;
 }
+
+/*
+  안내 모달(`NoticeDialog`)의 내용이 **순서대로** 들어온다 (2026-09-24).
+
+  **판이 먼저 서고 글자가 뒤따른다.** 판·표식·제목·본문·버튼이 한꺼번에 나타나면
+  움직임이 한 덩어리로 뭉개져 **올라온 것인지 그냥 나타난 것인지 구분되지 않는다.**
+  계단은 60ms 간격이고 전체가 260ms 안에 끝난다 — 읽기 시작하기 전에 자리를 잡는다.
+
+  ⚠️ **화면 전환(320ms)보다 짧게 둔다.** 탭을 눌러 이동하면서 안내가 뜨는 경우
+  둘이 겹치는데, 이쪽이 더 길면 **전환이 끝난 화면 위에서 안내가 아직 조립되고 있다.**
+
+  ⚠️ **`prefers-reduced-motion`에서는 끈다.** 이 계단은 장식이고 안내를 읽는 데
+  필요한 것이 아니다. 끄면 전부 제자리에서 즉시 보인다.
+*/
+@media (prefers-reduced-motion: no-preference) {
+  .notice-stagger > * {
+    animation: notice-rise 260ms ease-out both;
+  }
+
+  .notice-stagger > *:nth-child(2) {
+    animation-delay: 60ms;
+  }
+
+  .notice-stagger > *:nth-child(3) {
+    animation-delay: 120ms;
+  }
+
+  .notice-stagger > *:nth-child(4) {
+    animation-delay: 180ms;
+  }
+
+  /*
+    표식의 테두리가 천천히 숨을 쉰다. **"준비 중"이라는 말과 같은 것을 말하는 움직임**
+    이다 — 멈춰 있는 것이 아니라 진행 중이라는 뜻이다.
+
+    ⚠️ **경고가 아니라 안내다**(`ChurchNotice`가 세운 규칙). 빠르게 깜빡이면 경보가
+    되므로 **3.2초에 걸쳐 아주 옅게만** 움직인다. 색은 건드리지 않고 투명도와 크기만
+    쓴다 — 새 색을 들이지 않는다는 토큰 규칙 그대로다.
+  */
+  .notice-breathe {
+    animation: notice-breathe 3.2s ease-in-out infinite;
+  }
+}
+
+@keyframes notice-rise {
+  from {
+    opacity: 0;
+    translate: 0 6px;
+  }
+}
+
+@keyframes notice-breathe {
+  50% {
+    opacity: 0.35;
+    scale: 1.07;
+  }
+}
+
+/*
+  안내 모달이 열린 동안 **배경이 스크롤되지 않게 한다** (2026-09-24).
+
+  ⚠️ **`showModal()`이 이것까지 해주지 않는다.** 뒤쪽을 `inert`로 만들어 조작은
+  막지만 **body 스크롤은 그대로 남아**, 시트를 띄운 채 뒤 화면이 움직인다.
+
+  **클래스로 토글한다** — 인라인 스타일을 쓰지 않는다는 규칙(`docs/ui-checklist.md`)
+  때문이고, 붙이고 떼는 것은 `NoticeDialog`가 한다.
+*/
+.notice-locked {
+  overflow: hidden;
+}

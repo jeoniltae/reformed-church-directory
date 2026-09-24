@@ -20,6 +20,7 @@ describe("indexablePaths", () => {
         "/about",
         "/churches",
         "/denomination",
+        "/map",
         "/report",
         "/privacy",
       ]),
@@ -39,8 +40,18 @@ describe("indexablePaths", () => {
     expect(paths).toContain("/denomination");
   });
 
-  it("`/map`은 넣지 않는다 — 준비 중 안내라 soft 404 위험이 있다", () => {
-    expect(paths).not.toContain("/map");
+  /*
+    **이 테스트는 2026-09-24에 뒤집혔다.** 예전에는 `/map`을 **넣지 않는 것**을
+    고정하고 있었다("준비 중 안내라 soft 404 위험"). 지도·검색·목록 시트가 붙어
+    정적 HTML에 교회 92곳의 이름과 링크가 들어오며 그 근거가 사라졌다.
+
+    ⚠️ **이 파일이 `docs/지도-작업.md` 8단계 목록에 없던 다섯 번째 지점이었다** —
+    그 목록은 `map/page.tsx`·`indexable-paths.ts`·`CLAUDE.md` 셋만 적어 뒀고,
+    **여기를 빠뜨린 것을 테스트가 빨간불로 잡아 줬다.** 결정을 고정한 테스트는
+    결정을 뒤집을 때 함께 뒤집는다.
+  */
+  it("`/map`을 넣는다 — `robots`의 `index: false`를 푼 것과 짝이다", () => {
+    expect(paths).toContain("/map");
   });
 
   it("교회 상세를 전량 넣는다", () => {

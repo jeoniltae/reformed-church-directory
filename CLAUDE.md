@@ -125,7 +125,7 @@ npm run icons:favicon        # src/app/icon.png → src/app/favicon.ico (16·32�
 
 ```
 src/app/          Next.js App Router
-src/components/   ui/ (shadcn 관리 영역) · shared/ (BottomTabBar, PageTransition, SiteMark, JsonLd)
+src/components/   ui/ (shadcn 관리 영역) · shared/ (BottomTabBar, PageTransition, SiteMark, JsonLd, NoticeDialog)
 src/features/     기능별 슬라이스 — churches/ (조회·검색) · reports/ (제보 → GitHub Issues)
 src/lib/          cn() · church-utils · json-ld · site · indexable-paths · llms-txt · og
 src/types/        전역 타입
@@ -178,7 +178,7 @@ data/             앱이 직접 읽는 유일한 데이터 소스
 - **공개(2026-09-06) 이전에 id가 바뀐 건은 넣지 않는다** — 색인된 적이 없다. `우리개혁교회→서울개혁교회` 등 3건이 여기 해당한다.
 - 늘어나면 `data/`의 매핑 파일로 옮긴다. 지금은 한 건(`언약교회-강동구`)이라 설정에 직접 적어 뒀다.
 
-**상단 헤더가 없다.** 전역 이동은 `src/components/shared/BottomTabBar.tsx`(홈·검색·지도)가 전담하고, `layout.tsx`는 탭바와 `pb-16` 여백만 얹는다. **헤더를 다시 만들지 않는다** — 시안이 정한 구조다.
+**상단 헤더가 없다.** 전역 이동은 `src/components/shared/BottomTabBar.tsx`(홈·검색·지도·**더보기**)가 전담하고, `layout.tsx`는 탭바와 `pb-16` 여백만 얹는다. **헤더를 다시 만들지 않는다** — 시안이 정한 구조다.
 
 **사이트명은 두 형태로만 나온다** (2026-09-08). 홈 히어로의 **로고 락업**(마크 + `개혁주의 교회 디렉토리` + 영문 서브라인, `src/app/page.tsx`)과 안쪽 화면의 축약형 **`SiteMark`**(마크 + 사이트명 한 줄)다. **경위와 버린 선택지는 `docs/디자인-고도화.md`의 2026-09-08 항목들에 있다** — 전역 헤더를 만들지 않은 이유의 계산도 그쪽이다.
 
@@ -209,7 +209,7 @@ data/             앱이 직접 읽는 유일한 데이터 소스
 ## 상태 관리
 
 - 로컬 상태: useState
-- 전역 상태: Zustand (UI 상태만 — 모달, 토스트 등)
+- 전역 상태: Zustand (UI 상태만 — 모달, 토스트 등). **지금 있는 유일한 store는 공통 안내 모달이다** — `src/components/shared/notice.ts`의 `showNotice()` 한 줄로 어디서든 띄운다(`layout.tsx`에 `NoticeDialog` 한 벌). ⚠️ **화면 하나 안에서만 쓰는 상태는 여기 넣지 않는다** — `/map`의 선택·검색어가 `useState`인 이유다
 - 서버 상태: Next.js App Router 캐싱 (React Query/SWR 사용 안 함, 의도적 결정)
 - URL 상태: Next.js 라우터 (searchParams)
 
@@ -250,6 +250,30 @@ data/             앱이 직접 읽는 유일한 데이터 소스
 
 - **`Button`에 `render={<Link/>}`를 넘기지 않는다.** `nativeButton`이 기본 `true`라 네이티브 `<button>`을 기대하고, 링크를 렌더하면 접근성 경고가 난다. 링크에는 `buttonVariants`를 쓴다.
 - **`buttonVariants()`는 반드시 `cn()`으로 감싼다.** 직접 쓰면 tailwind-merge가 돌지 않아 base의 `border-transparent`가 variant의 `border-border`를 덮어 테두리가 사라진다.
+
+#### 언제 Base UI를 쓰고 언제 네이티브로 가나 (2026-09-24, 실측으로 그은 선)
+
+**"Base UI가 무겁다"는 말은 틀렸다.** 이 프로젝트가 쓰던 부분은 원래 얇았다 — `button` 3.1KB · `input` 3.9KB · `merge-props` 15KB · `use-render` 1KB. props 병합과 `render` 위임만 하는 껍데기다.
+
+**무거운 것은 `dialog` 계열이 끌고 오는 의존 사슬이다.**
+
+```
+alert-dialog(8.1KB) → dialog(79KB) → floating-ui-react(446KB)
+```
+
+번들에 실제로 실린 것은 **21KB(gzip)**였지만, 출처는 저 덩어리다. `floating-ui`는 **떠 있는 요소를 기준 요소에 맞춰 배치하는 엔진**이다 — 드롭다운이 버튼 아래 붙고, 화면 밖으로 넘치면 뒤집히고, 스크롤을 따라다니는 일.
+
+| 만드는 것 | 어느 쪽 | 왜 |
+|---|---|---|
+| **드롭다운 · 팝오버 · 툴팁 · Select · 콤보박스** | **Base UI** | **기준 요소에 붙어 떠야 한다** — `floating-ui`가 진짜 일을 한다. 한 번 받으면 다음부터는 추가 비용이 거의 없다 |
+| **모달 · 알림 시트 · 확인 창** | **네이티브 `<dialog>`** | 화면에 **고정**이라 배치 엔진이 할 일이 없고, 포커스 트랩·Escape·top layer는 `showModal()`이 내장으로 준다 |
+| 버튼 · 입력 · 배지 | **Base UI**(지금 그대로) | 얇고, 이미 번들에 있다 |
+
+⚠️ **판단 기준은 "기준 요소가 있는가" 하나다.** 무언가에 붙어 떠야 하면 Base UI, 화면에 고정이면 네이티브다.
+
+⚠️ **공통 안내 모달(`shared/NoticeDialog`)이 이 선을 그은 사례다.** 처음에 `alert-dialog`로 만들었더니 **모든 화면**의 클라이언트 JS가 늘었다(홈 gzip 229.1 → 네이티브로 바꾼 뒤 209.7KB). **되돌리지 않는다** — 모양과 움직임은 원래 전부 CSS라 라이브러리에서 얻은 것이 없었다. 측정표와 경위는 `docs/context-notes.md`의 2026-09-24 항목.
+
+- **대신 우리가 관리하는 것 둘** — 퇴장 애니메이션(`dialog.close()`는 즉시 사라진다)과 배경 스크롤 잠금(`showModal()`은 body 스크롤을 막지 않는다). 둘 다 `NoticeDialog` 주석에 있다.
 
 ---
 

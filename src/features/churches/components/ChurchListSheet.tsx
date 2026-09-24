@@ -175,7 +175,7 @@ export function ChurchListSheet({
                 {located < churches.length
                   ? ` 가운데 좌표를 확인한 ${located}곳을 지도에 표시합니다.`
                   : "의 위치를 지도에 표시합니다."}{" "}
-                마커를 누르면 그 교회가 여기 뜹니다.
+                마커를 누르면 그 교회가 여기에 보입니다.
               </span>
             </>
           )}

@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { BottomTabBar } from "@/components/shared/BottomTabBar";
 import { JsonLd } from "@/components/shared/JsonLd";
+import { NoticeDialog } from "@/components/shared/NoticeDialog";
 import { OfflineGuard } from "@/components/shared/OfflineGuard";
 import { siteJsonLd } from "@/lib/json-ld";
 import {
@@ -92,6 +93,14 @@ export default function RootLayout({
         <JsonLd data={siteJsonLd()} />
         {children}
         <BottomTabBar />
+        {/*
+          공통 안내 모달 — 화면 어디서든 `showNotice()`로 띄운다.
+
+          **한 벌만 두는 것이 요점이다.** 화면마다 만들면 모서리·여백·버튼 무게가
+          조금씩 갈린다. 열려 있지 않으면 아무것도 그리지 않으므로(Portal) 다른 화면에
+          얹는 비용이 없다.
+        */}
+        <NoticeDialog />
         {/*
           오프라인에서 앱 내부 이동을 막는다. 안 막으면 RSC 페이로드 fetch가 실패하면서
           Next가 하드 내비게이션으로 폴백해 **크롬 오류 화면으로 문서가 교체되고,

@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { NAV_FORWARD } from "@/components/shared/PageTransition";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import type { Church } from "@/types/church";
+import { monogramClass } from "../denomination-color";
 
 export function ChurchRow({ church }: { church: Church }) {
   const place = church.subRegion
@@ -19,9 +21,17 @@ export function ChurchRow({ church }: { church: Church }) {
       // 여기는 중첩된 링크가 없어 `has-[]`로 범위를 좁힐 필요가 없다
       className="flex items-center gap-3 py-4 outline-none transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 active:translate-y-px active:bg-muted"
     >
+      {/*
+        모노그램 — **색은 교단 묶음에서 온다**(`denomination-color.ts`).
+        ⚠️ **`aria-hidden`이라 색이 정보를 나르면 안 된다** — 교단을 말하는 것은
+        아래 배지(글자)이고 색은 훑기를 돕는 보조다.
+      */}
       <span
         aria-hidden
-        className="grid size-9 shrink-0 place-items-center rounded-full bg-muted text-t4 font-semibold text-muted-foreground"
+        className={cn(
+          "grid size-9 shrink-0 place-items-center rounded-full text-t4 font-semibold",
+          monogramClass(church.denominationGroup),
+        )}
       >
         {[...church.name][0]}
       </span>

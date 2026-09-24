@@ -76,6 +76,15 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
   --color-brand-accent: var(--brand-accent);
+  /*
+    교단 묶음 색 5종 — 모노그램(교회명 앞 동그라미)이 쓴다.
+    ⚠️ **이름에 번호를 쓰지 않는다** — `group-1`은 순위로 읽힌다.
+  */
+  --color-group-hapsin: var(--group-hapsin);
+  --color-group-hapdong: var(--group-hapdong);
+  --color-group-gosin: var(--group-gosin);
+  --color-group-daesin: var(--group-daesin);
+  --color-group-independent: var(--group-independent);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -108,6 +117,39 @@
     쓰는 토큰이라 색을 넣으면 버튼·드롭다운의 hover가 전부 청록이 된다.
   */
   --brand-accent: oklch(0.48 0.12 195);
+  /*
+    교단 묶음 색 5종 (2026-09-24) — 모노그램의 **채움에만** 쓴다.
+
+    ⚠️ **글자에 쓰지 않는다.** 처음에는 글자에도 썼다가 되돌렸다 — 밝은 쪽(합동·독립)이
+    흰 바탕에서 **2.29:1 · 2.54:1**로 본문 기준(4.5:1)은커녕 3:1도 못 넘겼다(실측).
+    글자는 `text-foreground`라 대비가 **최저 9.97:1**로 구조적으로 보장된다.
+
+    **눈으로 고르지 않았다.** 범주형 색은 잘못 고르면 서로 구분되지 않거나 순위가
+    생긴다. `dataviz` 가이드의 검증기로 **all-pairs**(목록에서는 어느 색이든 다른
+    어느 색 옆에 올 수 있다) 기준을 돌려 통과한 조합이다 —
+    **CVD ΔE 8.3 · 정상시력 20.8 · 대비 전원 3:1 이상.**
+
+    ⚠️ **다만 이 값은 원색끼리의 것이고, 화면에 나가는 것은 25% 틴트다.** 틴트끼리는
+    CVD ΔE 3.0 · 정상시력 4.4로 **나란히 놓으면 다르다는 것은 보이지만 색만으로
+    계열을 알아볼 수는 없다.** 그래서 색은 보조이고 **교단을 말하는 것은 배지**다.
+
+    ⚠️ **파랑(250)과 청록(195)을 쓰지 않는다.** 이 사이트에서 그 둘은 이미 다른 뜻이다
+    — 네이비는 브랜드(`--primary`), 청록은 **지역**(`--brand-accent`, `RegionTiles`).
+    교단에 주면 의미가 겹친다.
+
+    ⚠️ **밝기가 고르지 않은 것은 의도가 아니라 대가다.** 5색을 서로 구분하려면
+    밝기 폭 0.24가 필요했다 — 같은 밝기로는 검증을 통과하는 조합이 없다. 그래서
+    **진한 색이 더 중요해 보이는 인상이 남는다.** 색은 훑기를 돕는 보조일 뿐이고
+    **교단을 말하는 것은 언제나 옆의 배지(글자)다** — 그 전제가 깨지면 이 색을 뺀다.
+
+    **순서는 `landing.ts`의 `LANDING_GROUPS`를 따른다** — 설명할 수 있는 순서라야
+    "왜 이 교단이 빨강인가"에 답할 수 있다(그 답은 "목록 첫 번째라서"다).
+  */
+  --group-hapsin: oklch(0.48 0.16 25);
+  --group-hapdong: oklch(0.72 0.15 75);
+  --group-gosin: oklch(0.59 0.14 150);
+  --group-daesin: oklch(0.5 0.16 300);
+  --group-independent: oklch(0.7 0.13 340);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -147,6 +189,21 @@
   --primary-foreground: oklch(0.17 0.03 250);
   /* 강세 — 배경 대비 8.99:1 (AAA). primary(8.32:1)와 무게를 맞췄다. 토글은 없어 현재 비활성 */
   --brand-accent: oklch(0.74 0.11 195);
+  /*
+    교단 묶음 색 — 같은 다섯 색상을 어두운 바탕에 맞춰 올린 것이다(밝기 +0.08).
+    **별도 팔레트가 아니다** — 색상(hue)은 라이트와 같다.
+
+    검증: **CVD ΔE 8.5 · 정상시력 19.3 · 대비 전원 통과**(all-pairs).
+
+    ⚠️ **검증기의 다크 밝기 대역(0.48~0.67)을 넘는 값이 있다. 의도한 것이다** —
+    그 대역은 어두운 바탕 위의 **차트 마크** 기준인데 이 색들은 **글자(잉크)**다.
+    바로 위 `--brand-accent`가 다크에서 0.74인 것과 같은 이유다.
+  */
+  --group-hapsin: oklch(0.56 0.15 25);
+  --group-hapdong: oklch(0.8 0.14 75);
+  --group-gosin: oklch(0.67 0.13 150);
+  --group-daesin: oklch(0.58 0.15 300);
+  --group-independent: oklch(0.78 0.12 340);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);

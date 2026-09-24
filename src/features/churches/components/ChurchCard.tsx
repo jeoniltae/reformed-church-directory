@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { Church } from "@/types/church";
+import { monogramClass } from "../denomination-color";
 
 export function ChurchCard({ church }: { church: Church }) {
   return (
@@ -29,9 +30,17 @@ export function ChurchCard({ church }: { church: Church }) {
       하나뿐이므로 `data-nav`로 그것만 집는다.
     */
     <div className="relative flex items-start gap-3 rounded-lg border border-border bg-card p-4 transition-colors hover:bg-muted has-[a[data-nav]:active]:translate-y-px has-[a[data-nav]:active]:bg-muted has-[a:focus-visible]:border-ring has-[a:focus-visible]:ring-3 has-[a:focus-visible]:ring-ring/50">
+      {/*
+        모노그램 — **색은 교단 묶음에서 온다**(`denomination-color.ts`).
+        ⚠️ **`aria-hidden`이라 색이 정보를 나르면 안 된다** — 교단을 말하는 것은
+        아래 배지(글자)이고 색은 훑기를 돕는 보조다.
+      */}
       <span
         aria-hidden
-        className="grid size-10 shrink-0 place-items-center rounded-full bg-muted text-t5 font-semibold text-muted-foreground"
+        className={cn(
+          "grid size-10 shrink-0 place-items-center rounded-full text-t5 font-semibold",
+          monogramClass(church.denominationGroup),
+        )}
       >
         {[...church.name][0]}
       </span>

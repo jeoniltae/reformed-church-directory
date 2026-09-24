@@ -52,10 +52,15 @@ describe("monogramClass", () => {
     ⚠️ **클래스를 조립하지 않고 통째로 적는 규칙을 고정한다.** 템플릿 문자열로 만들면
     **Tailwind가 스캔에서 못 찾아 그 색이 CSS에 없고**, 화면에서는 색만 조용히 빠진다.
   */
-  it("채움과 글자를 한 쌍으로 돌려준다", () => {
+  /*
+    ⚠️ **글자는 `text-foreground`로 고정이다** (2026-09-24). 색 글자로 되돌리면
+    **대비가 2.29:1까지 떨어진다**(실측 — 본문 기준 4.5:1, 최소선 3:1).
+    이 단언이 그 회귀를 막는다.
+  */
+  it("채움만 물들이고 글자는 전경색으로 고정한다", () => {
     for (const group of coloredGroups()) {
       const cls = monogramClass(group);
-      expect(cls).toMatch(/^bg-group-[a-z]+\/12 text-group-[a-z]+$/);
+      expect(cls).toMatch(/^bg-group-[a-z]+\/25 text-foreground$/);
     }
   });
 

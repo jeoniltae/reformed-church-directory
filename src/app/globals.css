@@ -158,7 +158,13 @@
   --group-gosin: oklch(0.59 0.14 150);
   --group-daesin: oklch(0.5 0.16 300);
   --group-independent: oklch(0.7 0.13 340);
-  --secondary: oklch(0.97 0 0);
+  /*
+    `--secondary`·`--muted`·`--accent`는 **같은 값이다.** 바탕을 네이비 쪽으로 기울일 때
+    (2026-09-25) `--muted`만 옮겼더니 `--secondary`를 쓰는 버튼·배지·칩만 순수 회색으로
+    남아 누렇게 떠 보였다 — 상세의 `길찾기` 버튼 바로 아래 지도 자리가 다른 회색이었다.
+    **셋 중 하나를 바꾸면 나머지 둘도 함께 바꾼다.**
+  */
+  --secondary: oklch(0.965 0.01 250);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.965 0.01 250);
   /*
@@ -167,7 +173,7 @@
     4.34:1로 기준(4.5) 미달이었고, 바탕 편향이 4.28로 더 내렸다. 0.54로 내려 회복했다.
   */
   --muted-foreground: oklch(0.54 0 0);
-  --accent: oklch(0.97 0 0);
+  --accent: oklch(0.965 0.01 250);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.915 0.012 250);
@@ -217,12 +223,12 @@
   --group-gosin: oklch(0.67 0.13 150);
   --group-daesin: oklch(0.58 0.15 300);
   --group-independent: oklch(0.78 0.12 340);
-  --secondary: oklch(0.269 0 0);
+  --secondary: oklch(0.275 0.012 250);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.275 0.012 250);
   /* 보조 글자 — 다크는 회색 면 위에서도 5.71:1이라 그대로 둔다 */
   --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
+  --accent: oklch(0.275 0.012 250);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(0.97 0.012 250 / 10%);

@@ -6,11 +6,18 @@
 // **정작 먼저 읽혀야 할 요약이 14px로 목록보다 작았다** — 위계가 뒤집혀 있었다.
 
 import { Fragment } from "react";
+import { cn } from "@/lib/utils";
 import type { FacetLine } from "../landing";
 
 export interface LandingFact {
   label: string;
   value: FacetLine;
+  /**
+   * 라벨을 청록(`--brand-accent`)으로 칠한다 — **지역을 가리키는 줄(`지역`·`시군구`)에만.**
+   * `교단` 줄에 주면 "지역"을 뜻하는 색이 다른 뜻으로 쓰인다. **라벨만이고 값은
+   * 본문색 그대로다** — 값까지 칠하면 읽는 글자가 강세색이 되어 위계가 뒤집힌다.
+   */
+  accent?: boolean;
 }
 
 /**
@@ -71,9 +78,14 @@ export function LandingFacts({
 
       {rows.length > 0 && (
         <dl className="mt-3 grid grid-cols-[auto_1fr] items-baseline gap-x-3 gap-y-2.5">
-          {rows.map(({ label, value }) => (
+          {rows.map(({ label, value, accent }) => (
             <Fragment key={label}>
-              <dt className="text-right text-t4 font-semibold text-foreground">
+              <dt
+                className={cn(
+                  "text-right text-t4 font-semibold",
+                  accent ? "text-brand-accent" : "text-foreground",
+                )}
+              >
                 {label}
               </dt>
               <dd className="text-t4 text-foreground">

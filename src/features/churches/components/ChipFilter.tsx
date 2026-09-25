@@ -38,6 +38,13 @@ interface ChipFilterProps {
   label: string;
   /** 미선택 칩의 색. 두 줄이 겹쳐 보이지 않게 줄마다 다르게 준다 */
   tone: keyof typeof UNSELECTED_TONE;
+  /**
+   * 라벨을 청록(`--brand-accent`)으로 칠한다. **`지역` 줄에만 넘긴다.**
+   *
+   * 청록은 이 사이트에서 "지역"을 뜻하는 색이다. 이 컴포넌트는 지역·교단 줄이
+   * 함께 쓰므로 라벨에 색을 박으면 **`교단` 라벨까지 청록이 되어 어휘가 깨진다.**
+   */
+  accentLabel?: boolean;
   options: string[];
   selected: string;
   onSelect: (value: string) => void;
@@ -46,6 +53,7 @@ interface ChipFilterProps {
 export function ChipFilter({
   label,
   tone,
+  accentLabel = false,
   options,
   selected,
   onSelect,
@@ -97,7 +105,12 @@ export function ChipFilter({
         leading-9로 칩 높이(h-9)에 맞춰 첫 줄과 나란히 놓는다.
         넓은 화면에서 칩이 여러 줄로 접히면 라벨은 첫 줄에 남는다.
       */}
-      <span className="w-7 shrink-0 text-t2 leading-9 text-muted-foreground">
+      <span
+        className={cn(
+          "w-7 shrink-0 text-t2 leading-9",
+          accentLabel ? "text-brand-accent" : "text-muted-foreground",
+        )}
+      >
         {label}
       </span>
 

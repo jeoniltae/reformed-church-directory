@@ -40,13 +40,20 @@ export default function ChurchesPage() {
           수록 건수는 이 화면에서 가장 구체적인 사실인데 회색 문장에 묻혀 있었다.
           **홈처럼 카드로 만들지 않는다** — 그러면 홈의 유일한 brand-solid를 복제하게
           된다. 숫자만 본문색·semibold로 올리고 지역 수를 더해 아래 지역 칩과 잇는다.
+
+          **`N개 지역`은 청록이다 (2026-09-25).** 청록은 이 사이트에서 "지역"을
+          뜻하는 색이다(홈 제목의 롤링·지역 칩 밑줄). 바로 아래 `지역` 필터 라벨도
+          같은 색이라 부제와 필터가 한 줄로 이어진다.
         */}
         <p className="mt-1 mb-5 text-t4 text-muted-foreground">
           국내 개혁주의 교회{" "}
           <strong className="font-semibold text-foreground">
             {churches.length}곳
           </strong>{" "}
-          · {regions.length}개 지역
+          ·{" "}
+          <span className="font-semibold text-brand-accent">
+            {regions.length}개 지역
+          </span>
         </p>
         <ChurchDirectory churches={churches} />
         {/* 목록이 있는 화면에만 붙인다. 짧은 화면에서는 임계값에 못 닿아 뜨지 않는다 */}

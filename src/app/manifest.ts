@@ -4,7 +4,12 @@
 // 홈 화면에 추가했을 때 이름·색이 제대로 뜨게 하는 선까지만 한다.
 
 import type { MetadataRoute } from "next";
-import { BRAND_NAVY, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
+import {
+  BRAND_BACKGROUND,
+  BRAND_NAVY,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+} from "@/lib/site";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -15,7 +20,7 @@ export default function manifest(): MetadataRoute.Manifest {
     lang: "ko",
     start_url: "/",
     display: "standalone",
-    background_color: "#ffffff",
+    background_color: BRAND_BACKGROUND,
     theme_color: BRAND_NAVY,
     /**
      * **쿼리 없는 경로를 쓴다.** Next는 `<link rel="icon">`에 캐시 무효화용 해시를

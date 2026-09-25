@@ -99,7 +99,15 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
+  /*
+    바탕 — 순백이 아니라 네이비 쪽으로 아주 옅게 기운 흰색 (2026-09-25).
+    **색면을 하나도 늘리지 않고** 화면 전체의 온기를 바꾸는 값이다.
+    2026-09-07 팔레트 A안(정련)의 "중성색에 네이비 편향"이 그때 빠진 채 남아 있던 절반이다.
+
+    ⚠️ **`--card`·`--popover`는 순백 그대로 둔다.** 카드가 바탕 위로 떠올라야
+    이 편향이 성립한다 — 함께 바꾸면 전체가 칙칙해질 뿐이다.
+  */
+  --background: oklch(0.99 0.005 250);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -111,7 +119,7 @@
   /*
     브랜드 강세 — 청록. 홈 제목의 지역 롤링에만 쓴다 (2026-09-08).
     로고 락업이 상단을 무겁게 만들어 롤링이 묻히는 것을 되찾는 색이다.
-    흰 배경 대비 5.82:1 — 24px 굵은 글자라 기준은 3:1이지만 본문 기준(4.5:1)도 넘긴다.
+    바탕 대비 5.66:1 — 24px 굵은 글자라 기준은 3:1이지만 본문 기준(4.5:1)도 넘긴다.
 
     **`--accent`를 이 역할로 재정의하지 않았다.** 그쪽은 shadcn이 hover 배경으로
     쓰는 토큰이라 색을 넣으면 버튼·드롭다운의 hover가 전부 청록이 된다.
@@ -152,14 +160,19 @@
   --group-independent: oklch(0.7 0.13 340);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted: oklch(0.965 0.01 250);
+  /*
+    보조 글자 — 바탕 4.92:1 · 회색 면(`--muted`) 4.58:1 · 카드 5.06:1.
+    ⚠️ **회색 면 위가 합격선이다.** 기본값(0.556)은 순백 시절에도 회색 면 위에서
+    4.34:1로 기준(4.5) 미달이었고, 바탕 편향이 4.28로 더 내렸다. 0.54로 내려 회복했다.
+  */
+  --muted-foreground: oklch(0.54 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
+  --border: oklch(0.915 0.012 250);
   --input: oklch(0.922 0 0);
-  /* 포커스 링 — 흰 배경 대비 4.83:1 (비텍스트 기준 3:1 초과) */
+  /* 포커스 링 — 바탕 대비 4.69:1 (비텍스트 기준 3:1 초과) */
   --ring: oklch(0.55 0.09 250);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
@@ -178,7 +191,7 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  --background: oklch(0.15 0.008 250);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -206,12 +219,13 @@
   --group-independent: oklch(0.78 0.12 340);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
+  --muted: oklch(0.275 0.012 250);
+  /* 보조 글자 — 다크는 회색 면 위에서도 5.71:1이라 그대로 둔다 */
   --muted-foreground: oklch(0.708 0 0);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
+  --border: oklch(0.97 0.012 250 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.55 0.09 250);
   --chart-1: oklch(0.87 0 0);

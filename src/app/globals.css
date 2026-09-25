@@ -176,8 +176,13 @@
   --accent: oklch(0.965 0.01 250);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
+  /*
+    `--border`·`--input`은 **같은 값이다** — 카드 테두리와 입력창 테두리. 바탕을 옮길 때
+    (2026-09-25) `--border`만 옮겼다가 검색창·제보 입력칸 테두리만 순수 회색으로 남았다.
+    **하나를 바꾸면 다른 하나도 함께 바꾼다.** (다크는 불투명도만 다르다: 10% · 15%)
+  */
   --border: oklch(0.915 0.012 250);
-  --input: oklch(0.922 0 0);
+  --input: oklch(0.915 0.012 250);
   /* 포커스 링 — 바탕 대비 4.69:1 (비텍스트 기준 3:1 초과) */
   --ring: oklch(0.55 0.09 250);
   --chart-1: oklch(0.87 0 0);
@@ -232,7 +237,7 @@
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(0.97 0.012 250 / 10%);
-  --input: oklch(1 0 0 / 15%);
+  --input: oklch(0.97 0.012 250 / 15%);
   --ring: oklch(0.55 0.09 250);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);

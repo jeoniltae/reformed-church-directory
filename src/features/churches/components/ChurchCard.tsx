@@ -63,8 +63,18 @@ export function ChurchCard({ church }: { church: Church }) {
             </Badge>
           )}
         </div>
+        {/*
+          **핀만 청록이다 (2026-09-25).** 청록은 이 사이트에서 "지역"을 뜻하는 색이고,
+          주소 줄이 카드에서 지역을 말하는 자리다.
+          ⚠️ **주소 글자는 `muted` 그대로 둔다.** 글자까지 칠하면 읽는 글자가 강세색이
+          되어 교회명보다 주소가 먼저 읽힌다.
+          **`ChurchRow`(홈·지도 시트·가까운 교회)에는 주지 않았다** — 결정이다.
+        */}
         <p className="mt-1.5 flex gap-1.5 text-t4 text-muted-foreground">
-          <MapPin aria-hidden className="mt-0.5 size-3.5 shrink-0" />
+          <MapPin
+            aria-hidden
+            className="mt-0.5 size-3.5 shrink-0 text-brand-accent"
+          />
           {church.address}
         </p>
         <p className="mt-1 flex gap-1.5 text-t2 text-muted-foreground">

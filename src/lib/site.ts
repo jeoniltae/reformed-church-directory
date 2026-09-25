@@ -17,6 +17,14 @@ export const SITE_DESCRIPTION =
 export const BRAND_NAVY = "#0b3c67";
 
 /**
+ * 페이지 바탕. `globals.css`의 `--background`(`oklch(0.99 0.005 250)`)와 같은 색이다.
+ * 매니페스트의 `background_color`(홈 화면에서 열 때의 스플래시)만 쓴다 — 위와 같은 이유다.
+ *
+ * **OG 이미지는 이 값을 따르지 않는다.** 그쪽은 화면과 따로 설계한 그림이라 순백이다.
+ */
+export const BRAND_BACKGROUND = "#f9fcff";
+
+/**
  * 공개 저장소. 제보 이슈와 데이터 이용 조건이 여기 있다.
  *
  * **`GITHUB_REPO` 환경변수와 별개다.** 그쪽은 서버가 Issues API를 부를 때 쓰는

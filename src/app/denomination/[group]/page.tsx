@@ -159,7 +159,9 @@ export default async function GroupLandingPage({
         */}
         <LandingFacts
           count={churches.length}
-          facts={[{ label: "지역", value: facetLine(regionCounts, "개") }]}
+          facts={[
+            { label: "지역", value: facetLine(regionCounts, "개"), accent: true },
+          ]}
         />
 
         {content?.lead && (

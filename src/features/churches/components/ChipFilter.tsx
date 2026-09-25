@@ -16,7 +16,7 @@ export const ALL = "전체";
  *
  * 두 줄이 나란히 놓이면 회색이 겹쳐 같은 줄처럼 읽힌다. 그렇다고 새 색을
  * 들이면 토큰 어휘가 두 벌이 된다 — `--secondary`·`--muted`·`--accent`는
- * 값이 모두 `oklch(0.97 0 0)`으로 같아서 애초에 고를 다른 회색도 없다.
+ * 값이 모두 같아서(`globals.css` 주석 참고) 애초에 고를 다른 회색도 없다.
  *
  * 그래서 **브랜드 네이비의 옅은 톤**을 쓴다. 새 토큰이 없고 색 가족이 브랜드와
  * 같아 팔레트가 늘어나 보이지 않는다. 선택되면 같은 네이비가 진해지므로
@@ -38,6 +38,13 @@ interface ChipFilterProps {
   label: string;
   /** 미선택 칩의 색. 두 줄이 겹쳐 보이지 않게 줄마다 다르게 준다 */
   tone: keyof typeof UNSELECTED_TONE;
+  /**
+   * 라벨을 청록(`--brand-accent`)으로 칠한다. **`지역` 줄에만 넘긴다.**
+   *
+   * 지역·교단이 나란히 놓인 자리에서 청록은 **지역 쪽을 가르는 신호**다. 이 컴포넌트는
+   * 두 줄이 함께 쓰므로 라벨에 색을 박으면 **`교단` 라벨까지 청록이 되어 구분이 사라진다.**
+   */
+  accentLabel?: boolean;
   options: string[];
   selected: string;
   onSelect: (value: string) => void;
@@ -46,6 +53,7 @@ interface ChipFilterProps {
 export function ChipFilter({
   label,
   tone,
+  accentLabel = false,
   options,
   selected,
   onSelect,
@@ -97,7 +105,12 @@ export function ChipFilter({
         leading-9로 칩 높이(h-9)에 맞춰 첫 줄과 나란히 놓는다.
         넓은 화면에서 칩이 여러 줄로 접히면 라벨은 첫 줄에 남는다.
       */}
-      <span className="w-7 shrink-0 text-t2 leading-9 text-muted-foreground">
+      <span
+        className={cn(
+          "w-7 shrink-0 text-t2 leading-9",
+          accentLabel ? "text-brand-accent" : "text-muted-foreground",
+        )}
+      >
         {label}
       </span>
 

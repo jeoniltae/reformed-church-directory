@@ -133,6 +133,7 @@ export function ChurchDirectory({ churches }: { churches: Church[] }) {
         <ChipFilter
           label="지역"
           tone="neutral"
+          accentLabel
           options={regions}
           selected={region}
           onSelect={(value) => startTransition(() => setPicked(value))}

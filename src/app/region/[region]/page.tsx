@@ -171,7 +171,11 @@ export default async function RegionLandingPage({
           count={churches.length}
           facts={[
             { label: "교단", value: facetLine(groupCounts, "종") },
-            { label: "시군구", value: facetLine(subRegionCounts, "개") },
+            {
+              label: "시군구",
+              value: facetLine(subRegionCounts, "개"),
+              accent: true,
+            },
           ]}
         />
 

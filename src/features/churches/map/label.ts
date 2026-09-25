@@ -35,8 +35,9 @@ import type { MapPoint } from "./points";
   - **선택은 **구분되는 것**이 일이다** — 이미 신호가 둘 더 있다(하단 시트가 그 교회를
     띄우고, 지도가 그 마커로 이동한다). 네이비 밭에서 **흰 알약은 구멍처럼 튄다**
 
-  ⚠️ **선택에 새 색(청록 `--brand-accent`)을 쓰지 않았다** — 그 색은 이 사이트에서
-  **"지역"을 뜻하는 어휘다**(`RegionTiles`). 마커 선택에 쓰면 그 뜻이 흐려진다.
+  ⚠️ **선택에 새 색(청록 `--brand-accent`)을 쓰지 않았다** — 이 지도에서 청록은 이미
+  **내 위치 점**(`location-dot.ts`)의 색이다. 선택한 교회가 청록이면 "여기가 당신"과
+  "고른 교회"가 같은 색이 된다. 사이트 전체로도 청록은 지역 표시·강조에 쓰인다.
 */
 const PILL_BASE =
   "inline-block rounded-full border px-2 py-0.5 text-t2 font-semibold whitespace-nowrap shadow-md";

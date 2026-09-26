@@ -451,14 +451,16 @@
     },
     {
       "raw": "FPCNA",
-      "count": 0,
-      "churches": [],
+      "count": 1,
+      "churches": [
+        "광명믿음교회"
+      ],
       "official": "북미주 독립장로교단(FPCNA)",
       "short": "FPCNA",
       "group": "독립·해외",
       "sourceUrl": "https://www.fpcna.org/",
       "checkedAt": "2026-09-26",
-      "hint": "**교회보다 교단을 먼저 넣었다 (2026-09-26).** 수록 교회가 0건이라 count·churches가 비어 있다 — 첫 교회를 등록하면 채운다. Free Presbyterian Church of North America. **공식 사이트(fpcna.org)에서 정식명과 교리 표준을 확인했다** — 웨스트민스터 신앙고백·대소요리문답과 Book of Church Order. **국내 소속 근거는 교회가 스스로 밝힌 문장이다** — 광명믿음교회(gmfpc.org/about.html#denom, 경기 광명시) \"광명믿음교회는 북미주 독립장로교단(Free Presbyterian Church of North America)에 소속된 교회입니다\" · \"한국에 세워진 첫번째 독립장로교회\"이며 미국 그린빌 독립장로교회와 자매 관계. **fpcna.org에는 한국 교회 언급이 없다** — 교단 명부로 교차 확인되지 않았고, PCA 행과 같은 한계다. sourceUrl은 교단이 실재한다는 근거이지 개별 교회의 소속 증빙은 아니다. **group을 `독립·해외`로 둔다** — 해외 교단 정식 소속이라 PCA와 같은 자리다. 이름의 `독립`은 국내의 `독립`(대형 교단 미소속) 행과 뜻이 다르다 — 그쪽은 소속이 없다는 뜻이고 이쪽은 교단 이름이다. **short를 `FPCNA`로 둔 이유** — 한글 `독립장로`는 무소속 `독립` 배지와 혼동되고 해외 교단이라는 사실이 드러나지 않는다. PCA가 영문 약어를 유지한 것과 같은 판단이다(사용자 결정). **공개 원고(denomination-content.json)에는 아직 넣지 않았다** — '원고에 있는 총회는 전부 수록 교회가 있다' 테스트가 막는다. 첫 교회를 등록할 때 `독립·해외` synods에 official·confession(웨스트민스터)·sourceUrl과 함께 추가한다."
+      "hint": "**교회보다 교단을 먼저 넣었고(2026-09-26) 같은 날 첫 교회 광명믿음교회가 등록됐다.** Free Presbyterian Church of North America. **공식 사이트(fpcna.org)에서 정식명과 교리 표준을 확인했다** — 웨스트민스터 신앙고백·대소요리문답과 Book of Church Order. **국내 소속 근거는 교회가 스스로 밝힌 문장이다** — 광명믿음교회(gmfpc.org/about.html#denom, 경기 광명시) \"광명믿음교회는 북미주 독립장로교단(Free Presbyterian Church of North America)에 소속된 교회입니다\" · \"한국에 세워진 첫번째 독립장로교회\"이며 미국 그린빌 독립장로교회와 자매 관계. **fpcna.org에는 한국 교회 언급이 없다** — 교단 명부로 교차 확인되지 않았고, PCA 행과 같은 한계다. sourceUrl은 교단이 실재한다는 근거이지 개별 교회의 소속 증빙은 아니다. **group을 `독립·해외`로 둔다** — 해외 교단 정식 소속이라 PCA와 같은 자리다. 이름의 `독립`은 국내의 `독립`(대형 교단 미소속) 행과 뜻이 다르다 — 그쪽은 소속이 없다는 뜻이고 이쪽은 교단 이름이다. **short를 `FPCNA`로 둔 이유** — 한글 `독립장로`는 무소속 `독립` 배지와 혼동되고 해외 교단이라는 사실이 드러나지 않는다. PCA가 영문 약어를 유지한 것과 같은 판단이다(사용자 결정). **공개 원고에는 첫 교회 등록과 함께 넣었다** — confession은 FPCNA 교회 헌법(Book of Church Order, 2005년 토론토 첫 노회에서 채택) 원문이 웨스트민스터 신앙고백과 대소요리문답을 구성 문서로 싣는 것을 근거로 채웠고, 원고의 sourceUrl도 그 페이지다."
     },
     {
       "raw": "마스터스개혁파총회",

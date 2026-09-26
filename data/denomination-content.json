@@ -116,6 +116,13 @@
           "confession": null,
           "note": "",
           "sourceUrl": "https://pcanet.org"
+        },
+        {
+          "denomination": "FPCNA",
+          "official": "북미주 독립장로교단(FPCNA)",
+          "confession": "웨스트민스터 신앙고백서·대소요리문답",
+          "note": "",
+          "sourceUrl": "https://fpcna.org/beliefs/book-of-church-order/"
         }
       ]
     }

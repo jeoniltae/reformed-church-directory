@@ -79,6 +79,78 @@
       "address": "전남광주 서구 상무대로1081번길 3 2층",
       "homepage": "http://bschurch.net",
       "addedAt": "2026-09-20"
+    },
+    {
+      "region": "인천",
+      "subRegion": "검단구",
+      "name": "회복의교회",
+      "pastor": "김민호",
+      "denomination": "대신",
+      "phone": "032-528-5702",
+      "address": "인천 검단구 단봉로153번길 29",
+      "homepage": "http://hoebok.com",
+      "addedAt": "2026-09-26",
+      "sourceNote": "자체수집"
+    },
+    {
+      "region": "경기",
+      "subRegion": "안양시",
+      "name": "열린교회",
+      "pastor": "김성진",
+      "denomination": "합동",
+      "phone": "070-4372-4100",
+      "address": "경기 안양시 동안구 흥안대로439번길 31",
+      "homepage": "https://www.yullin.org",
+      "addedAt": "2026-09-26",
+      "sourceNote": "자체수집"
+    },
+    {
+      "region": "서울",
+      "subRegion": "강동구",
+      "name": "하늘영광교회",
+      "pastor": "박순용",
+      "denomination": "합동",
+      "phone": "02-2296-1586",
+      "address": "서울특별시 강동구 고덕로20길 5",
+      "homepage": "http://www.gloryofgod.or.kr",
+      "addedAt": "2026-09-26",
+      "sourceNote": "자체수집"
+    },
+    {
+      "region": "서울",
+      "subRegion": "서초구",
+      "name": "개포중앙교회",
+      "pastor": "오태환",
+      "denomination": "합동",
+      "phone": "02-574-9177",
+      "address": "서울특별시 서초구 동산로6길 41-14",
+      "homepage": "https://www.youtube.com/channel/UCFeVK_4_UZtxON3P4pVmNLQ/about",
+      "addedAt": "2026-09-26",
+      "sourceNote": "자체 수집"
+    },
+    {
+      "region": "경기",
+      "subRegion": "구리시",
+      "name": "구리성천교회",
+      "pastor": "강소양",
+      "denomination": "합동",
+      "phone": "031-566-2755",
+      "address": "경기 구리시 검배로71번길 12-16",
+      "homepage": "https://sungchun.onmam.com",
+      "addedAt": "2026-09-26",
+      "sourceNote": "자체 수집"
+    },
+    {
+      "region": "경기",
+      "subRegion": "광명시",
+      "name": "광명믿음교회",
+      "pastor": "이성규",
+      "denomination": "FPCNA",
+      "phone": "02-4999-8339",
+      "address": "경기 광명시 소하로109번길 15 소하토피아",
+      "homepage": "https://gmfpc.org/",
+      "addedAt": "2026-09-26",
+      "sourceNote": "자체 수집"
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "note": "도로명주소 검색 API 조회 결과. import-source가 status가 'ok'인 건만 address를 roadAddr로 교체한다. 후보가 여럿이어도 원본과 글자까지 일치하는 것이 유일하면 ok로 확정한다(totalCount>1이면서 ok인 건이 그것이다). 그런 후보가 없거나 둘 이상이면 1순위가 맞다는 보장이 없어 multiple로 두고 원본을 유지한다. 좌표 단계는 coordParams를 그대로 쓴다. coordParams가 이전 실행과 같으면 좌표를 그대로 이어받으므로 주소를 다시 조회해도 좌표 API를 다시 부르지 않는다 — 일부러 다시 받으려면 --refresh-coords를 준다.",
-  "checkedAt": "2026-09-26",
+  "checkedAt": "2026-10-02",
   "entries": [
     {
       "id": "언약교회-하남시",
@@ -3237,7 +3237,103 @@
       "status": "ok",
       "reason": "정상",
       "keywordUsed": "경기 광명시 소하로109번길 15"
+    },
+    {
+      "id": "머스트교회-수원시",
+      "name": "머스트교회",
+      "original": {
+        "address": "경기 수원시 장안구 경수대로 1030",
+        "region": "경기",
+        "subRegion": "수원시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 수원시 장안구 경수대로 1030 (파장동)",
+        "jibunAddr": "경기도 수원시 장안구 파장동 627-9",
+        "zipNo": "16203",
+        "siNm": "경기도",
+        "sggNm": "수원시 장안구",
+        "coordParams": {
+          "admCd": "4111112900",
+          "rnMgtSn": "411112012008",
+          "udrtYn": "0",
+          "buldMnnm": "1030",
+          "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 37.307338,
+          "lng": 126.999581,
+          "entX": 955654.3877565335,
+          "entY": 1923269.5842127334
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "사랑스러운교회-시흥시",
+      "name": "사랑스러운교회",
+      "original": {
+        "address": "경기 시흥시 은행로 186",
+        "region": "경기",
+        "subRegion": "시흥시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 시흥시 은행로 186 (대야동)",
+        "jibunAddr": "경기도 시흥시 대야동 583-1 사랑스러운교회",
+        "zipNo": "14915",
+        "siNm": "경기도",
+        "sggNm": "시흥시",
+        "coordParams": {
+          "admCd": "4139010100",
+          "rnMgtSn": "413903199071",
+          "udrtYn": "0",
+          "buldMnnm": "186",
+          "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 37.446951,
+          "lng": 126.797259,
+          "entX": 937840.3680777668,
+          "entY": 1938872.7706007333
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "김포사랑스러운교회-김포시",
+      "name": "김포사랑스러운교회",
+      "original": {
+        "address": "경기 김포시 김포한강9로115번길 38",
+        "region": "경기",
+        "subRegion": "김포시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 김포시 김포한강9로115번길 38 (구래동)",
+        "jibunAddr": "경기도 김포시 구래동 6918-23",
+        "zipNo": "10071",
+        "siNm": "경기도",
+        "sggNm": "김포시",
+        "coordParams": {
+          "admCd": "4157010900",
+          "rnMgtSn": "415704838105",
+          "udrtYn": "0",
+          "buldMnnm": "38",
+          "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 37.647167,
+          "lng": 126.623467,
+          "entX": 922674.7387523334,
+          "entY": 1961214.8717443002
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
     }
   ],
-  "coordsCheckedAt": "2026-09-26T05:40:38.105Z"
+  "coordsCheckedAt": "2026-10-01T15:03:22.191Z"
 }

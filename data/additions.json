@@ -151,6 +151,42 @@
       "homepage": "https://gmfpc.org/",
       "addedAt": "2026-09-26",
       "sourceNote": "자체 수집"
+    },
+    {
+      "region": "경기",
+      "subRegion": "수원시",
+      "name": "머스트교회",
+      "pastor": "유가나",
+      "denomination": "독립",
+      "phone": "0507-1345-1714",
+      "address": "경기 수원시 장안구 경수대로 1030",
+      "homepage": "https://www.youtube.com/channel/UCb_Ulk7zmZlcATjZbaNySDQ/about",
+      "addedAt": "2026-09-30",
+      "sourceNote": "자체 수집"
+    },
+    {
+      "region": "경기",
+      "subRegion": "시흥시",
+      "name": "사랑스러운교회",
+      "pastor": "배만석",
+      "denomination": "합동",
+      "phone": "031-488-1900",
+      "address": "경기 시흥시 은행로 186",
+      "homepage": "https://www.lovelychurch.net/",
+      "addedAt": "2026-10-01",
+      "sourceNote": "자체수집"
+    },
+    {
+      "region": "경기",
+      "subRegion": "김포시",
+      "name": "김포사랑스러운교회",
+      "pastor": "최종일",
+      "denomination": "합동",
+      "phone": "031-988-5500",
+      "address": "경기 김포시 김포한강9로115번길 38",
+      "homepage": "http://gplovelychurch.net/",
+      "addedAt": "2026-10-02",
+      "sourceNote": "자체수집"
     }
   ]
 }

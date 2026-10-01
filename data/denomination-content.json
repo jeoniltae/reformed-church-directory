@@ -123,6 +123,13 @@
           "confession": "웨스트민스터 신앙고백서·대소요리문답",
           "note": "",
           "sourceUrl": "https://fpcna.org/beliefs/book-of-church-order/"
+        },
+        {
+          "denomination": "WRF",
+          "official": "세계개혁주의연합회(World Reformed Fellowship)",
+          "confession": "WRF 신앙고백서와 역사적 개혁 신앙고백 가운데 하나 — 웨스트민스터 신앙고백서·하이델베르크 요리문답·벨직 신앙고백·도르트 신조 등",
+          "note": "교단(총회)이 아닌 국제 개혁주의 연합체 · 교회 회원",
+          "sourceUrl": "https://wrf.global/about/wrf-theological-statements/statement-of-faith"
         }
       ]
     }

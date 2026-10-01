@@ -1437,5 +1437,50 @@
     "denominationGroup": "독립·해외",
     "phone": "02-4999-8339",
     "homepage": "https://gmfpc.org/"
+  },
+  {
+    "id": "머스트교회-수원시",
+    "name": "머스트교회",
+    "region": "경기",
+    "address": "경기도 수원시 장안구 경수대로 1030 (파장동)",
+    "pastor": "유가나",
+    "source": "자체 수집",
+    "lat": 37.307338,
+    "lng": 126.999581,
+    "subRegion": "수원시",
+    "denomination": "WRF",
+    "denominationGroup": "독립·해외",
+    "phone": "0507-1345-1714",
+    "homepage": "https://www.youtube.com/channel/UCb_Ulk7zmZlcATjZbaNySDQ/about"
+  },
+  {
+    "id": "사랑스러운교회-시흥시",
+    "name": "사랑스러운교회",
+    "region": "경기",
+    "address": "경기도 시흥시 은행로 186 (대야동)",
+    "pastor": "배만석",
+    "source": "자체 수집",
+    "lat": 37.446951,
+    "lng": 126.797259,
+    "subRegion": "시흥시",
+    "denomination": "합동",
+    "denominationGroup": "합동 계열",
+    "phone": "031-488-1900",
+    "homepage": "https://www.lovelychurch.net/"
+  },
+  {
+    "id": "김포사랑스러운교회-김포시",
+    "name": "김포사랑스러운교회",
+    "region": "경기",
+    "address": "경기도 김포시 김포한강9로115번길 38 (구래동)",
+    "pastor": "최종일",
+    "source": "자체 수집",
+    "lat": 37.647167,
+    "lng": 126.623467,
+    "subRegion": "김포시",
+    "denomination": "합동",
+    "denominationGroup": "합동 계열",
+    "phone": "031-988-5500",
+    "homepage": "http://gplovelychurch.net/"
   }
 ]

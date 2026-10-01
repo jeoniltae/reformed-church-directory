@@ -4,7 +4,7 @@
 // 매핑표와 `기타`를 제외하는 이유는 `features/churches/landing.ts`에 있다.
 // 세그먼트를 ASCII로 두는 이유는 `app/region/[region]/page.tsx` 첫 주석에 있다.
 
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Info } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -218,11 +218,32 @@ export default async function GroupLandingPage({
               ⚠️ **단계가 없는 `text-t*`는 조용히 사라진다** — 빌드도 lint도 통과한다.
               새 단계가 필요하면 `globals.css`의 `@theme`과 `src/lib/utils.ts`에 **함께**
               등록해야 한다(CLAUDE.md "코드 컨벤션").
+
+              **목록과 떼어 안내 상자로 둔다 (2026-10-01).** 맨문단일 때는 총회 행과
+              급수(t4)·색(muted)이 같고 마지막 행에 선이 없어(`last:border-b-0`)
+              **목록의 한 항목처럼 이어져 읽혔다.** 새 어휘를 만들지 않고 이 사이트의
+              "안내" 표현 — `ChurchNotice`·교단 허브의 `교단을 확인하지 못한 교회`가
+              쓰는 **테두리 + `Info`** — 를 그대로 쓴다. 같은 말(확인하지 못했다는
+              뜻)이라 같은 모양이어야 한다. 크기는 절 안의 곁글인 `ChurchNotice`와
+              같은 `p-3`이다.
+
+              ⚠️ **`bg-muted`를 깔지 않는다** — 회색 덩어리는 "준비 중"으로 읽힌다
+              (허브 상자 주석 참고). **`destructive`도 쓰지 않는다** — 경고가 아니라
+              우리 데이터의 한계를 밝히는 안내다.
+
+              `break-keep` — 좁은 상자라 `우 / 리가`처럼 낱말 가운데가 끊겼다(실측,
+              데스크톱·375px 둘 다). `NoticeDialog` 주석과 같은 이유다.
             */}
-            <p className="mt-3 text-t4 text-muted-foreground">
-              신앙고백은 총회가 공식 자료로 밝힌 것만 적었습니다. 비어 있는 것은
-              채택한 신조가 없다는 뜻이 아니라 우리가 확인하지 못했다는 뜻입니다.
-            </p>
+            <aside className="mt-4 flex gap-2.5 rounded-lg border border-border p-3">
+              <Info
+                aria-hidden
+                className="mt-0.5 size-4 shrink-0 text-muted-foreground"
+              />
+              <p className="min-w-0 flex-1 text-t4 break-keep text-muted-foreground">
+                신앙고백은 총회가 공식 자료로 밝힌 것만 적었습니다. 비어 있는 것은
+                채택한 신조가 없다는 뜻이 아니라 우리가 확인하지 못했다는 뜻입니다.
+              </p>
+            </aside>
           </section>
         )}
 

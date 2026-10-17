@@ -10,7 +10,10 @@ import {
   type AdditionsDoc,
   appendAddition,
   appendExclusion,
+  appendHistory,
+  describeFixChanges,
   type ExcludedDoc,
+  historyEntry,
   idChangeChecklist,
   type NoticesDoc,
   resolveTarget,
@@ -129,6 +132,96 @@ describe("upsertFix", () => {
     const original = doc();
     upsertFix(original, "언약교회-강동구", { corrected: "바뀐 주소" });
     expect(original.fixes[0].corrected).toBe("경기 하남시 하남대로 412");
+  });
+
+  // ⚠️ 메모는 행 전체의 교정 근거다. 덮어쓰면 남아 있는 다른 교정의 근거가 사라진다 —
+  // 합정동교회 행에서 담임목사 교정 근거가 홈페이지 제보 메모로 덮였다(2026-10-17 실측).
+  describe("메모는 덮어쓰지 않고 쌓는다", () => {
+    const withNote = (): AddressFixesDoc => ({
+      fixes: [{ id: "언약교회-강동구", pastorCorrected: "최현진", note: "담임 교체 — 홈페이지로 확인" }],
+    });
+
+    it("기존 메모 뒤에 [날짜] 바뀐 값 — 메모를 붙인다", () => {
+      const out = upsertFix(
+        withNote(),
+        "언약교회-강동구",
+        { homepageCorrected: "https://new.example/", note: "제보 #33" },
+        { date: "2026-10-17", changes: ["홈페이지: http://old.example/ → https://new.example/"] },
+      );
+      expect(out.fixes[0].note).toBe(
+        "담임 교체 — 홈페이지로 확인 · [2026-10-17] 홈페이지: http://old.example/ → https://new.example/ — 제보 #33",
+      );
+    });
+
+    it("메모를 비워도 바뀐 값은 기록된다", () => {
+      const out = upsertFix(withNote(), "언약교회-강동구", { phoneCorrected: "02-1" }, {
+        date: "2026-10-17",
+        changes: ["전화: 02-0 → 02-1"],
+      });
+      expect(out.fixes[0].note).toBe("담임 교체 — 홈페이지로 확인 · [2026-10-17] 전화: 02-0 → 02-1");
+    });
+
+    it("새 행은 이번 기록이 첫 메모가 된다", () => {
+      const out = upsertFix(doc(), "사랑교회-서초구", { phoneCorrected: "02-1", note: "제보 #12" }, {
+        date: "2026-10-17",
+        changes: ["전화: 02-0 → 02-1"],
+      });
+      expect(out.fixes[1].note).toBe("[2026-10-17] 전화: 02-0 → 02-1 — 제보 #12");
+    });
+
+    it("바뀐 것도 메모도 없으면 기존 메모를 그대로 둔다 — 빈 --note=로 지워지지 않는다", () => {
+      const out = upsertFix(withNote(), "언약교회-강동구", { note: "" }, { date: "2026-10-17", changes: [] });
+      expect(out.fixes[0].note).toBe("담임 교체 — 홈페이지로 확인");
+    });
+  });
+});
+
+describe("historyEntry · appendHistory", () => {
+  it("바뀐 값과 메모를 함께 쓴다", () => {
+    expect(historyEntry("2026-10-17", ["전화: A → B", "담임목사: C → D"], "제보 #1")).toBe(
+      "[2026-10-17] 전화: A → B, 담임목사: C → D — 제보 #1",
+    );
+  });
+
+  it("한쪽만 있으면 그것만 쓴다", () => {
+    expect(historyEntry("2026-10-17", ["전화: A → B"], "")).toBe("[2026-10-17] 전화: A → B");
+    expect(historyEntry("2026-10-17", [], "메모만")).toBe("[2026-10-17] 메모만");
+  });
+
+  it("쓸 것이 없으면 빈 문자열이다", () => {
+    expect(historyEntry("2026-10-17", [], "  ")).toBe("");
+  });
+
+  it("날짜가 없으면 대괄호를 붙이지 않는다", () => {
+    expect(historyEntry("", [], "메모")).toBe("메모");
+  });
+
+  it("기존이 비었으면 이번 기록만, 이번이 비었으면 기존 그대로", () => {
+    expect(appendHistory(undefined, "[d] x")).toBe("[d] x");
+    expect(appendHistory("옛 메모", "")).toBe("옛 메모");
+    expect(appendHistory("옛 메모", "[d] x")).toBe("옛 메모 · [d] x");
+  });
+});
+
+describe("describeFixChanges", () => {
+  const original = row({ phone: "02-원본", homepage: "http://원본/" });
+
+  it("바뀐 칸만 '이름: 전 → 후'로 적는다", () => {
+    const current = row({ phone: "02-지금", pastor: "최현진" });
+    expect(describeFixChanges({ phoneCorrected: "02-새값", pastorCorrected: "최현진" }, current, original)).toEqual([
+      "전화: 02-지금 → 02-새값",
+    ]);
+  });
+
+  it("교정 해제는 무엇으로 돌아가는지 원본 값과 함께 적는다", () => {
+    const current = row({ homepage: "http://원본/", homepageCorrected: "https://교정/" });
+    expect(describeFixChanges({ homepageCorrected: "" }, current, original)).toEqual([
+      "홈페이지: 교정 해제(https://교정/ → 원본 http://원본/)",
+    ]);
+  });
+
+  it("메모·참고 칸은 바뀐 값으로 치지 않는다", () => {
+    expect(describeFixChanges({ note: "x", church: "언약교회", phoneHint: "02" }, row(), original)).toEqual([]);
   });
 });
 

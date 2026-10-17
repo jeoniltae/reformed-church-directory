@@ -108,19 +108,83 @@ function defined<T extends object>(patch: T): Partial<T> {
   ) as Partial<T>;
 }
 
+// ── 메모 이력 ────────────────────────────────────────────────────────────
+//
+// **메모는 덮어쓰지 않고 쌓는다 (2026-10-18).** `note`는 한 번의 수정이 아니라 행 전체의
+// 교정 근거다. 덮어쓰면 남아 있는 다른 교정의 근거가 사라진다 — 합정동교회 행에서
+// 담임목사 교정의 근거가 홈페이지 제보 메모로 덮여 사라졌다(2026-10-17 실측).
+//
+//   <기존 메모> · [YYYY-MM-DD] <바뀐 값> — <이번 메모>
+//
+// - 날짜가 기준점이다. 날짜 없는 옛 메모는 그대로 첫 기록으로 둔다
+// - 바뀐 값을 함께 적는다 — 기존 행에는 고치기 전 값(…Hint)이 새로 남지 않아서다
+// - 줄바꿈은 쓰지 않는다 — 파일의 메모가 전부 한 줄 문장이다
+// - 정말 지워야 할 메모는 파일을 직접 고친다. 지우는 옵션을 두면 실수로 쓰게 된다
+
+const HISTORY_SEP = " · ";
+
+/** 이번 수정 한 토막. 쓸 것이 없으면 빈 문자열 */
+export function historyEntry(date: string, changes: readonly string[], memo: string): string {
+  const what = changes.join(", ");
+  const note = memo.trim();
+  const body = what && note ? `${what} — ${note}` : what || note;
+  if (!body) return "";
+  return date ? `[${date}] ${body}` : body;
+}
+
+export function appendHistory(existing: string | undefined, entry: string): string {
+  const before = existing?.trim() ?? "";
+  if (!entry) return before;
+  return before ? `${before}${HISTORY_SEP}${entry}` : entry;
+}
+
+/** 교정 칸 → 사람이 읽는 이름과 SourceRow에서 현재 값을 꺼내는 법 */
+const FIX_LABELS: readonly [keyof FixEntry, string, (r: SourceRow) => string][] = [
+  ["nameCorrected", "교회명", (r) => r.name],
+  ["regionCorrected", "시도", (r) => r.region],
+  ["subRegionCorrected", "시군구", (r) => r.subRegion],
+  ["corrected", "주소", (r) => r.rawAddress],
+  ["phoneCorrected", "전화", (r) => r.phone],
+  ["pastorCorrected", "담임목사", (r) => r.pastor],
+  ["homepageCorrected", "홈페이지", (r) => r.homepageCorrected || r.homepage],
+];
+
+/**
+ * 이번 교정으로 무엇이 바뀌는지 `이름: 전 → 후`로 적는다. 값이 같은 칸은 건너뛴다.
+ * 빈 문자열은 교정 해제라 **무엇으로 돌아가는지**를 원본(교정을 뺀 행)에서 꺼내 적는다.
+ */
+export function describeFixChanges(patch: FixPatch, current: SourceRow, original?: SourceRow): string[] {
+  const out: string[] = [];
+  for (const [key, label, of] of FIX_LABELS) {
+    const next = (patch as Record<string, string | undefined>)[key];
+    if (next === undefined) continue;
+    const from = of(current) || "(없음)";
+    if (next === "") out.push(`${label}: 교정 해제(${from} → 원본 ${(original && of(original)) || "(없음)"})`);
+    else if (next !== of(current)) out.push(`${label}: ${from} → ${next}`);
+  }
+  return out;
+}
+
 /**
  * **키는 반드시 조회용 id(lookupId)다.** churches.json의 id를 넣으면 이미
  * 개명·이전한 교회에서 조용히 빗나가 교정이 아예 반영되지 않는다.
  *
  * 기존 행은 키 순서를 그대로 두고 값만 덮는다 — 사람이 쓴 파일이라 재배열하지 않는다.
+ * **단 `note`는 덮지 않는다** — `patch.note`는 이번 메모이고, 기존 메모 뒤에
+ * `history`(날짜·바뀐 값)와 함께 쌓인다(위 "메모 이력").
  */
 export function upsertFix(
   doc: AddressFixesDoc,
   lookupId: string,
   patch: FixPatch,
+  history: { date: string; changes?: readonly string[] } = { date: "" },
 ): AddressFixesDoc {
-  const clean = defined(patch);
+  const { note: memo, ...rest } = patch;
+  const clean: FixPatch = defined(rest);
   const index = doc.fixes.findIndex((f) => f.id === lookupId);
+
+  const entry = historyEntry(history.date, history.changes ?? [], memo ?? "");
+  if (entry) clean.note = appendHistory(index === -1 ? undefined : doc.fixes[index].note, entry);
 
   let fixes: FixEntry[];
   if (index === -1) {

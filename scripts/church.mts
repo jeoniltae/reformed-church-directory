@@ -23,6 +23,7 @@ import {
   type AddressFixesDoc,
   appendAddition,
   appendExclusion,
+  describeFixChanges,
   type ExcludedDoc,
   type FixEntry,
   type FixPatch,
@@ -74,7 +75,8 @@ const USAGE = `교회 데이터 등록·수정·삭제
 
   --dry-run  파일을 쓰지 않고 결과만 본다
 
-검색어는 교회명·출력 id·조회용 id 아무거나 된다. 후보가 여럿이면 목록만 보여주고 멈춘다.`;
+검색어는 교회명·출력 id·조회용 id 아무거나 된다. 후보가 여럿이면 목록만 보여주고 멈춘다.
+edit의 --note=는 덮어쓰지 않는다 — 기존 메모 뒤에 "[날짜] 바뀐 값 — 메모"로 쌓인다.`;
 
 // ── 공용 ─────────────────────────────────────────────────────────────────
 
@@ -294,7 +296,20 @@ function cmdEdit(base: BuildInput, rows: SourceRow[]): void {
     if (patch.homepageCorrected !== undefined) patch.homepageHint = row.homepage;
   }
 
-  const next = upsertFix(doc, row.lookupId, patch);
+  // 메모 이력에 적을 바뀐 값. 교정 해제가 무엇으로 돌아가는지 알려면 이 행의 교정을 뺀 원본이 필요하다
+  // ⚠️ simulate가 아니라 buildRows를 직접 부른다 — simulate는 실패하면 die한다. 개명한 교회는
+  // 교정을 빼면 다른 교회와 id가 겹칠 수 있는데, 메모 한 줄 때문에 수정 자체가 막히면 안 된다
+  const withoutFix = new Map(base.fixes);
+  withoutFix.delete(row.lookupId);
+  let original: SourceRow | undefined;
+  try {
+    original = buildRows({ ...base, fixes: withoutFix }).rows.find((r) => r.lookupId === row.lookupId);
+  } catch {
+    original = undefined; // 교정 해제 기록이 "원본 (없음)"이 될 뿐이다
+  }
+  const changes = describeFixChanges(patch, row, original);
+
+  const next = upsertFix(doc, row.lookupId, patch, { date: today, changes });
   const fixes = new Map<string, FixEntry>(next.fixes.map((f) => [f.id, f]));
   const after = simulate(base, { fixes });
   const updated = after[rows.indexOf(row)];
@@ -302,10 +317,15 @@ function cmdEdit(base: BuildInput, rows: SourceRow[]): void {
   console.log(`${row.name} 수정`);
   console.log(`  조회용 id  ${row.lookupId}  ← ${ADDRESS_FIXES}의 키`);
   for (const [cli, key] of EDIT_FLAGS) {
+    if (key === "note") continue; // 메모는 아래에서 쌓인 결과로 보여준다
     const v = (patch as Record<string, string | undefined>)[key];
     if (v === undefined) continue;
     console.log(`  ${cli}: ${v === "" ? "(교정 해제)" : v}`);
   }
+  // 덮어쓰지 않고 쌓는다 — 저장될 최종 메모를 보여줘야 미리보기(--dry-run)로 확인할 수 있다
+  const savedNote = next.fixes.find((f) => f.id === row.lookupId)?.note;
+  const prevNote = doc.fixes.find((f) => f.id === row.lookupId)?.note;
+  if (savedNote !== undefined && savedNote !== prevNote) console.log(`  note: ${savedNote}`);
   if (patch.phoneCorrected && isSuspectPhone(patch.phoneCorrected)) {
     console.log(`  ⚠ 전화번호 형식 확인 필요: ${patch.phoneCorrected}`);
   }

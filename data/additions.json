@@ -187,6 +187,90 @@
       "homepage": "http://gplovelychurch.net/",
       "addedAt": "2026-10-02",
       "sourceNote": "자체수집"
+    },
+    {
+      "region": "경기",
+      "subRegion": "수원시",
+      "name": "광야의샘교회",
+      "pastor": "최은상",
+      "denomination": "합동",
+      "phone": "0507-1328-0319",
+      "address": "경기 수원시 영통구 에듀타운로 101 에듀하임 103동 205-207호",
+      "homepage": "https://gsamchurch.org/",
+      "addedAt": "2026-10-18",
+      "sourceNote": "자체 수집"
+    },
+    {
+      "region": "경기",
+      "subRegion": "고양시",
+      "name": "그영광교회",
+      "pastor": "강사명",
+      "denomination": "합동",
+      "phone": "0507-1380-5032",
+      "address": "경기 고양시 덕양구 지축로 74 벨라미 702호",
+      "homepage": "https://cafe.naver.com/theglorychurch1",
+      "addedAt": "2026-10-18",
+      "sourceNote": "자체수집"
+    },
+    {
+      "region": "서울",
+      "subRegion": "성북구",
+      "name": "높은뜻교회",
+      "pastor": "김영채",
+      "denomination": "합동",
+      "phone": "02-923-0419",
+      "address": "서울 성북구 북악산로 913 풍림상가 2층",
+      "homepage": "https://www.youtube.com/@Godswillchurch",
+      "addedAt": "2026-10-18",
+      "sourceNote": "자체수집"
+    },
+    {
+      "region": "경기",
+      "subRegion": "군포시",
+      "name": "더모자이크교회",
+      "pastor": "김태범",
+      "denomination": "합신",
+      "phone": "0507-1494-0351",
+      "address": "경기 군포시 산본로 404 대주빌딩 601호",
+      "homepage": "https://www.youtube.com/channel/UCLSqrZ9ys31JvYt8k0DAjAw",
+      "addedAt": "2026-10-18",
+      "sourceNote": "자체수집"
+    },
+    {
+      "region": "경남",
+      "subRegion": "함양군",
+      "name": "민들레교회",
+      "pastor": "강성대",
+      "denomination": "고신",
+      "phone": "055-963-7542",
+      "address": "경남 함양군 함양읍 기동길 19-11",
+      "homepage": "https://www.youtube.com/@%EA%B0%95%EC%84%B1%EB%8C%80-u3e",
+      "addedAt": "2026-10-18",
+      "sourceNote": "자체수집"
+    },
+    {
+      "region": "대구",
+      "subRegion": "동구",
+      "name": "복음영광교회",
+      "pastor": "박혁",
+      "denomination": "합신",
+      "phone": "010-4514-0785",
+      "address": "대구광역시 동구 안심로49길 97",
+      "homepage": "https://blog.naver.com/hyoukpark",
+      "addedAt": "2026-10-19",
+      "sourceNote": "자체수집"
+    },
+    {
+      "region": "전남광주",
+      "subRegion": "해남군",
+      "name": "삼산중앙교회",
+      "pastor": "전기준",
+      "denomination": "합동",
+      "phone": "061-533-7004",
+      "address": "전남광주 해남군 삼산면 고산로 534",
+      "homepage": "",
+      "addedAt": "2026-10-19",
+      "sourceNote": "자체수집"
     }
   ]
 }

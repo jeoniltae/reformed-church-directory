@@ -1586,5 +1586,20 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "061-533-7004"
+  },
+  {
+    "id": "제주사랑의교회-제주시",
+    "name": "제주사랑의교회",
+    "region": "제주",
+    "address": "제주특별자치도 제주시 아연로 602 (아라일동)",
+    "pastor": "강태근",
+    "source": "자체 수집",
+    "lat": 33.477355,
+    "lng": 126.543444,
+    "subRegion": "제주시",
+    "denomination": "고신",
+    "denominationGroup": "고신·고려 계열",
+    "phone": "064-702-7377",
+    "homepage": "https://jejulovech.icg21.com/"
   }
 ]

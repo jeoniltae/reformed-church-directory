@@ -1,6 +1,6 @@
 {
   "note": "도로명주소 검색 API 조회 결과. import-source가 status가 'ok'인 건만 address를 roadAddr로 교체한다. 후보가 여럿이어도 원본과 글자까지 일치하는 것이 유일하면 ok로 확정한다(totalCount>1이면서 ok인 건이 그것이다). 그런 후보가 없거나 둘 이상이면 1순위가 맞다는 보장이 없어 multiple로 두고 원본을 유지한다. 좌표 단계는 coordParams를 그대로 쓴다. coordParams가 이전 실행과 같으면 좌표를 그대로 이어받으므로 주소를 다시 조회해도 좌표 API를 다시 부르지 않는다 — 일부러 다시 받으려면 --refresh-coords를 준다.",
-  "checkedAt": "2026-10-19",
+  "checkedAt": "2026-10-25",
   "entries": [
     {
       "id": "언약교회-하남시",
@@ -3558,7 +3558,39 @@
       },
       "status": "ok",
       "reason": "후보 6건 중 건물명이 교회명과 일치하는 1건"
+    },
+    {
+      "id": "제주사랑의교회-제주시",
+      "name": "제주사랑의교회",
+      "original": {
+        "address": "제주 제주시 아연로 602",
+        "region": "제주",
+        "subRegion": "제주시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "제주특별자치도 제주시 아연로 602 (아라일동)",
+        "jibunAddr": "제주특별자치도 제주시 아라일동 6102-2 사랑의교회",
+        "zipNo": "63237",
+        "siNm": "제주특별자치도",
+        "sggNm": "제주시",
+        "coordParams": {
+          "admCd": "5011011700",
+          "rnMgtSn": "501103349125",
+          "udrtYn": "0",
+          "buldMnnm": "602",
+          "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 33.477355,
+          "lng": 126.543444,
+          "entX": 911125.1945856668,
+          "entY": 1498802.7741671335
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
     }
   ],
-  "coordsCheckedAt": "2026-10-18T15:10:33.269Z"
+  "coordsCheckedAt": "2026-10-25T13:44:14.690Z"
 }

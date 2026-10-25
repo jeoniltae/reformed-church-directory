@@ -271,6 +271,18 @@
       "homepage": "",
       "addedAt": "2026-10-19",
       "sourceNote": "자체수집"
+    },
+    {
+      "region": "제주",
+      "subRegion": "제주시",
+      "name": "제주사랑의교회",
+      "pastor": "강태근",
+      "denomination": "고신",
+      "phone": "064-702-7377",
+      "address": "제주 제주시 아연로 602",
+      "homepage": "https://jejulovech.icg21.com/",
+      "addedAt": "2026-10-25",
+      "sourceNote": "#36 [교회 등록 요청] 2026-10-25 · https://github.com/jeoniltae/reformed-church-directory/issues/36"
     }
   ]
 }

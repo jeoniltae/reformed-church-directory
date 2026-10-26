@@ -1601,5 +1601,20 @@
     "denominationGroup": "고신·고려 계열",
     "phone": "064-702-7377",
     "homepage": "https://jejulovech.icg21.com/"
+  },
+  {
+    "id": "초원교회-남동구",
+    "name": "초원교회",
+    "region": "인천",
+    "address": "인천광역시 남동구 남동대로370번길 103 (논현동)",
+    "pastor": "신상훈",
+    "source": "자체 수집",
+    "lat": 37.414046,
+    "lng": 126.711478,
+    "subRegion": "남동구",
+    "denomination": "고신",
+    "denominationGroup": "고신·고려 계열",
+    "phone": "032-508-9113",
+    "homepage": "https://www.youtube.com/@%EC%B4%88%EC%9B%90%EA%B5%90%ED%9A%8C%EA%B3%A0%EC%8B%A0"
   }
 ]

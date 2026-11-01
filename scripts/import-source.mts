@@ -11,6 +11,7 @@ import {
   buildDenominationIndex,
   type DenominationTable,
   normalizeDenomination,
+  syncChurchLists,
 } from "./lib/denominations.mts";
 import { readSource } from "./lib/source.mts";
 
@@ -75,9 +76,8 @@ const notices = new Map<string, NoticeRow>(
 );
 
 // 교단 표기 판정표. 매핑표는 여기서만 읽고 앱 번들에는 들어가지 않는다.
-const denominations = buildDenominationIndex(
-  JSON.parse(readFileSync(DENOMINATIONS, "utf8")) as DenominationTable,
-);
+const denominationTable = JSON.parse(readFileSync(DENOMINATIONS, "utf8")) as DenominationTable;
+const denominations = buildDenominationIndex(denominationTable);
 
 const { rows, droppedColumns, addedCount } = readSource();
 
@@ -203,6 +203,16 @@ for (const row of rows) {
 
 writeFileSync(OUTPUT, JSON.stringify(churches, null, 2) + "\n", "utf8");
 
+// 판정표의 count·churches는 데이터에서 세는 값이라 여기서 맞춘다(손으로 두면 낡는다 — 2026-11-02).
+// 판정·hint·perChurch는 건드리지 않고, 바뀐 행이 있을 때만 파일을 쓴다
+const synced = syncChurchLists(
+  denominationTable,
+  rows.filter((r) => !excluded.has(r.id)).map((r) => ({ name: r.name, denomination: r.denomination })),
+);
+if (synced.changed.length) {
+  writeFileSync(DENOMINATIONS, JSON.stringify(synced.table, null, 2) + "\n", "utf8");
+}
+
 console.log(`${churches.length}건 → ${OUTPUT}`);
 console.log(`원본 CSV 이후 신규 등록: ${addedCount}건 (${ADDITIONS})`);
 console.log(`삭제 요청으로 제외: ${excludedCount}건 / ${excluded.size}건 등록 (${EXCLUDED})`);
@@ -219,7 +229,8 @@ console.log(
 console.log(`좌표 반영: ${withCoords}건 / ${churches.length}건`);
 console.log(`알려진 한계 안내: ${noticed}건 / ${notices.size}건 등록 (${NOTICES})`);
 console.log(
-  `교단 정규화: 묶음 ${grouped}건 · 표기 교체 ${renamedDenoms}건 · 미등록 ${unmappedDenoms.length}건  (${DENOMINATIONS})`,
+  `교단 정규화: 묶음 ${grouped}건 · 표기 교체 ${renamedDenoms}건 · 미등록 ${unmappedDenoms.length}건  (${DENOMINATIONS})` +
+    (synced.changed.length ? `\n판정표 교회 목록 갱신: ${synced.changed.join(", ")}` : ""),
 );
 for (const u of unmappedDenoms) {
   warnings.push(`교단 표기 미등록 → ${u} (${DENOMINATIONS}에 행을 추가할 것)`);

@@ -73,3 +73,29 @@ export function normalizeDenomination(
   const denominationGroup = pick(override?.group, entry.group);
   return denominationGroup ? { denomination, denominationGroup } : { denomination };
 }
+
+/**
+ * 판정표 각 행의 `count`·`churches`를 실제 교회 목록으로 맞춘다.
+ *
+ * **이 두 칸은 사람이 판단하는 값이 아니라 데이터에서 세는 값이다.** 손으로 관리했더니
+ * 등록·개명·삭제가 쌓이며 8개 행이 어긋났다(2026-11-02 발견 — 합동 16 → 실제 28).
+ * 그래서 import:source가 매번 다시 쓴다. 다른 칸(판정·hint·perChurch)은 건드리지 않는다.
+ *
+ * `rows`는 제외 목록을 뺀, 교정이 얹힌 원본 표기다. 이미 있던 이름의 순서는 그대로 둔다 —
+ * 매번 정렬하면 diff가 실제 변화와 무관하게 커진다.
+ */
+export function syncChurchLists<
+  E extends { raw: string; count?: number; churches?: string[] },
+  T extends { entries: E[] },
+>(table: T, rows: readonly { name: string; denomination: string }[]): { table: T; changed: string[] } {
+  const changed: string[] = [];
+  const entries = table.entries.map((e) => {
+    const actual = rows.filter((r) => r.denomination.trim() === e.raw).map((r) => r.name);
+    const kept = (e.churches ?? []).filter((n) => actual.includes(n));
+    const churches = [...kept, ...actual.filter((n) => !kept.includes(n))];
+    if (e.count === actual.length && JSON.stringify(e.churches ?? []) === JSON.stringify(churches)) return e;
+    changed.push(e.raw);
+    return { ...e, count: actual.length, churches };
+  });
+  return { table: { ...table, entries }, changed };
+}

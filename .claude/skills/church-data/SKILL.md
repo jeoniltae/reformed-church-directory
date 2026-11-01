@@ -170,7 +170,7 @@ curl -I "http://localhost:3000/churches/%EC%96%B8%EC%95%BD%EA%B5%90%ED%9A%8C-%EA
 - **판정표에 정확히 있는 raw만 받는다** — 배지 이름이 아니다(`국신`의 배지는 `개혁`이다). 없으면 CLI가 멈춘다.
 - **근거가 먼저다.** 교회가 스스로 밝힌 소속이나 교단 교회록·노회 명부를 확인하고 `--note=`에 근거를 적는다. 협력·교류 관계는 소속이 아니다(청주언약교회는 협력 문장만으로는 옮기지 않았고, 교회록으로 가입을 확인한 뒤에 옮겼다).
 - id는 바뀌지 않는다. 반영은 `npm run import:source` 하나다.
-- 바꿀 때 판정표의 `count`·`churches`도 옮기고, **옛 행 `perChurch`에 이 교회가 있으면 지운다**(raw가 바뀌어 조용히 무효가 된다). 옛 배지의 마지막 교회였으면 `data/denomination-content.json`의 총회 행도 정리해야 `npm test`가 통과한다.
+- 판정표의 `count`·`churches`는 `import:source`가 데이터에서 다시 세어 쓰므로 손대지 않는다. **옛 행 `perChurch`에 이 교회가 있으면 지운다**(raw가 바뀌어 조용히 무효가 된다). 옛 배지의 마지막 교회였으면 `data/denomination-content.json`의 총회 행도 정리해야 `npm test`가 통과한다.
 - `--denomination=`(빈 값)은 교정 해제 — 원본 표기로 돌아간다.
 
 ### `perChurch`

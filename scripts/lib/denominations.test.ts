@@ -8,6 +8,7 @@ import {
   buildDenominationIndex,
   type DenominationTable,
   normalizeDenomination,
+  syncChurchLists,
 } from "./denominations.mts";
 
 const TABLE: DenominationTable = {
@@ -109,5 +110,48 @@ describe("normalizeDenomination — group이 비었을 때", () => {
     const r = normalizeDenomination("미분류", "x", noGroup);
     expect(r).toEqual({ denomination: "미분류" });
     expect(r && "denominationGroup" in r).toBe(false);
+  });
+});
+
+// count·churches는 사람이 판단하는 값이 아니라 데이터에서 세는 값이다 — import:source가 매번 맞춘다
+describe("syncChurchLists", () => {
+  const table = () => ({
+    groups: [],
+    entries: [
+      { raw: "합신", short: "합신", group: "합신 계열", count: 2, churches: ["가교회", "삭제된교회"] },
+      { raw: "대신", short: "대신", group: "대신 계열", count: 0, churches: [] },
+    ],
+  });
+
+  it("있는 이름의 순서는 두고, 빠진 이름은 뒤에 붙이고, 없어진 이름은 뺀다", () => {
+    const { table: out } = syncChurchLists(table(), [
+      { name: "나교회", denomination: "합신" },
+      { name: "가교회", denomination: "합신" },
+    ]);
+    expect(out.entries[0].churches).toEqual(["가교회", "나교회"]);
+    expect(out.entries[0].count).toBe(2);
+  });
+
+  it("바뀐 행의 raw만 돌려준다", () => {
+    const { changed } = syncChurchLists(table(), [
+      { name: "가교회", denomination: "합신" },
+      { name: "삭제된교회", denomination: "합신" },
+    ]);
+    expect(changed).toEqual([]);
+  });
+
+  it("교단 표기가 없거나 판정표에 없는 교회는 어느 행에도 세지 않는다", () => {
+    const { table: out } = syncChurchLists(table(), [
+      { name: "빈교회", denomination: "" },
+      { name: "미등록교회", denomination: "없는교단" },
+    ]);
+    expect(out.entries.map((e) => e.count)).toEqual([0, 0]);
+  });
+
+  it("다른 칸과 최상위 키는 건드리지 않는다", () => {
+    const input = { ...table(), note: "설명" };
+    const { table: out } = syncChurchLists(input, [{ name: "다교회", denomination: "대신" }]);
+    expect(out.note).toBe("설명");
+    expect(out.entries[1]).toEqual({ raw: "대신", short: "대신", group: "대신 계열", count: 1, churches: ["다교회"] });
   });
 });

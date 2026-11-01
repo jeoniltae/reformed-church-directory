@@ -83,6 +83,7 @@ npm run build  # 프로덕션 빌드
 npm run church -- find <검색어>    # 대상 확인. 출력 id와 조회용 id를 나란히 보여준다
 npm run church -- add ...          # 신규 등록 → data/additions.json
 npm run church -- edit <검색어> ...  # 수정 → data/address-fixes.json
+npm run church -- edit <검색어> --denomination=<판정표 raw>  # 교단 변경 — 판정표에 있는 원본 표기만 받는다
 npm run church -- remove <검색어> --reason=  # 삭제 요청 → data/excluded.json
 npm run church -- notice <검색어> --message= # 알려진 한계 안내 → data/notices.json
 npm run issues                     # GitHub Issues 제보 조회 (읽기 전용)
@@ -463,6 +464,7 @@ alert-dialog(8.1KB) → dialog(79KB) → floating-ui-react(446KB)
 - **매핑표는 앱 번들에 들어가지 않는다.** `scripts/lib/denominations.mts`가 오프라인에서만 읽고, 앱은 구워진 값만 소비한다.
 - **표에 없는 표기는 조용히 비우지 않는다.** 원본을 그대로 두고 `import:source`가 경고한다 — 확장 때 교단이 사라진 것을 알아채기 위해서다.
 - **한 raw 값이 서로 다른 교단을 가리키면 `perChurch`로 교회별로 나눈다.** 어느 행이 그런지는 판정표에 있다.
+- **교회가 판정표에 이미 있는 다른 교단에 속하면(또는 원본에 교단이 비었으면) `address-fixes.json`의 `denominationCorrected`로 원본 표기를 교정한다** (2026-11-01). `npm run church -- edit --denomination=<raw>`가 쓰고, 판정표에 없는 raw는 받지 않는다. perChurch는 raw가 여러 교단을 가리킬 때만 쓴다 — 교단 표기가 빈 교회는 perChurch로 다룰 수 없어서(빈 raw는 판정표 행을 찾지 못한다) 교정 필드를 따로 뒀다. 근거 기준과 함께 정리할 것은 `.claude/skills/church-data/SKILL.md`.
 
 **남은 것** — `독립개혁장로회`와 `독립개혁장로교회(IRPC)`가 같은 조직인지 미확정이다(`data/denominations.json`의 `openQuestion`). 묶음은 이 답에 좌우되지 않는다.
 

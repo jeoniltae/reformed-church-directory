@@ -8,6 +8,7 @@
     "nameCorrected": "교회가 개명했을 때만. **id가 교회명에서 나오므로 출력 id와 상세 페이지 URL이 함께 바뀐다.** 아래 id 필드는 CSV 값으로 만든 조회용 키라 그대로 둔다",
     "subRegionCorrected": "교회가 다른 시군구로 이전했을 때만. nameCorrected와 마찬가지로 출력 id가 바뀐다",
     "regionCorrected": "교회가 다른 시도로 이전했을 때만. **이 값을 빼먹으면 normalize:addresses가 regionMismatch로 판정해 주소와 좌표가 아예 반영되지 않는다.** id에는 영향이 없지만 지역 필터가 어긋난다",
+    "denominationCorrected": "소속 교단이 바뀌었거나 원본에 교단이 비어 있을 때만. **배지가 아니라 data/denominations.json에 있는 원본 표기(raw)다** — 배지·묶음은 판정표가 이 값으로 정한다. 판정표에 없는 값은 npm run church -- edit --denomination=이 받지 않는다. id에는 영향이 없다",
     "phoneHint": "원본 전화번호 — 검색용 참고값이며 수정해도 반영되지 않는다",
     "pastorHint": "원본 담임목사 — 참고값",
     "homepageHint": "원본 홈페이지 — 참고값",

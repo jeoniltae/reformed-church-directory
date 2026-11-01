@@ -69,14 +69,15 @@ const USAGE = `교회 데이터 등록·수정·삭제
 
   npm run church -- find   <검색어>
   npm run church -- add    --name= --region= --subRegion= --address= [--pastor= --denomination= --phone= --homepage= --source-note=]
-  npm run church -- edit   <검색어> [--address= --phone= --pastor= --homepage= --name= --subRegion= --region= --note=]
+  npm run church -- edit   <검색어> [--address= --phone= --pastor= --homepage= --name= --subRegion= --region= --denomination= --note=]
   npm run church -- remove <검색어> --reason=
   npm run church -- notice <검색어> --message= [--contact-label= --contact-phone= --reason=]
 
   --dry-run  파일을 쓰지 않고 결과만 본다
 
 검색어는 교회명·출력 id·조회용 id 아무거나 된다. 후보가 여럿이면 목록만 보여주고 멈춘다.
-edit의 --note=는 덮어쓰지 않는다 — 기존 메모 뒤에 "[날짜] 바뀐 값 — 메모"로 쌓인다.`;
+edit의 --note=는 덮어쓰지 않는다 — 기존 메모 뒤에 "[날짜] 바뀐 값 — 메모"로 쌓인다.
+edit의 --denomination=은 판정표(${DENOMINATIONS})에 있는 원본 표기만 받는다. 새 교단은 판정이 먼저다.`;
 
 // ── 공용 ─────────────────────────────────────────────────────────────────
 
@@ -273,6 +274,7 @@ const EDIT_FLAGS = [
   ["name", "nameCorrected"],
   ["subRegion", "subRegionCorrected"],
   ["region", "regionCorrected"],
+  ["denomination", "denominationCorrected"],
   ["note", "note"],
 ] as const;
 
@@ -285,6 +287,17 @@ function cmdEdit(base: BuildInput, rows: SourceRow[]): void {
     if (v !== undefined) (patch as Record<string, string>)[key] = v;
   }
   if (!Object.keys(patch).length) die(`고칠 값이 없다.\n\n${USAGE}`);
+
+  // add와 달리 경고로 넘기지 않고 멈춘다 — 교정은 기존 교회의 배지·묶음을 바꾸므로 판정표에
+  // 없는 표기가 들어가면 묶음이 조용히 빈다. 문구는 add와 같게 둔다(관리 화면이 이 문구로 멈춘다)
+  const denomination = patch.denominationCorrected?.trim();
+  if (denomination) {
+    const index = buildDenominationIndex(readDoc<DenominationTable>(DENOMINATIONS));
+    if (!index.has(denomination)) {
+      die(`⚠ 교단 표기 '${denomination}'가 ${DENOMINATIONS}에 없다.\n  기존 교단의 원본 표기(raw)를 쓴다. 새 교단이면 판정이 먼저다.`);
+    }
+    patch.denominationCorrected = denomination;
+  }
 
   const doc = readDoc<AddressFixesDoc>(ADDRESS_FIXES);
   if (!doc.fixes.some((f) => f.id === row.lookupId)) {

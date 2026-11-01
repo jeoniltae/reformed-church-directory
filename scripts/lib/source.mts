@@ -37,6 +37,7 @@ export type SourceRow = {
   /** CSV 주소에 사람 교정을 얹은 값. 도로명주소 조회의 입력이다 */
   rawAddress: string;
   pastor: string;
+  /** 원본 교단 표기에 사람 교정을 얹은 값. 배지·묶음은 판정표가 이 값으로 정한다 */
   denomination: string;
   phone: string;
   /**
@@ -55,6 +56,7 @@ export type SourceRow = {
     name: boolean;
     subRegion: boolean;
     region: boolean;
+    denomination: boolean;
   };
 };
 
@@ -83,6 +85,8 @@ export type Fix = {
   nameCorrected?: string;
   subRegionCorrected?: string;
   regionCorrected?: string;
+  /** 판정표에 있는 원본 표기(raw). 배지가 아니다 — 배지·묶음은 판정표가 정한다 */
+  denominationCorrected?: string;
 };
 
 /** CSV 행과 additions 행을 같은 모양으로 맞춘 중간 표현. 출처를 구분하지 않는다 */
@@ -196,6 +200,7 @@ export function buildRows(input: {
     const fixedName = fixOf(lookupId, "nameCorrected");
     const fixedSubRegion = fixOf(lookupId, "subRegionCorrected");
     const fixedRegion = fixOf(lookupId, "regionCorrected");
+    const fixedDenomination = fixOf(lookupId, "denominationCorrected");
 
     // 교회를 식별하는 값이 바뀌면 id도 따라 바뀐다. URL과 geocode 키가 함께 움직인다.
     const id =
@@ -211,7 +216,7 @@ export function buildRows(input: {
       subRegion: fixedSubRegion ?? rec.subRegion,
       rawAddress: fixedAddress ?? normalizeAddress(rec.address),
       pastor: fixedPastor ?? rec.pastor,
-      denomination: rec.denomination,
+      denomination: fixedDenomination ?? rec.denomination,
       phone: fixedPhone ?? rec.phone,
       homepage: rec.homepage,
       homepageCorrected: fixedHomepage ?? "",
@@ -223,6 +228,7 @@ export function buildRows(input: {
         name: Boolean(fixedName),
         subRegion: Boolean(fixedSubRegion),
         region: Boolean(fixedRegion),
+        denomination: Boolean(fixedDenomination),
       },
     };
   });

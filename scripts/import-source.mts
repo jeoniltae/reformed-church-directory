@@ -91,6 +91,7 @@ const fixedCount = {
   name: 0,
   subRegion: 0,
   region: 0,
+  denomination: 0,
 };
 let droppedLinks = 0;
 let normalizedAddresses = 0;
@@ -114,6 +115,7 @@ for (const row of rows) {
   if (row.fixed.name) fixedCount.name++;
   if (row.fixed.subRegion) fixedCount.subRegion++;
   if (row.fixed.region) fixedCount.region++;
+  if (row.fixed.denomination) fixedCount.denomination++;
 
   // 조회는 rawAddress로 했다. 그 사이 주소가 바뀌었으면 낡은 결과로 덮어쓰지 않는다.
   let address = row.rawAddress;
@@ -209,7 +211,7 @@ console.log(
   `죽은 링크로 비운 homepage: ${droppedLinks}건 (등록 ${deadLinks.size}건, ${DEAD_LINKS})`,
 );
 console.log(
-  `사람이 교정한 값: 주소 ${fixedCount.address} · 전화 ${fixedCount.phone} · 담임목사 ${fixedCount.pastor} · 홈페이지 ${fixedCount.homepage} · 교회명 ${fixedCount.name} · 시도 ${fixedCount.region} · 시군구 ${fixedCount.subRegion}`,
+  `사람이 교정한 값: 주소 ${fixedCount.address} · 전화 ${fixedCount.phone} · 담임목사 ${fixedCount.pastor} · 홈페이지 ${fixedCount.homepage} · 교회명 ${fixedCount.name} · 시도 ${fixedCount.region} · 시군구 ${fixedCount.subRegion} · 교단 ${fixedCount.denomination}`,
 );
 console.log(
   `도로명주소로 정규화: ${normalizedAddresses}건 / ${geocode.size}건 조회  (${GEOCODE})`,

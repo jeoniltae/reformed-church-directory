@@ -274,8 +274,8 @@
     "lat": 37.638944,
     "lng": 126.919177,
     "subRegion": "은평구",
-    "denomination": "대신",
-    "denominationGroup": "대신 계열",
+    "denomination": "마스터스개혁파총회",
+    "denominationGroup": "기타",
     "phone": "0507-1410-7208",
     "homepage": "http://cafe.naver.com/ariel300"
   },
@@ -1616,5 +1616,34 @@
     "denominationGroup": "고신·고려 계열",
     "phone": "032-508-9113",
     "homepage": "https://www.youtube.com/@%EC%B4%88%EC%9B%90%EA%B5%90%ED%9A%8C%EA%B3%A0%EC%8B%A0"
+  },
+  {
+    "id": "주기쁨교회-고양시",
+    "name": "주기쁨교회",
+    "region": "경기",
+    "address": "경기도 고양시 일산동구 공릉천로 30 (사리현동)",
+    "pastor": "김경수",
+    "source": "자체 수집",
+    "lat": 37.695899,
+    "lng": 126.844698,
+    "subRegion": "고양시",
+    "denomination": "마스터스개혁파총회",
+    "denominationGroup": "기타",
+    "phone": "010-8466-7247"
+  },
+  {
+    "id": "금천장로교회-금천구",
+    "name": "금천장로교회",
+    "region": "서울",
+    "address": "서울특별시 금천구 독산로54길 31 (독산동)",
+    "pastor": "우병하",
+    "source": "자체 수집",
+    "lat": 37.464068,
+    "lng": 126.906646,
+    "subRegion": "금천구",
+    "denomination": "대신",
+    "denominationGroup": "대신 계열",
+    "phone": "02-805-8117",
+    "homepage": "https://www.youtube.com/@%EA%B8%88%EC%B2%9C%EC%9E%A5%EB%A1%9C%EA%B5%90%ED%9A%8C"
   }
 ]

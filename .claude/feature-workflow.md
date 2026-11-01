@@ -12,7 +12,7 @@ base_branch: main  # 작업은 dev, main push가 곧 Vercel 배포다
 ## DEFINE
 - `docs/plans/`는 `.gitignore`의 `/docs/*`에 걸려 로컬 문서다 — spec·plan은 커밋되지 않는다
 - 데이터를 건드리는 기능이면 "영향 범위"에 바뀌는 `data/` 파일과 `npm run church` 명령을 적는다
-- 로컬 전용 파일(`scripts/admin.mts`·`scripts/admin/` — `.git/info/exclude`)을 건드리면 "영향 범위"에 **로컬 전용**이라고 표시한다
+- 로컬 전용 파일(`.git/info/exclude` 대상 — 목록은 그 파일에 있다)을 건드리면 "영향 범위"에 **로컬 전용**이라고 표시한다
 
 ## PLAN
 - 문서 갱신(CLAUDE.md 명령어·라우트 표, `.claude/skills/church-data/SKILL.md`, `docs/context-notes.md`)이 필요하면 별도 작업으로 넣는다
@@ -28,10 +28,10 @@ base_branch: main  # 작업은 dev, main push가 곧 Vercel 배포다
 - `npm test` · `npm run lint`
 - `data/`를 바꿨으면 `node scripts/import-source.mts --strict`
 - 화면·정적 HTML·리다이렉트를 바꿨으면 `npm run build` → `npx next start`로 확인한다(`npm run dev`로는 프리페치·정적 HTML이 안 보인다)
-- 관리 화면을 바꿨으면 `node --env-file=.env.local scripts/admin.mts`를 띄워 시나리오대로 직접 조작한다. 시험으로 쓴 `data/` 변경은 확인 후 되돌린다
+- 로컬 전용 도구를 바꿨으면 그 도구를 직접 띄워 시나리오대로 조작한다. 시험으로 쓴 `data/` 변경은 확인 후 되돌린다
 
 ## REVIEW
-- ⚠️ `scripts/admin.mts`·`scripts/admin/`은 `.git/info/exclude` 대상이라 **git diff에 나오지 않는다** — 리뷰 대상에 이 파일들을 명시적으로 넣는다
+- ⚠️ `.git/info/exclude` 대상 파일은 **git diff에 나오지 않는다** — 이번 변경이 그 파일들을 건드렸으면 리뷰 대상에 명시적으로 넣는다
 - public 저장소다 — diff에 실제 연락처·민감정보·`.env.local` 값이 없는지 본다
 
 ## SHIP

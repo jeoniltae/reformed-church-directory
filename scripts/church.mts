@@ -289,12 +289,15 @@ function cmdEdit(base: BuildInput, rows: SourceRow[]): void {
   if (!Object.keys(patch).length) die(`고칠 값이 없다.\n\n${USAGE}`);
 
   // add와 달리 경고로 넘기지 않고 멈춘다 — 교정은 기존 교회의 배지·묶음을 바꾸므로 판정표에
-  // 없는 표기가 들어가면 묶음이 조용히 빈다. 문구는 add와 같게 둔다(관리 화면이 이 문구로 멈춘다)
-  const denomination = patch.denominationCorrected?.trim();
-  if (denomination) {
-    const index = buildDenominationIndex(readDoc<DenominationTable>(DENOMINATIONS));
-    if (!index.has(denomination)) {
-      die(`⚠ 교단 표기 '${denomination}'가 ${DENOMINATIONS}에 없다.\n  기존 교단의 원본 표기(raw)를 쓴다. 새 교단이면 판정이 먼저다.`);
+  // 없는 표기가 들어가면 묶음이 조용히 빈다. 문구는 add와 같게 둔다(다른 도구가 이 문구로 멈춘다).
+  // 공백만 준 값은 교정 해제('')로 본다 — 그대로 두면 파일과 메모에 의미 없는 교정이 남는다
+  if (patch.denominationCorrected !== undefined) {
+    const denomination = patch.denominationCorrected.trim();
+    if (denomination) {
+      const index = buildDenominationIndex(readDoc<DenominationTable>(DENOMINATIONS));
+      if (!index.has(denomination)) {
+        die(`⚠ 교단 표기 '${denomination}'가 ${DENOMINATIONS}에 없다.\n  기존 교단의 원본 표기(raw)를 쓴다. 새 교단이면 판정이 먼저다.`);
+      }
     }
     patch.denominationCorrected = denomination;
   }

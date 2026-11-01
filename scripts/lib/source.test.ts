@@ -211,6 +211,25 @@ describe("buildRows — 사람 교정(address-fixes)", () => {
     expect(rows[3].rawAddress).toBe("부산 해운대구 우동 1");
     expect(rows[3].fixed.address).toBe(true);
   });
+
+  // 교단 교정은 **원본 표기 자리**에 들어간다 — 배지·묶음은 판정표가 이 값으로 다시 정한다
+  it("교단을 고치면 원본 표기를 덮고 id는 그대로다", () => {
+    const { rows } = run([], [{ id: "언약교회-강동구", denominationCorrected: "고신" }]);
+    expect(rows[0].denomination).toBe("고신");
+    expect(rows[0].fixed.denomination).toBe(true);
+    expect(rows[0].id).toBe("언약교회-강동구");
+  });
+
+  it("교단이 빈 행에도 교단 교정이 걸린다", () => {
+    const { rows } = run([addition({ denomination: "" })], [{ id: "새교회-해운대구", denominationCorrected: "합신" }]);
+    expect(rows[3].denomination).toBe("합신");
+  });
+
+  it("빈 교단 교정은 원본 표기를 지우지 않는다", () => {
+    const { rows } = run([], [{ id: "언약교회-강동구", denominationCorrected: "" }]);
+    expect(rows[0].denomination).toBe("합신");
+    expect(rows[0].fixed.denomination).toBe(false);
+  });
 });
 
 describe("buildRows — id 중복", () => {

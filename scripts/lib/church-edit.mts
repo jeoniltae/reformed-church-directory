@@ -99,6 +99,7 @@ const FIX_KEY_ORDER: readonly (keyof FixEntry)[] = [
   "nameCorrected",
   "subRegionCorrected",
   "regionCorrected",
+  "denominationCorrected",
   "note",
 ];
 
@@ -147,6 +148,7 @@ const FIX_LABELS: readonly [keyof FixEntry, string, (r: SourceRow) => string][] 
   ["phoneCorrected", "전화", (r) => r.phone],
   ["pastorCorrected", "담임목사", (r) => r.pastor],
   ["homepageCorrected", "홈페이지", (r) => r.homepageCorrected || r.homepage],
+  ["denominationCorrected", "교단", (r) => r.denomination],
 ];
 
 /**

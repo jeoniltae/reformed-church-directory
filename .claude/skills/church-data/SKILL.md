@@ -1,6 +1,6 @@
 ---
 name: church-data
-description: 교회 데이터를 등록·수정·삭제하거나 GitHub Issues 제보를 반영한다. "교회 추가", "교회 등록", "교회 정보 수정", "주소가 바뀌었다", "담임목사가 바뀌었다", "삭제 요청 반영", "제보 반영", "교단 표기 추가", "data/churches.json 고쳐줘" 같은 요청에 발동한다. 데이터 파일을 손으로 고치려는 상황이면 먼저 이 스킬을 읽는다.
+description: 교회 데이터를 등록·수정·삭제하거나 GitHub Issues 제보를 반영한다. "교회 추가", "교회 등록", "교회 정보 수정", "주소가 바뀌었다", "담임목사가 바뀌었다", "교단이 바뀌었다", "삭제 요청 반영", "제보 반영", "교단 표기 추가", "data/churches.json 고쳐줘" 같은 요청에 발동한다. 데이터 파일을 손으로 고치려는 상황이면 먼저 이 스킬을 읽는다.
 ---
 
 # 교회 데이터 등록·수정·삭제
@@ -59,7 +59,7 @@ npm run church -- find <교회명|id>
 npm run church -- add    --name= --region= --subRegion= --address= \
                          [--pastor= --denomination= --phone= --homepage= --source-note=]
 npm run church -- edit   <검색어> [--address= --phone= --pastor= --homepage= \
-                                   --name= --subRegion= --region= --note=]
+                                   --name= --subRegion= --region= --denomination= --note=]
 npm run church -- remove <검색어> --reason=
 npm run church -- notice <검색어> --message= [--contact-label= --contact-phone=]
 ```
@@ -155,9 +155,25 @@ curl -I "http://localhost:3000/churches/%EC%96%B8%EC%95%BD%EA%B5%90%ED%9A%8C-%EA
 
 ---
 
-## 교단을 바꿀 때 — `edit`이 아니다
+## 교단을 바꿀 때 — 경로가 둘이다
 
-**`edit`에 `--denomination`이 없다.** 교단은 `data/address-fixes.json`이 아니라 `data/denominations.json`에서 결정되는 값이라 그 파일을 직접 고친다.
+교단 배지·묶음은 **원본 표기(raw) → `data/denominations.json` 판정표**로 정해진다. 바꾸는 방법은 무엇을 바꾸느냐에 따라 갈린다.
+
+| 상황 | 방법 |
+|---|---|
+| 교회가 **판정표에 이미 있는 다른 교단**에 속한다 / 원본에 교단이 비어 있다 | `edit --denomination=<판정표 raw>` → `address-fixes.json`의 `denominationCorrected` (2026-11-01) |
+| raw는 맞는데 **그 raw가 여러 교단을 가리켜** 이 교회만 다르게 판정해야 한다 | 판정표 해당 행의 `perChurch` (아래) |
+| 판정표에 **없는** 교단이다 | 새 교단 판정이 먼저다 — 판정표에 행을 추가한다(`groupRule`) |
+
+### `edit --denomination=`
+
+- **판정표에 정확히 있는 raw만 받는다** — 배지 이름이 아니다(`국신`의 배지는 `개혁`이다). 없으면 CLI가 멈춘다.
+- **근거가 먼저다.** 교회가 스스로 밝힌 소속이나 교단 교회록·노회 명부를 확인하고 `--note=`에 근거를 적는다. 협력·교류 관계는 소속이 아니다(청주언약교회는 협력 문장만으로는 옮기지 않았고, 교회록으로 가입을 확인한 뒤에 옮겼다).
+- id는 바뀌지 않는다. 반영은 `npm run import:source` 하나다.
+- 판정표의 `count`·`churches`는 `import:source`가 데이터에서 다시 세어 쓰므로 손대지 않는다. **옛 행 `perChurch`에 이 교회가 있으면 지운다**(raw가 바뀌어 조용히 무효가 된다). 옛 배지의 마지막 교회였으면 `data/denomination-content.json`의 총회 행도 정리해야 `npm test`가 통과한다.
+- `--denomination=`(빈 값)은 교정 해제 — 원본 표기로 돌아간다.
+
+### `perChurch`
 
 raw 표기 자체는 그대로 두고 **그 교회만 다르게 판정해야 하면** 해당 `entries[].perChurch`에 넣는다.
 

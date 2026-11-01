@@ -1,6 +1,6 @@
 {
   "note": "도로명주소 검색 API 조회 결과. import-source가 status가 'ok'인 건만 address를 roadAddr로 교체한다. 후보가 여럿이어도 원본과 글자까지 일치하는 것이 유일하면 ok로 확정한다(totalCount>1이면서 ok인 건이 그것이다). 그런 후보가 없거나 둘 이상이면 1순위가 맞다는 보장이 없어 multiple로 두고 원본을 유지한다. 좌표 단계는 coordParams를 그대로 쓴다. coordParams가 이전 실행과 같으면 좌표를 그대로 이어받으므로 주소를 다시 조회해도 좌표 API를 다시 부르지 않는다 — 일부러 다시 받으려면 --refresh-coords를 준다.",
-  "checkedAt": "2026-10-27",
+  "checkedAt": "2026-11-02",
   "entries": [
     {
       "id": "언약교회-하남시",
@@ -3622,7 +3622,71 @@
       },
       "status": "ok",
       "reason": "정상"
+    },
+    {
+      "id": "주기쁨교회-고양시",
+      "name": "주기쁨교회",
+      "original": {
+        "address": "경기도 고양시 일산동구 공릉천로 30",
+        "region": "경기",
+        "subRegion": "고양시"
+      },
+      "totalCount": 4,
+      "matched": {
+        "roadAddr": "경기도 고양시 일산동구 공릉천로 30 (사리현동)",
+        "jibunAddr": "경기도 고양시 일산동구 사리현동 127-6 경하빌딩",
+        "zipNo": "10261",
+        "siNm": "경기도",
+        "sggNm": "고양시 일산동구",
+        "coordParams": {
+          "admCd": "4128510900",
+          "rnMgtSn": "412853193007",
+          "udrtYn": "0",
+          "buldMnnm": "30",
+          "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 37.695899,
+          "lng": 126.844698,
+          "entX": 942229.1549037334,
+          "entY": 1966462.2002588334
+        }
+      },
+      "status": "ok",
+      "reason": "후보 4건 중 원본 주소와 정확히 일치하는 1건"
+    },
+    {
+      "id": "금천장로교회-금천구",
+      "name": "금천장로교회",
+      "original": {
+        "address": "서울 금천구 독산로54길 31",
+        "region": "서울",
+        "subRegion": "금천구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 금천구 독산로54길 31 (독산동)",
+        "jibunAddr": "서울특별시 금천구 독산동 378-58",
+        "zipNo": "08561",
+        "siNm": "서울특별시",
+        "sggNm": "금천구",
+        "coordParams": {
+          "admCd": "1154510200",
+          "rnMgtSn": "115454151121",
+          "udrtYn": "0",
+          "buldMnnm": "31",
+          "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 37.464068,
+          "lng": 126.906646,
+          "entX": 947527.9846899002,
+          "entY": 1940705.2367922002
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
     }
   ],
-  "coordsCheckedAt": "2026-10-26T15:49:44.956Z"
+  "coordsCheckedAt": "2026-11-01T16:57:52.414Z"
 }

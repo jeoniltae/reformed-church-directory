@@ -43,6 +43,7 @@ const row = (over: Partial<SourceRow> = {}): SourceRow => ({
     name: false,
     subRegion: false,
     region: false,
+    denomination: false,
   },
   ...over,
 });
@@ -104,6 +105,15 @@ describe("upsertFix", () => {
       phoneCorrected: "02-111-2222",
     });
     expect(Object.keys(out.fixes[1])).toEqual(["id", "church", "phoneCorrected", "note"]);
+  });
+
+  it("교단 교정은 시도 교정 뒤, 메모 앞에 놓인다", () => {
+    const out = upsertFix(doc(), "사랑교회-서초구", {
+      note: "판정 요청서",
+      denominationCorrected: "고신",
+      regionCorrected: "서울",
+    });
+    expect(Object.keys(out.fixes[1])).toEqual(["id", "regionCorrected", "denominationCorrected", "note"]);
   });
 
   it("기존 행은 키 순서를 그대로 두고 값만 덮는다", () => {
@@ -217,6 +227,13 @@ describe("describeFixChanges", () => {
     const current = row({ homepage: "http://원본/", homepageCorrected: "https://교정/" });
     expect(describeFixChanges({ homepageCorrected: "" }, current, original)).toEqual([
       "홈페이지: 교정 해제(https://교정/ → 원본 http://원본/)",
+    ]);
+  });
+
+  it("교단 교정은 원본 표기 기준으로 적고, 빈 교단은 (없음)이다", () => {
+    expect(describeFixChanges({ denominationCorrected: "고신" }, row(), original)).toEqual(["교단: 합신 → 고신"]);
+    expect(describeFixChanges({ denominationCorrected: "합신" }, row({ denomination: "" }), original)).toEqual([
+      "교단: (없음) → 합신",
     ]);
   });
 

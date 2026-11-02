@@ -3718,7 +3718,104 @@
       },
       "status": "ok",
       "reason": "정상"
+    },
+    {
+      "id": "새로운교회-송파구",
+      "name": "새로운교회",
+      "original": {
+        "address": "서울 송파구 충민로 66 가든파이브라이프 영관 10층",
+        "region": "서울",
+        "subRegion": "송파구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "서울특별시 송파구 충민로 66 (문정동)",
+        "jibunAddr": "서울특별시 송파구 문정동 634 가든파이브라이프",
+        "zipNo": "05838",
+        "siNm": "서울특별시",
+        "sggNm": "송파구",
+        "coordParams": {
+          "admCd": "1171010800",
+          "rnMgtSn": "117103123017",
+          "udrtYn": "0",
+          "buldMnnm": "66",
+          "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 37.477615,
+          "lng": 127.124962,
+          "entX": 966840.3831506667,
+          "entY": 1942108.8872164
+        }
+      },
+      "status": "ok",
+      "reason": "정상",
+      "keywordUsed": "서울 송파구 충민로 66"
+    },
+    {
+      "id": "새순교회-대덕구",
+      "name": "새순교회",
+      "original": {
+        "address": "대전 대덕구 대전로1044번길 19",
+        "region": "대전",
+        "subRegion": "대덕구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "대전광역시 대덕구 대전로1044번길 19 (오정동)",
+        "jibunAddr": "대전광역시 대덕구 오정동 449-5",
+        "zipNo": "34435",
+        "siNm": "대전광역시",
+        "sggNm": "대덕구",
+        "coordParams": {
+          "admCd": "3023010100",
+          "rnMgtSn": "302304304069",
+          "udrtYn": "0",
+          "buldMnnm": "19",
+          "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 36.348543,
+          "lng": 127.417166,
+          "entX": 992567.3378627333,
+          "entY": 1816796.2148747668
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
+    },
+    {
+      "id": "한개혁장로교회-유성구",
+      "name": "한개혁장로교회",
+      "original": {
+        "address": "대전 유성구 문화원로6번길 87-26",
+        "region": "대전",
+        "subRegion": "유성구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "대전광역시 유성구 문화원로6번길 87-26 (장대동)",
+        "jibunAddr": "대전광역시 유성구 장대동 370-8",
+        "zipNo": "34170",
+        "siNm": "대전광역시",
+        "sggNm": "유성구",
+        "coordParams": {
+          "admCd": "3020011700",
+          "rnMgtSn": "302004301161",
+          "udrtYn": "0",
+          "buldMnnm": "87",
+          "buldSlno": "26"
+        },
+        "coord": {
+          "lat": 36.358218,
+          "lng": 127.339147,
+          "entX": 985568.5665778334,
+          "entY": 1817878.2471447
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
     }
   ],
-  "coordsCheckedAt": "2026-11-02T14:15:48.565Z"
+  "coordsCheckedAt": "2026-11-02T14:34:32.876Z"
 }

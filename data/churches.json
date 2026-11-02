@@ -1661,5 +1661,49 @@
     "denominationGroup": "독립·해외",
     "phone": "042-863-0191",
     "homepage": "http://www.h2ohope.net/"
+  },
+  {
+    "id": "새로운교회-송파구",
+    "name": "새로운교회",
+    "region": "서울",
+    "address": "서울특별시 송파구 충민로 66 (문정동)",
+    "pastor": "한홍",
+    "source": "자체 수집",
+    "lat": 37.477615,
+    "lng": 127.124962,
+    "subRegion": "송파구",
+    "denomination": "KAICAM",
+    "denominationGroup": "독립·해외",
+    "phone": "02-597-0691",
+    "homepage": "http://www.saeroun.net/"
+  },
+  {
+    "id": "새순교회-대덕구",
+    "name": "새순교회",
+    "region": "대전",
+    "address": "대전광역시 대덕구 대전로1044번길 19 (오정동)",
+    "pastor": "장재철",
+    "source": "자체 수집",
+    "lat": 36.348543,
+    "lng": 127.417166,
+    "subRegion": "대덕구",
+    "denomination": "고신",
+    "denominationGroup": "고신·고려 계열",
+    "phone": "042-627-9910",
+    "homepage": "https://saesoonchurch.qshop.ai/"
+  },
+  {
+    "id": "한개혁장로교회-유성구",
+    "name": "한개혁장로교회",
+    "region": "대전",
+    "address": "대전광역시 유성구 문화원로6번길 87-26 (장대동)",
+    "pastor": "김영훈",
+    "source": "자체 수집",
+    "lat": 36.358218,
+    "lng": 127.339147,
+    "subRegion": "유성구",
+    "denomination": "독립",
+    "denominationGroup": "독립·해외",
+    "homepage": "https://www.youtube.com/channel/UCvXs6i_OkP56YukupWk5lyA"
   }
 ]

@@ -1629,7 +1629,8 @@
     "subRegion": "고양시",
     "denomination": "마스터스개혁파총회",
     "denominationGroup": "기타",
-    "phone": "010-8466-7247"
+    "phone": "010-8466-7247",
+    "homepage": "https://www.mareca.org"
   },
   {
     "id": "금천장로교회-금천구",
@@ -1645,5 +1646,64 @@
     "denominationGroup": "대신 계열",
     "phone": "02-805-8117",
     "homepage": "https://www.youtube.com/@%EA%B8%88%EC%B2%9C%EC%9E%A5%EB%A1%9C%EA%B5%90%ED%9A%8C"
+  },
+  {
+    "id": "새희망교회-유성구",
+    "name": "새희망교회",
+    "region": "대전",
+    "address": "대전광역시 유성구 엑스포로540번길 1 (전민동)",
+    "pastor": "최종현",
+    "source": "자체 수집",
+    "lat": 36.404753,
+    "lng": 127.405025,
+    "subRegion": "유성구",
+    "denomination": "KAICAM",
+    "denominationGroup": "독립·해외",
+    "phone": "042-863-0191",
+    "homepage": "http://www.h2ohope.net/"
+  },
+  {
+    "id": "새로운교회-송파구",
+    "name": "새로운교회",
+    "region": "서울",
+    "address": "서울특별시 송파구 충민로 66 (문정동)",
+    "pastor": "한홍",
+    "source": "자체 수집",
+    "lat": 37.477615,
+    "lng": 127.124962,
+    "subRegion": "송파구",
+    "denomination": "KAICAM",
+    "denominationGroup": "독립·해외",
+    "phone": "02-597-0691",
+    "homepage": "http://www.saeroun.net/"
+  },
+  {
+    "id": "새순교회-대덕구",
+    "name": "새순교회",
+    "region": "대전",
+    "address": "대전광역시 대덕구 대전로1044번길 19 (오정동)",
+    "pastor": "장재철",
+    "source": "자체 수집",
+    "lat": 36.348543,
+    "lng": 127.417166,
+    "subRegion": "대덕구",
+    "denomination": "고신",
+    "denominationGroup": "고신·고려 계열",
+    "phone": "042-627-9910",
+    "homepage": "https://saesoonchurch.qshop.ai/"
+  },
+  {
+    "id": "한개혁장로교회-유성구",
+    "name": "한개혁장로교회",
+    "region": "대전",
+    "address": "대전광역시 유성구 문화원로6번길 87-26 (장대동)",
+    "pastor": "김영훈",
+    "source": "자체 수집",
+    "lat": 36.358218,
+    "lng": 127.339147,
+    "subRegion": "유성구",
+    "denomination": "독립",
+    "denominationGroup": "독립·해외",
+    "homepage": "https://www.youtube.com/channel/UCvXs6i_OkP56YukupWk5lyA"
   }
 ]

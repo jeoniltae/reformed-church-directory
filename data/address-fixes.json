@@ -536,6 +536,13 @@
       "church": "청주언약교회",
       "original": "충북 청주시 흥덕구 복대2동 2386",
       "corrected": "충북 청주시 서원구 성봉로 209"
+    },
+    {
+      "id": "주기쁨교회-고양시",
+      "church": "주기쁨교회",
+      "homepageHint": "",
+      "homepageCorrected": "https://www.mareca.org",
+      "note": "[2026-11-02] 홈페이지: (없음) → https://www.mareca.org — 홈페이지 주소가 별도 없어서 교회 정체성을 나타내주는 총회 홈페이지 추가"
     }
   ]
 }

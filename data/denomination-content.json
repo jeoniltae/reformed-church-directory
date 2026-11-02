@@ -130,6 +130,13 @@
           "confession": "WRF 신앙고백서와 역사적 개혁 신앙고백 가운데 하나 — 웨스트민스터 신앙고백서·하이델베르크 요리문답·벨직 신앙고백·도르트 신조 등",
           "note": "교단(총회)이 아닌 국제 개혁주의 연합체 · 교회 회원",
           "sourceUrl": "https://wrf.global/about/wrf-theological-statements/statement-of-faith"
+        },
+        {
+          "denomination": "KAICAM",
+          "official": "사단법인 한국독립교회선교단체연합회",
+          "confession": null,
+          "note": "총회가 아닌 독립교회·선교단체 연합회 · 교회 가입과 목사고시·안수를 맡는다",
+          "sourceUrl": "https://home.kaicam.org/"
         }
       ]
     }

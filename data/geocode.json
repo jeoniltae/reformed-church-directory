@@ -3686,7 +3686,39 @@
       },
       "status": "ok",
       "reason": "정상"
+    },
+    {
+      "id": "새희망교회-유성구",
+      "name": "새희망교회",
+      "original": {
+        "address": "대전 유성구 엑스포로540번길 1",
+        "region": "대전",
+        "subRegion": "유성구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "대전광역시 유성구 엑스포로540번길 1 (전민동)",
+        "jibunAddr": "대전광역시 유성구 전민동 379",
+        "zipNo": "34042",
+        "siNm": "대전광역시",
+        "sggNm": "유성구",
+        "coordParams": {
+          "admCd": "3020014100",
+          "rnMgtSn": "302004301278",
+          "udrtYn": "0",
+          "buldMnnm": "1",
+          "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 36.404753,
+          "lng": 127.405025,
+          "entX": 991484.0395411002,
+          "entY": 1823032.1214031335
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
     }
   ],
-  "coordsCheckedAt": "2026-11-01T16:57:52.414Z"
+  "coordsCheckedAt": "2026-11-02T14:15:48.565Z"
 }

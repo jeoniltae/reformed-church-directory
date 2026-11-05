@@ -1,6 +1,6 @@
 // 교회 상세 — 89건 전량을 빌드 시점에 정적 생성한다 (SSG)
 
-import { ChevronLeft, ExternalLink, Navigation, Phone } from "lucide-react";
+import { ChevronLeft, Clock, ExternalLink, Navigation, Phone } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -192,34 +192,57 @@ export default async function ChurchDetailPage({
         {/* 교단과 주소는 위 헤더에만 둔다. 여기 또 넣으면 같은 화면에 두 번 나온다 */}
         <section className="mt-6 border-t border-border pt-5">
           <h2 className="text-t4 font-semibold text-foreground">교회 정보</h2>
-          <dl className="mt-3 flex flex-col gap-3">
-            <div className="flex items-baseline justify-between gap-4">
-              <dt className="shrink-0 text-t4 text-muted-foreground">
-                담임목사
-              </dt>
-              <dd className="text-right text-t4 text-foreground">
-                {church.pastor} 목사
-              </dd>
-            </div>
-            {church.homepage && (
+          {/*
+            최종 수정일은 정보를 묶은 카드의 아래 띠에 둔다 (2026-11-06). 제목 줄 오른쪽의
+            작은 회색 글자는 눈에 띄지 않았다. 날짜가 말하는 대상이 카드 안의 정보이고,
+            푸터의 `출처` 옆은 지도 아래라 전화 걸기 전에 보이지 않는다.
+
+            ⚠️ **라벨을 `최종 확인`으로 바꾸지 않는다.** 값이 바뀐 날이지 확인한 날이 아니다.
+          */}
+          <div className="mt-3 overflow-hidden rounded-xl border border-border bg-card">
+            <dl className="flex flex-col gap-3 p-3.5">
               <div className="flex items-baseline justify-between gap-4">
                 <dt className="shrink-0 text-t4 text-muted-foreground">
-                  홈페이지
+                  담임목사
                 </dt>
-                <dd className="text-t4">
-                  <a
-                    href={church.homepage}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 rounded-lg text-foreground underline outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-                  >
-                    홈페이지 열기
-                    <ExternalLink aria-hidden className="size-3.5" />
-                  </a>
+                <dd className="text-right text-t4 text-foreground">
+                  {church.pastor} 목사
                 </dd>
               </div>
+              {church.homepage && (
+                <div className="flex items-baseline justify-between gap-4">
+                  <dt className="shrink-0 text-t4 text-muted-foreground">
+                    홈페이지
+                  </dt>
+                  <dd className="text-t4">
+                    <a
+                      href={church.homepage}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 rounded-lg text-foreground underline outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                    >
+                      홈페이지 열기
+                      <ExternalLink aria-hidden className="size-3.5" />
+                    </a>
+                  </dd>
+                </div>
+              )}
+            </dl>
+            {church.updatedAt && (
+              <p className="flex items-center justify-between gap-3 border-t border-border bg-muted px-3.5 py-2.5 text-t2 tabular-nums">
+                <span className="inline-flex items-center gap-1.5 text-muted-foreground">
+                  <Clock aria-hidden className="size-3.5" />
+                  최종 수정
+                </span>
+                <time
+                  dateTime={church.updatedAt}
+                  className="font-semibold text-foreground"
+                >
+                  {church.updatedAt.replaceAll("-", ".")}
+                </time>
+              </p>
             )}
-          </dl>
+          </div>
         </section>
 
         {/*

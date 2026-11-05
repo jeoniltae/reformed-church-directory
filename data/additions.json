@@ -367,6 +367,18 @@
       "homepage": "https://www.youtube.com/channel/UCvXs6i_OkP56YukupWk5lyA",
       "addedAt": "2026-11-02",
       "sourceNote": "자체수집"
+    },
+    {
+      "region": "인천",
+      "subRegion": "검단구",
+      "name": "바른교회",
+      "pastor": "구재일",
+      "denomination": "제신노회",
+      "phone": "0507-1306-1462",
+      "address": "인천 검단구 단봉로 97-7 센타프라자 301호, 309호",
+      "homepage": "https://blog.naver.com/barunchurch",
+      "addedAt": "2026-11-05",
+      "sourceNote": "제보 (GitHub Issues) #43  2026-11-04  [교회 등록 요청] 교회 미지정 · 판정 요청서 2026-11-05-제신노회"
     }
   ]
 }

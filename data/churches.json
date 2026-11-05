@@ -12,7 +12,8 @@
     "denomination": "합신",
     "denominationGroup": "합신 계열",
     "phone": "070-4101-3578",
-    "homepage": "http://www.cvtchurch.org/"
+    "homepage": "http://www.cvtchurch.org/",
+    "updatedAt": "2026-09-07"
   },
   {
     "id": "갈보리교회-관악구",
@@ -27,7 +28,8 @@
     "denomination": "고려",
     "denominationGroup": "고신·고려 계열",
     "phone": "02-861-7444",
-    "homepage": "http://www.calvary.kr/"
+    "homepage": "http://www.calvary.kr/",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "서울진명교회-관악구",
@@ -40,7 +42,8 @@
     "lng": 126.959216,
     "subRegion": "관악구",
     "phone": "02-882-3820",
-    "homepage": "http://cafe.daum.net/seoulatlanta/"
+    "homepage": "http://cafe.daum.net/seoulatlanta/",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "관악교회-관악구",
@@ -55,7 +58,8 @@
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
     "phone": "070-8682-3991",
-    "homepage": "http://cafe.daum.net/-goodchurch"
+    "homepage": "http://cafe.daum.net/-goodchurch",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "한길교회-광진구",
@@ -70,7 +74,8 @@
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
     "phone": "010-7423-0113",
-    "homepage": "http://cafe.daum.net/hgpch"
+    "homepage": "http://cafe.daum.net/hgpch",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "바른교회-노원구",
@@ -85,7 +90,8 @@
     "denomination": "고려",
     "denominationGroup": "고신·고려 계열",
     "phone": "02-969-0432",
-    "homepage": "http://blog.naver.com/daleun71"
+    "homepage": "http://blog.naver.com/daleun71",
+    "updatedAt": "2026-09-01"
   },
   {
     "id": "새롬교회-노원구",
@@ -98,7 +104,8 @@
     "lng": 127.06829,
     "subRegion": "노원구",
     "phone": "02-978-9140",
-    "homepage": "http://www.reformedchurch.co.kr/default/index.php"
+    "homepage": "http://www.reformedchurch.co.kr/default/index.php",
+    "updatedAt": "2026-09-17"
   },
   {
     "id": "예림교회-노원구",
@@ -113,7 +120,8 @@
     "denomination": "개혁",
     "denominationGroup": "기타",
     "phone": "02-977-2780",
-    "homepage": "https://www.rcw.kr/www/yelimchurch"
+    "homepage": "https://www.rcw.kr/www/yelimchurch",
+    "updatedAt": "2026-09-17"
   },
   {
     "id": "고은교회-동대문구",
@@ -128,7 +136,8 @@
     "denomination": "대신",
     "denominationGroup": "대신 계열",
     "phone": "02-963-4891",
-    "homepage": "http://cafe.naver.com/ghkdqndlf"
+    "homepage": "http://cafe.naver.com/ghkdqndlf",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "영화교회-동작구",
@@ -143,7 +152,8 @@
     "denomination": "계신",
     "denominationGroup": "기타",
     "phone": "02-534-4228",
-    "homepage": "http://www.young-hwa.or.kr/"
+    "homepage": "http://www.young-hwa.or.kr/",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "세움교회-동작구",
@@ -158,7 +168,8 @@
     "denomination": "합신",
     "denominationGroup": "합신 계열",
     "phone": "02-7760-6442",
-    "homepage": "https://seum.onmam.com/"
+    "homepage": "https://seum.onmam.com/",
+    "updatedAt": "2026-09-01"
   },
   {
     "id": "성가교회-마포구",
@@ -173,7 +184,8 @@
     "denomination": "합신",
     "denominationGroup": "합신 계열",
     "phone": "02-718-9898",
-    "homepage": "http://sungga.or.kr/"
+    "homepage": "http://sungga.or.kr/",
+    "updatedAt": "2026-09-07"
   },
   {
     "id": "서교장로교회-마포구",
@@ -188,7 +200,8 @@
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
     "phone": "02-3144-6607",
-    "homepage": "http://www.sgreformed.org/xe/"
+    "homepage": "http://www.sgreformed.org/xe/",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "예수가족교회-마포구",
@@ -203,7 +216,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "02-337-4645",
-    "homepage": "http://www.jesusfamily.kr/"
+    "homepage": "http://www.jesusfamily.kr/",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "합정동교회-마포구",
@@ -218,7 +232,8 @@
     "denomination": "독립(근본노회)",
     "denominationGroup": "독립·해외",
     "phone": "02-334-8291",
-    "homepage": "https://www.hjdc.kr/"
+    "homepage": "https://www.hjdc.kr/",
+    "updatedAt": "2026-10-18"
   },
   {
     "id": "그의나라교회-서초구",
@@ -232,7 +247,8 @@
     "subRegion": "서초구",
     "denomination": "합신",
     "denominationGroup": "합신 계열",
-    "phone": "02-572-1583"
+    "phone": "02-572-1583",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "방배본교회-서초구",
@@ -247,7 +263,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "010-8784-0823",
-    "homepage": "http://cafe.daum.net/bangbaebon-church"
+    "homepage": "http://cafe.daum.net/bangbaebon-church",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "신반포중앙교회-서초구",
@@ -262,7 +279,8 @@
     "denomination": "대신",
     "denominationGroup": "대신 계열",
     "phone": "02-536-4511",
-    "homepage": "http://www.sbpcc.or.kr/"
+    "homepage": "http://www.sbpcc.or.kr/",
+    "updatedAt": "2026-09-07"
   },
   {
     "id": "바로선개혁교회-은평구",
@@ -277,7 +295,8 @@
     "denomination": "마스터스개혁파총회",
     "denominationGroup": "기타",
     "phone": "0507-1410-7208",
-    "homepage": "http://cafe.naver.com/ariel300"
+    "homepage": "http://cafe.naver.com/ariel300",
+    "updatedAt": "2026-11-02"
   },
   {
     "id": "가락동부교회-송파구",
@@ -292,7 +311,8 @@
     "denomination": "계신",
     "denominationGroup": "기타",
     "phone": "02-408-6993",
-    "homepage": "http://www.garakdb.org/"
+    "homepage": "http://www.garakdb.org/",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "진리교회-송파구",
@@ -307,7 +327,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "02-488-0158",
-    "homepage": "http://www.jinrichurch.org/"
+    "homepage": "http://www.jinrichurch.org/",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "두레교회-영등포구",
@@ -322,7 +343,8 @@
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
     "phone": "02-2677-5281",
-    "homepage": "http://www.dooresarang.org/"
+    "homepage": "http://www.dooresarang.org/",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "예인교회-영등포구",
@@ -337,7 +359,8 @@
     "denomination": "합동총회",
     "denominationGroup": "기타",
     "phone": "02-894-9395",
-    "homepage": "http://cafe.daum.net/cbcsus"
+    "homepage": "http://cafe.daum.net/cbcsus",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "십자가지기교회-용산구",
@@ -352,7 +375,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "02-792-2127",
-    "homepage": "http://www.crossbc.org/"
+    "homepage": "http://www.crossbc.org/",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "샘터교회-은평구",
@@ -367,7 +391,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "02-388-2847",
-    "homepage": "https://thevine21.hompee.com/user/bbs/html/index?menuId=101512&topMenuId=1&menuType=27&newmenuAt=0"
+    "homepage": "https://thevine21.hompee.com/user/bbs/html/index?menuId=101512&topMenuId=1&menuType=27&newmenuAt=0",
+    "updatedAt": "2026-09-17"
   },
   {
     "id": "중심교회-은평구",
@@ -382,7 +407,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "02-353-6265",
-    "homepage": "http://www.joongsimch.org/"
+    "homepage": "http://www.joongsimch.org/",
+    "updatedAt": "2026-09-17"
   },
   {
     "id": "명륜교회-종로구",
@@ -397,7 +423,8 @@
     "denomination": "계신",
     "denominationGroup": "기타",
     "phone": "02-762-4595",
-    "homepage": "http://www.mrch.net/"
+    "homepage": "http://www.mrch.net/",
+    "updatedAt": "2026-08-31"
   },
   {
     "id": "양의문교회-종로구",
@@ -412,7 +439,8 @@
     "denomination": "고려개혁",
     "denominationGroup": "기타",
     "phone": "02-733-5252",
-    "homepage": "https://asheep.org/"
+    "homepage": "https://asheep.org/",
+    "updatedAt": "2026-09-01"
   },
   {
     "id": "열린교회-종로구",
@@ -426,7 +454,8 @@
     "subRegion": "종로구",
     "denomination": "합신",
     "denominationGroup": "합신 계열",
-    "phone": "070-4110-0643"
+    "phone": "070-4110-0643",
+    "updatedAt": "2026-09-17"
   },
   {
     "id": "동래언약교회-동래구",
@@ -441,7 +470,8 @@
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
     "phone": "010-4564-4890",
-    "homepage": "http://cafe.daum.net/DRcovenent"
+    "homepage": "http://cafe.daum.net/DRcovenent",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "반석위교회-부산진구",
@@ -455,7 +485,8 @@
     "subRegion": "부산진구",
     "denomination": "합신",
     "denominationGroup": "합신 계열",
-    "phone": "010-9672-7242"
+    "phone": "010-9672-7242",
+    "updatedAt": "2026-09-07"
   },
   {
     "id": "유은교회-사하구",
@@ -470,7 +501,8 @@
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
     "phone": "010-3406-3373",
-    "homepage": "http://cafe.daum.net/sola-gratia"
+    "homepage": "http://cafe.daum.net/sola-gratia",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "한우리교회-해운대구",
@@ -485,7 +517,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "051-518-9125",
-    "homepage": "https://www.youtube.com/@hanwoorichurch_busan"
+    "homepage": "https://www.youtube.com/@hanwoorichurch_busan",
+    "updatedAt": "2026-09-17"
   },
   {
     "id": "성서계명교회-달서구",
@@ -500,7 +533,8 @@
     "denomination": "한국개혁장로교회",
     "denominationGroup": "기타",
     "phone": "053-582-5824",
-    "homepage": "http://kmcmi.org/"
+    "homepage": "http://kmcmi.org/",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "언약교회-수성구",
@@ -515,7 +549,8 @@
     "denomination": "대한예수교 개혁회",
     "denominationGroup": "기타",
     "phone": "053-741-6221",
-    "homepage": "https://cafe.daum.net/covenant2021"
+    "homepage": "https://cafe.daum.net/covenant2021",
+    "updatedAt": "2026-09-17"
   },
   {
     "id": "주님뜻이룸교회-남동구",
@@ -530,7 +565,8 @@
     "denomination": "대신",
     "denominationGroup": "대신 계열",
     "phone": "032-465-4283",
-    "homepage": "http://gwilliroom.or.kr"
+    "homepage": "http://gwilliroom.or.kr",
+    "updatedAt": "2026-09-07"
   },
   {
     "id": "어진내교회-남동구",
@@ -545,7 +581,8 @@
     "denomination": "대신",
     "denominationGroup": "대신 계열",
     "phone": "032-466-2776",
-    "homepage": "http://blog.naver.com/churchejn/"
+    "homepage": "http://blog.naver.com/churchejn/",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "튜울립장로교회-부평구",
@@ -559,7 +596,8 @@
     "subRegion": "부평구",
     "denomination": "합신",
     "denominationGroup": "합신 계열",
-    "phone": "032-424-1559"
+    "phone": "032-424-1559",
+    "updatedAt": "2026-09-07"
   },
   {
     "id": "반석교회-서구",
@@ -574,7 +612,8 @@
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
     "phone": "032-564-6187",
-    "homepage": "https://www.youtube.com/@bansuk1616"
+    "homepage": "https://www.youtube.com/@bansuk1616",
+    "updatedAt": "2026-09-17"
   },
   {
     "id": "주님의교회-북구",
@@ -589,7 +628,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "062-401-7762",
-    "homepage": "http://cafe.daum.net/mangwol91"
+    "homepage": "http://cafe.daum.net/mangwol91",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "복용교회-유성구",
@@ -604,7 +644,8 @@
     "denomination": "계신",
     "denominationGroup": "기타",
     "phone": "042-522-2005",
-    "homepage": "http://ytbch.79.ypage.kr"
+    "homepage": "http://ytbch.79.ypage.kr",
+    "updatedAt": "2026-08-31"
   },
   {
     "id": "울산언약교회-북구",
@@ -617,7 +658,8 @@
     "lng": 129.359847,
     "subRegion": "북구",
     "phone": "052-283-1366",
-    "homepage": "http://cafe.daum.net/007bell"
+    "homepage": "http://cafe.daum.net/007bell",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "세종개혁교회",
@@ -631,7 +673,8 @@
     "denomination": "독립개혁장로회",
     "denominationGroup": "독립·해외",
     "phone": "010-5568-4718",
-    "homepage": "http://cafe.daum.net/churchinsejong"
+    "homepage": "http://cafe.daum.net/churchinsejong",
+    "updatedAt": "2026-09-01"
   },
   {
     "id": "세종말씀교회",
@@ -645,7 +688,8 @@
     "denomination": "대신",
     "denominationGroup": "대신 계열",
     "phone": "010-5050-5105",
-    "homepage": "https://cafe.naver.com/sejonglogos"
+    "homepage": "https://cafe.naver.com/sejonglogos",
+    "updatedAt": "2026-09-17"
   },
   {
     "id": "삼송제일교회-고양시",
@@ -660,7 +704,8 @@
     "denomination": "개혁",
     "denominationGroup": "기타",
     "phone": "031-965-6385",
-    "homepage": "https://www.samsongfirst.org"
+    "homepage": "https://www.samsongfirst.org",
+    "updatedAt": "2026-09-19"
   },
   {
     "id": "주교개혁장로교회-고양시",
@@ -675,7 +720,8 @@
     "denomination": "합신",
     "denominationGroup": "합신 계열",
     "phone": "010-8297-4120",
-    "homepage": "https://www.youtube.com/@%EC%9E%A5%EB%A1%9C%EA%B5%90%ED%9A%8C%EC%A3%BC%EA%B5%90%EA%B0%9C%ED%98%81"
+    "homepage": "https://www.youtube.com/@%EC%9E%A5%EB%A1%9C%EA%B5%90%ED%9A%8C%EC%A3%BC%EA%B5%90%EA%B0%9C%ED%98%81",
+    "updatedAt": "2026-09-17"
   },
   {
     "id": "금정제일교회-군포시",
@@ -689,7 +735,8 @@
     "subRegion": "군포시",
     "denomination": "합동",
     "denominationGroup": "합동 계열",
-    "phone": "031-452-7836"
+    "phone": "031-452-7836",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "예숲교회-군포시",
@@ -704,7 +751,8 @@
     "denomination": "합신",
     "denominationGroup": "합신 계열",
     "phone": "070-4117-4020",
-    "homepage": "http://yesup.kr/"
+    "homepage": "http://yesup.kr/",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "새소망교회-김포시",
@@ -719,7 +767,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "010-9155-9088",
-    "homepage": "http://blog.naver.com/PostList.nhn?blogId=sae-somang&categoryNo=18"
+    "homepage": "http://blog.naver.com/PostList.nhn?blogId=sae-somang&categoryNo=18",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "솔리데오글로리아교회-의정부시",
@@ -734,7 +783,8 @@
     "denomination": "합신",
     "denominationGroup": "합신 계열",
     "phone": "070-7775-7770",
-    "homepage": "https://sdgchurch.kr"
+    "homepage": "https://sdgchurch.kr",
+    "updatedAt": "2026-09-17"
   },
   {
     "id": "온생명교회-남양주시",
@@ -749,7 +799,8 @@
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
     "phone": "0507-1312-5303",
-    "homepage": "http://cafe.daum.net/osm.or.kr"
+    "homepage": "http://cafe.daum.net/osm.or.kr",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "한사랑교회-동두천시",
@@ -764,7 +815,8 @@
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
     "phone": "031-868-6264",
-    "homepage": "https://thevine21.hompee.com/user/bbs/html/index?menuId=115787&topMenuId=1&menuType=27&newmenuAt=0"
+    "homepage": "https://thevine21.hompee.com/user/bbs/html/index?menuId=115787&topMenuId=1&menuType=27&newmenuAt=0",
+    "updatedAt": "2026-09-17"
   },
   {
     "id": "한마음개혁교회-성남시",
@@ -779,7 +831,8 @@
     "denomination": "대신",
     "denominationGroup": "대신 계열",
     "phone": "010-5130-6803",
-    "homepage": "https://www.reformedchurch.or.kr"
+    "homepage": "https://www.reformedchurch.or.kr",
+    "updatedAt": "2026-09-17"
   },
   {
     "id": "광교장로교회-수원시",
@@ -794,7 +847,8 @@
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
     "phone": "010-7313-2012",
-    "homepage": "http://cafe.naver.com/nextgeneration1/"
+    "homepage": "http://cafe.naver.com/nextgeneration1/",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "미문교회-수원시",
@@ -809,7 +863,8 @@
     "denomination": "합신",
     "denominationGroup": "합신 계열",
     "phone": "031-296-7381",
-    "homepage": "http://www.meemoon.org/"
+    "homepage": "http://www.meemoon.org/",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "우만교회-수원시",
@@ -823,7 +878,8 @@
     "subRegion": "수원시",
     "denomination": "합신",
     "denominationGroup": "합신 계열",
-    "phone": "031-212-4184"
+    "phone": "031-212-4184",
+    "updatedAt": "2026-09-07"
   },
   {
     "id": "서울개혁교회-동작구",
@@ -838,7 +894,8 @@
     "denomination": "합동사당총신",
     "denominationGroup": "합동 계열",
     "phone": "010-4100-7909",
-    "homepage": "https://mahanaimjjang.wixsite.com/seoulreformedchurch"
+    "homepage": "https://mahanaimjjang.wixsite.com/seoulreformedchurch",
+    "updatedAt": "2026-09-01"
   },
   {
     "id": "안산회복의교회-안산시",
@@ -853,7 +910,8 @@
     "denomination": "대신",
     "denominationGroup": "대신 계열",
     "phone": "010-2758-4909",
-    "homepage": "http://cafe.daum.net/ansanhoebok"
+    "homepage": "http://cafe.daum.net/ansanhoebok",
+    "updatedAt": "2026-09-07"
   },
   {
     "id": "안산푸른교회-안산시",
@@ -867,7 +925,8 @@
     "subRegion": "안산시",
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
-    "phone": "031-411-3445"
+    "phone": "031-411-3445",
+    "updatedAt": "2026-09-17"
   },
   {
     "id": "진리사랑교회-안양시",
@@ -882,7 +941,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "010-8356-1699",
-    "homepage": "https://truthlove.kr/"
+    "homepage": "https://truthlove.kr/",
+    "updatedAt": "2026-09-01"
   },
   {
     "id": "다우리교회-용인시",
@@ -897,7 +957,8 @@
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
     "phone": "0507-1372-9967",
-    "homepage": "http://cafe.daum.net/dawoorichurch"
+    "homepage": "http://cafe.daum.net/dawoorichurch",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "하늘마을장로교회-용인시",
@@ -911,7 +972,8 @@
     "subRegion": "용인시",
     "denomination": "PCA",
     "denominationGroup": "독립·해외",
-    "phone": "031-261-4760"
+    "phone": "031-261-4760",
+    "updatedAt": "2026-09-07"
   },
   {
     "id": "선실교회-의왕시",
@@ -925,7 +987,8 @@
     "subRegion": "의왕시",
     "denomination": "독립",
     "denominationGroup": "독립·해외",
-    "phone": "019-210-8187"
+    "phone": "019-210-8187",
+    "updatedAt": "2026-08-31"
   },
   {
     "id": "소식교회-일산시",
@@ -940,7 +1003,8 @@
     "denomination": "합신",
     "denominationGroup": "합신 계열",
     "phone": "031-904-6944",
-    "homepage": "http://cafe.daum.net/yoongjukalvin"
+    "homepage": "http://cafe.daum.net/yoongjukalvin",
+    "updatedAt": "2026-09-07"
   },
   {
     "id": "현산교회-일산시",
@@ -955,7 +1019,8 @@
     "denomination": "합신",
     "denominationGroup": "합신 계열",
     "phone": "031-813-5316",
-    "homepage": "http://www.hyunsan.net/"
+    "homepage": "http://www.hyunsan.net/",
+    "updatedAt": "2026-09-07"
   },
   {
     "id": "더불어사는교회-평택시",
@@ -969,7 +1034,8 @@
     "subRegion": "평택시",
     "denomination": "합동",
     "denominationGroup": "합동 계열",
-    "phone": "031-683-7469"
+    "phone": "031-683-7469",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "반석교회-평택시",
@@ -983,7 +1049,8 @@
     "subRegion": "평택시",
     "denomination": "합신",
     "denominationGroup": "합신 계열",
-    "phone": "031-662-4742"
+    "phone": "031-662-4742",
+    "updatedAt": "2026-09-17"
   },
   {
     "id": "새언약교회-수원시",
@@ -998,7 +1065,8 @@
     "denomination": "정통대신",
     "denominationGroup": "대신 계열",
     "phone": "031-354-0379",
-    "homepage": "http://afamily.ijesus.net/"
+    "homepage": "http://afamily.ijesus.net/",
+    "updatedAt": "2026-09-01"
   },
   {
     "id": "덕일교회-김천시",
@@ -1012,7 +1080,8 @@
     "subRegion": "김천시",
     "denomination": "합신",
     "denominationGroup": "합신 계열",
-    "phone": "054-439-1695"
+    "phone": "054-439-1695",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "실로암교회-영천시",
@@ -1027,7 +1096,8 @@
     "denomination": "한국개혁장로교회",
     "denominationGroup": "기타",
     "phone": "054-337-8925",
-    "homepage": "http://www.siloam-church.org/"
+    "homepage": "http://www.siloam-church.org/",
+    "updatedAt": "2026-08-31"
   },
   {
     "id": "한결교회-창원시",
@@ -1042,7 +1112,8 @@
     "denomination": "개혁",
     "denominationGroup": "기타",
     "phone": "055-267-3604",
-    "homepage": "http://hangyulcmi.org/"
+    "homepage": "http://hangyulcmi.org/",
+    "updatedAt": "2026-09-07"
   },
   {
     "id": "내흥교회-군산시",
@@ -1056,7 +1127,8 @@
     "subRegion": "군산시",
     "denomination": "합신",
     "denominationGroup": "합신 계열",
-    "phone": "063-442-3458"
+    "phone": "063-442-3458",
+    "updatedAt": "2026-09-17"
   },
   {
     "id": "예본교회-김제시",
@@ -1070,7 +1142,8 @@
     "subRegion": "김제시",
     "denomination": "합동",
     "denominationGroup": "합동 계열",
-    "phone": "010-6653-9684"
+    "phone": "010-6653-9684",
+    "updatedAt": "2026-08-31"
   },
   {
     "id": "익산우리교회-익산시",
@@ -1085,7 +1158,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "063-915-0082",
-    "homepage": "http://cafe.daum.net/wooriecclesia"
+    "homepage": "http://cafe.daum.net/wooriecclesia",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "삼천제일교회-전주시",
@@ -1099,7 +1173,8 @@
     "subRegion": "전주시",
     "denomination": "합동",
     "denominationGroup": "합동 계열",
-    "phone": "063-222-2272"
+    "phone": "063-222-2272",
+    "updatedAt": "2026-09-17"
   },
   {
     "id": "옥토교회-정읍시",
@@ -1114,7 +1189,8 @@
     "denomination": "합동진리",
     "denominationGroup": "기타",
     "phone": "063-535-6297",
-    "homepage": "http://thevine21.hompee.com/"
+    "homepage": "http://thevine21.hompee.com/",
+    "updatedAt": "2026-09-07"
   },
   {
     "id": "광양개혁교회-광양시",
@@ -1129,7 +1205,8 @@
     "denomination": "독립개혁장로교회",
     "denominationGroup": "독립·해외",
     "phone": "070-8612-4955",
-    "homepage": "https://gwrech.com/"
+    "homepage": "https://gwrech.com/",
+    "updatedAt": "2026-09-01"
   },
   {
     "id": "목포장로교회-목포시",
@@ -1143,7 +1220,8 @@
     "subRegion": "목포시",
     "denomination": "합신",
     "denominationGroup": "합신 계열",
-    "phone": "010-9877-7026"
+    "phone": "010-9877-7026",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "필그림교회-천안시",
@@ -1158,7 +1236,8 @@
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
     "phone": "010-2703-0545",
-    "homepage": "http://koreapilgrimchurch.com/"
+    "homepage": "http://koreapilgrimchurch.com/",
+    "updatedAt": "2026-09-07"
   },
   {
     "id": "죽림교회-태안군",
@@ -1173,7 +1252,8 @@
     "denomination": "합동진리",
     "denominationGroup": "기타",
     "phone": "041-675-1329",
-    "homepage": "http://thevine21.hompee.com/kt/intro/index?menuId=101515&topMenuId=1&menuType=27&newmenuAt=0"
+    "homepage": "http://thevine21.hompee.com/kt/intro/index?menuId=101515&topMenuId=1&menuType=27&newmenuAt=0",
+    "updatedAt": "2026-09-01"
   },
   {
     "id": "제천행복한교회-제천시",
@@ -1186,7 +1266,8 @@
     "lng": 128.214007,
     "subRegion": "제천시",
     "phone": "043-643-0691",
-    "homepage": "https://blog.naver.com/jcfamcounsel"
+    "homepage": "https://blog.naver.com/jcfamcounsel",
+    "updatedAt": "2026-09-17"
   },
   {
     "id": "새소망교회-청주시",
@@ -1201,7 +1282,8 @@
     "denomination": "합신",
     "denominationGroup": "합신 계열",
     "phone": "010-6574-3977",
-    "homepage": "http://facebook.com/newhope179"
+    "homepage": "http://facebook.com/newhope179",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "수문앞장로교회-청주시",
@@ -1216,7 +1298,8 @@
     "denomination": "합신",
     "denominationGroup": "합신 계열",
     "phone": "070-4383-1191",
-    "homepage": "https://www.youtube.com/channel/UC_ltQy94qWRNw_KW8oogqfA/videos"
+    "homepage": "https://www.youtube.com/channel/UC_ltQy94qWRNw_KW8oogqfA/videos",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "청주언약교회-청주시",
@@ -1230,20 +1313,8 @@
     "subRegion": "청주시",
     "denomination": "합신",
     "denominationGroup": "합신 계열",
-    "phone": "010-3315-6801"
-  },
-  {
-    "id": "원주청신교회-원주시",
-    "name": "원주청신교회",
-    "region": "강원",
-    "address": "강원특별자치도 원주시 원문로 174 (단계동)",
-    "pastor": "조권수",
-    "source": "자체 수집",
-    "lat": 37.356369,
-    "lng": 127.930592,
-    "subRegion": "원주시",
-    "phone": "033-742-9343",
-    "homepage": "http://cafe.daum.net/kok101/"
+    "phone": "010-3315-6801",
+    "updatedAt": "2026-09-17"
   },
   {
     "id": "춘천시민교회-춘천시",
@@ -1257,7 +1328,8 @@
     "subRegion": "춘천시",
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
-    "phone": "033-262-6752"
+    "phone": "033-262-6752",
+    "updatedAt": "2026-08-08"
   },
   {
     "id": "제주서광교회-제주시",
@@ -1272,7 +1344,8 @@
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
     "phone": "064-722-5312",
-    "homepage": "https://www.jjsg.or.kr"
+    "homepage": "https://www.jjsg.or.kr",
+    "updatedAt": "2026-09-18"
   },
   {
     "id": "제주시민교회-제주시",
@@ -1287,7 +1360,8 @@
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
     "phone": "064-803-0140",
-    "homepage": "https://jejusimin.tistory.com"
+    "homepage": "https://jejusimin.tistory.com",
+    "updatedAt": "2026-09-18"
   },
   {
     "id": "제주동신교회-제주시",
@@ -1301,7 +1375,8 @@
     "subRegion": "제주시",
     "denomination": "합동",
     "denominationGroup": "합동 계열",
-    "phone": "064-757-9845"
+    "phone": "064-757-9845",
+    "updatedAt": "2026-09-18"
   },
   {
     "id": "하람교회-제주시",
@@ -1316,7 +1391,8 @@
     "denomination": "마스터스개혁파총회",
     "denominationGroup": "기타",
     "phone": "010-8466-7247",
-    "homepage": "https://www.mareca.org"
+    "homepage": "https://www.mareca.org",
+    "updatedAt": "2026-09-18"
   },
   {
     "id": "서울에스라교회-영등포구",
@@ -1331,7 +1407,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "070-4105-3927",
-    "homepage": "https://ezrachurch.kr"
+    "homepage": "https://ezrachurch.kr",
+    "updatedAt": "2026-09-20"
   },
   {
     "id": "벧샬롬교회-서구",
@@ -1346,7 +1423,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "062-364-7118",
-    "homepage": "http://bschurch.net"
+    "homepage": "http://bschurch.net",
+    "updatedAt": "2026-09-20"
   },
   {
     "id": "회복의교회-검단구",
@@ -1361,7 +1439,8 @@
     "denomination": "대신",
     "denominationGroup": "대신 계열",
     "phone": "032-528-5702",
-    "homepage": "http://hoebok.com"
+    "homepage": "http://hoebok.com",
+    "updatedAt": "2026-09-26"
   },
   {
     "id": "열린교회-안양시",
@@ -1376,7 +1455,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "070-4372-4100",
-    "homepage": "https://www.yullin.org"
+    "homepage": "https://www.yullin.org",
+    "updatedAt": "2026-09-26"
   },
   {
     "id": "하늘영광교회-강동구",
@@ -1391,7 +1471,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "02-2296-1586",
-    "homepage": "http://www.gloryofgod.or.kr"
+    "homepage": "http://www.gloryofgod.or.kr",
+    "updatedAt": "2026-09-26"
   },
   {
     "id": "개포중앙교회-서초구",
@@ -1406,7 +1487,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "02-574-9177",
-    "homepage": "https://www.youtube.com/channel/UCFeVK_4_UZtxON3P4pVmNLQ/about"
+    "homepage": "https://www.youtube.com/channel/UCFeVK_4_UZtxON3P4pVmNLQ/about",
+    "updatedAt": "2026-09-26"
   },
   {
     "id": "구리성천교회-구리시",
@@ -1421,7 +1503,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "031-566-2755",
-    "homepage": "https://sungchun.onmam.com"
+    "homepage": "https://sungchun.onmam.com",
+    "updatedAt": "2026-09-26"
   },
   {
     "id": "광명믿음교회-광명시",
@@ -1436,7 +1519,8 @@
     "denomination": "FPCNA",
     "denominationGroup": "독립·해외",
     "phone": "02-4999-8339",
-    "homepage": "https://gmfpc.org/"
+    "homepage": "https://gmfpc.org/",
+    "updatedAt": "2026-09-26"
   },
   {
     "id": "머스트교회-수원시",
@@ -1451,7 +1535,8 @@
     "denomination": "WRF",
     "denominationGroup": "독립·해외",
     "phone": "0507-1345-1714",
-    "homepage": "https://www.youtube.com/channel/UCb_Ulk7zmZlcATjZbaNySDQ/about"
+    "homepage": "https://www.youtube.com/channel/UCb_Ulk7zmZlcATjZbaNySDQ/about",
+    "updatedAt": "2026-10-02"
   },
   {
     "id": "사랑스러운교회-시흥시",
@@ -1466,7 +1551,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "031-488-1900",
-    "homepage": "https://www.lovelychurch.net/"
+    "homepage": "https://www.lovelychurch.net/",
+    "updatedAt": "2026-10-02"
   },
   {
     "id": "김포사랑스러운교회-김포시",
@@ -1481,7 +1567,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "031-988-5500",
-    "homepage": "http://gplovelychurch.net/"
+    "homepage": "http://gplovelychurch.net/",
+    "updatedAt": "2026-10-02"
   },
   {
     "id": "광야의샘교회-수원시",
@@ -1496,7 +1583,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "0507-1328-0319",
-    "homepage": "https://gsamchurch.org/"
+    "homepage": "https://gsamchurch.org/",
+    "updatedAt": "2026-10-19"
   },
   {
     "id": "그영광교회-고양시",
@@ -1511,7 +1599,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "0507-1380-5032",
-    "homepage": "https://cafe.naver.com/theglorychurch1"
+    "homepage": "https://cafe.naver.com/theglorychurch1",
+    "updatedAt": "2026-10-19"
   },
   {
     "id": "높은뜻교회-성북구",
@@ -1526,7 +1615,8 @@
     "denomination": "합동",
     "denominationGroup": "합동 계열",
     "phone": "02-923-0419",
-    "homepage": "https://www.youtube.com/@Godswillchurch"
+    "homepage": "https://www.youtube.com/@Godswillchurch",
+    "updatedAt": "2026-10-19"
   },
   {
     "id": "더모자이크교회-군포시",
@@ -1541,7 +1631,8 @@
     "denomination": "합신",
     "denominationGroup": "합신 계열",
     "phone": "0507-1494-0351",
-    "homepage": "https://www.youtube.com/channel/UCLSqrZ9ys31JvYt8k0DAjAw"
+    "homepage": "https://www.youtube.com/channel/UCLSqrZ9ys31JvYt8k0DAjAw",
+    "updatedAt": "2026-10-19"
   },
   {
     "id": "민들레교회-함양군",
@@ -1556,7 +1647,8 @@
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
     "phone": "055-963-7542",
-    "homepage": "https://www.youtube.com/@%EA%B0%95%EC%84%B1%EB%8C%80-u3e"
+    "homepage": "https://www.youtube.com/@%EA%B0%95%EC%84%B1%EB%8C%80-u3e",
+    "updatedAt": "2026-10-19"
   },
   {
     "id": "복음영광교회-동구",
@@ -1571,7 +1663,8 @@
     "denomination": "합신",
     "denominationGroup": "합신 계열",
     "phone": "010-4514-0785",
-    "homepage": "https://blog.naver.com/hyoukpark"
+    "homepage": "https://blog.naver.com/hyoukpark",
+    "updatedAt": "2026-10-19"
   },
   {
     "id": "삼산중앙교회-해남군",
@@ -1585,7 +1678,8 @@
     "subRegion": "해남군",
     "denomination": "합동",
     "denominationGroup": "합동 계열",
-    "phone": "061-533-7004"
+    "phone": "061-533-7004",
+    "updatedAt": "2026-10-19"
   },
   {
     "id": "제주사랑의교회-제주시",
@@ -1600,7 +1694,8 @@
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
     "phone": "064-702-7377",
-    "homepage": "https://jejulovech.icg21.com/"
+    "homepage": "https://jejulovech.icg21.com/",
+    "updatedAt": "2026-10-25"
   },
   {
     "id": "초원교회-남동구",
@@ -1615,7 +1710,8 @@
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
     "phone": "032-508-9113",
-    "homepage": "https://www.youtube.com/@%EC%B4%88%EC%9B%90%EA%B5%90%ED%9A%8C%EA%B3%A0%EC%8B%A0"
+    "homepage": "https://www.youtube.com/@%EC%B4%88%EC%9B%90%EA%B5%90%ED%9A%8C%EA%B3%A0%EC%8B%A0",
+    "updatedAt": "2026-10-27"
   },
   {
     "id": "주기쁨교회-고양시",
@@ -1630,7 +1726,8 @@
     "denomination": "마스터스개혁파총회",
     "denominationGroup": "기타",
     "phone": "010-8466-7247",
-    "homepage": "https://www.mareca.org"
+    "homepage": "https://www.mareca.org",
+    "updatedAt": "2026-11-02"
   },
   {
     "id": "금천장로교회-금천구",
@@ -1645,7 +1742,8 @@
     "denomination": "대신",
     "denominationGroup": "대신 계열",
     "phone": "02-805-8117",
-    "homepage": "https://www.youtube.com/@%EA%B8%88%EC%B2%9C%EC%9E%A5%EB%A1%9C%EA%B5%90%ED%9A%8C"
+    "homepage": "https://www.youtube.com/@%EA%B8%88%EC%B2%9C%EC%9E%A5%EB%A1%9C%EA%B5%90%ED%9A%8C",
+    "updatedAt": "2026-11-02"
   },
   {
     "id": "새희망교회-유성구",
@@ -1660,7 +1758,8 @@
     "denomination": "KAICAM",
     "denominationGroup": "독립·해외",
     "phone": "042-863-0191",
-    "homepage": "http://www.h2ohope.net/"
+    "homepage": "http://www.h2ohope.net/",
+    "updatedAt": "2026-11-02"
   },
   {
     "id": "새로운교회-송파구",
@@ -1675,7 +1774,8 @@
     "denomination": "KAICAM",
     "denominationGroup": "독립·해외",
     "phone": "02-597-0691",
-    "homepage": "http://www.saeroun.net/"
+    "homepage": "http://www.saeroun.net/",
+    "updatedAt": "2026-11-02"
   },
   {
     "id": "새순교회-대덕구",
@@ -1690,7 +1790,8 @@
     "denomination": "고신",
     "denominationGroup": "고신·고려 계열",
     "phone": "042-627-9910",
-    "homepage": "https://saesoonchurch.qshop.ai/"
+    "homepage": "https://saesoonchurch.qshop.ai/",
+    "updatedAt": "2026-11-02"
   },
   {
     "id": "한개혁장로교회-유성구",
@@ -1704,6 +1805,23 @@
     "subRegion": "유성구",
     "denomination": "독립",
     "denominationGroup": "독립·해외",
-    "homepage": "https://www.youtube.com/channel/UCvXs6i_OkP56YukupWk5lyA"
+    "homepage": "https://www.youtube.com/channel/UCvXs6i_OkP56YukupWk5lyA",
+    "updatedAt": "2026-11-02"
+  },
+  {
+    "id": "바른교회-검단구",
+    "name": "바른교회",
+    "region": "인천",
+    "address": "인천광역시 검단구 단봉로 97-7 (왕길동)",
+    "pastor": "구재일",
+    "source": "자체 수집",
+    "lat": 37.596593,
+    "lng": 126.64024,
+    "subRegion": "검단구",
+    "denomination": "제신노회",
+    "denominationGroup": "고신·고려 계열",
+    "phone": "0507-1306-1462",
+    "homepage": "https://blog.naver.com/barunchurch",
+    "updatedAt": "2026-11-05"
   }
 ]

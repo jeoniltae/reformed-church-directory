@@ -1,6 +1,6 @@
 {
   "note": "도로명주소 검색 API 조회 결과. import-source가 status가 'ok'인 건만 address를 roadAddr로 교체한다. 후보가 여럿이어도 원본과 글자까지 일치하는 것이 유일하면 ok로 확정한다(totalCount>1이면서 ok인 건이 그것이다). 그런 후보가 없거나 둘 이상이면 1순위가 맞다는 보장이 없어 multiple로 두고 원본을 유지한다. 좌표 단계는 coordParams를 그대로 쓴다. coordParams가 이전 실행과 같으면 좌표를 그대로 이어받으므로 주소를 다시 조회해도 좌표 API를 다시 부르지 않는다 — 일부러 다시 받으려면 --refresh-coords를 준다.",
-  "checkedAt": "2026-11-02",
+  "checkedAt": "2026-11-05",
   "entries": [
     {
       "id": "언약교회-하남시",
@@ -3815,7 +3815,40 @@
       },
       "status": "ok",
       "reason": "정상"
+    },
+    {
+      "id": "바른교회-검단구",
+      "name": "바른교회",
+      "original": {
+        "address": "인천 검단구 단봉로 97-7 센타프라자 301호, 309호",
+        "region": "인천",
+        "subRegion": "검단구"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "인천광역시 검단구 단봉로 97-7 (왕길동)",
+        "jibunAddr": "인천광역시 검단구 왕길동 695-2",
+        "zipNo": "23499",
+        "siNm": "인천광역시",
+        "sggNm": "검단구",
+        "coordParams": {
+          "admCd": "2829010900",
+          "rnMgtSn": "282903156024",
+          "udrtYn": "0",
+          "buldMnnm": "97",
+          "buldSlno": "7"
+        },
+        "coord": {
+          "lat": 37.596593,
+          "lng": 126.64024,
+          "entX": 924102.9867011334,
+          "entY": 1955590.1098342002
+        }
+      },
+      "status": "ok",
+      "reason": "정상",
+      "keywordUsed": "인천 검단구 단봉로 97-7"
     }
   ],
-  "coordsCheckedAt": "2026-11-02T14:34:32.876Z"
+  "coordsCheckedAt": "2026-11-05T13:56:41.392Z"
 }

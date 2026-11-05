@@ -1692,5 +1692,20 @@
     "denomination": "독립",
     "denominationGroup": "독립·해외",
     "homepage": "https://www.youtube.com/channel/UCvXs6i_OkP56YukupWk5lyA"
+  },
+  {
+    "id": "바른교회-검단구",
+    "name": "바른교회",
+    "region": "인천",
+    "address": "인천광역시 검단구 단봉로 97-7 (왕길동)",
+    "pastor": "구재일",
+    "source": "자체 수집",
+    "lat": 37.596593,
+    "lng": 126.64024,
+    "subRegion": "검단구",
+    "denomination": "제신노회",
+    "denominationGroup": "고신·고려 계열",
+    "phone": "0507-1306-1462",
+    "homepage": "https://blog.naver.com/barunchurch"
   }
 ]

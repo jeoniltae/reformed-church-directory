@@ -29,6 +29,13 @@ export interface Church {
   /** 상세 페이지 출처 표기에 사용한다 */
   source: string;
   /**
+   * 사실 정보(교회명·주소·전화·담임목사·홈페이지·교단)가 마지막으로 바뀐 날, `YYYY-MM-DD`.
+   *
+   * 원본은 `data/updated-dates.json`이고 `import-source`가 얹는다.
+   * **값이 바뀐 날이지 확인한 날이 아니다** — 화면 라벨도 `최종 수정`이다.
+   */
+  updatedAt?: string;
+  /**
    * 이 교회 데이터에 **알려진 한계**가 있을 때 상세 화면에 띄우는 안내.
    *
    * 원본은 `data/notices.json`이고 `import-source`가 얹는다. 앱은 구워진 값만 읽는다.

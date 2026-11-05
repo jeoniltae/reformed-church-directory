@@ -88,8 +88,10 @@ npm run import:source
 ```bash
 npm run import:source -- --strict   # 경고가 있으면 exit 1
 npm test && npm run lint
-git diff data/churches.json         # 의도한 교회만 바뀌었는지 눈으로 본다
+git diff data/churches.json data/updated-dates.json  # 의도한 교회만 바뀌었는지 눈으로 본다
 ```
+
+`data/updated-dates.json`은 `import:source`가 갱신하는 `최종 수정` 날짜 원장이다. **손으로 고치지 않고, `churches.json`과 함께 커밋한다.**
 
 `--strict`가 잡는 경고는 셋이다. 정리하지 않고 넘어가지 않는다.
 

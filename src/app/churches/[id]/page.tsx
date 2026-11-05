@@ -191,7 +191,23 @@ export default async function ChurchDetailPage({
 
         {/* 교단과 주소는 위 헤더에만 둔다. 여기 또 넣으면 같은 화면에 두 번 나온다 */}
         <section className="mt-6 border-t border-border pt-5">
-          <h2 className="text-t4 font-semibold text-foreground">교회 정보</h2>
+          {/*
+            최종 수정일은 제목 줄의 빈 오른쪽에 둔다 — 세로를 더 쓰지 않고, 담임목사·연락처를
+            읽는 순간 함께 보인다. 푸터의 `출처` 옆은 지도 아래라 전화 걸기 전에 보이지 않는다.
+
+            ⚠️ **라벨을 `최종 확인`으로 바꾸지 않는다.** 값이 바뀐 날이지 확인한 날이 아니다.
+          */}
+          <div className="flex items-baseline justify-between gap-4">
+            <h2 className="text-t4 font-semibold text-foreground">교회 정보</h2>
+            {church.updatedAt && (
+              <p className="text-t2 text-muted-foreground">
+                최종 수정{" "}
+                <time dateTime={church.updatedAt}>
+                  {church.updatedAt.replaceAll("-", ".")}
+                </time>
+              </p>
+            )}
+          </div>
           <dl className="mt-3 flex flex-col gap-3">
             <div className="flex items-baseline justify-between gap-4">
               <dt className="shrink-0 text-t4 text-muted-foreground">

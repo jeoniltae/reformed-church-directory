@@ -1,6 +1,6 @@
 // 원본 CSV를 data/churches.json으로 변환한다 — 오프라인 배치, 앱 런타임과 분리
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import {
   isSuspectPhone,
   normalizePhone,
@@ -13,7 +13,9 @@ import {
   normalizeDenomination,
   syncChurchLists,
 } from "./lib/denominations.mts";
+import { todayInSeoul } from "./lib/date.mts";
 import { readSource } from "./lib/source.mts";
+import { stampUpdatedDates } from "./lib/updated-dates.mts";
 
 const OUTPUT = "data/churches.json";
 const DEAD_LINKS = "data/dead-links.json";
@@ -23,6 +25,7 @@ const EXCLUDED = "data/excluded.json";
 const NOTICES = "data/notices.json";
 const SOURCE = "자체 수집";
 const ADDITIONS = "data/additions.json";
+const UPDATED_DATES = "data/updated-dates.json";
 
 // 경고가 있어도 기본 동작은 exit 0이다(손으로 돌려 보고 판단하는 도구라서).
 // --strict를 주면 경고 하나에도 실패로 끝난다 — 자동화가 게이트로 쓰는 길이다.
@@ -201,7 +204,26 @@ for (const row of rows) {
   churches.push(church);
 }
 
+// 교회별 `최종 수정` 날짜. 덮어쓰기 직전의 churches.json과 비교해 사실이 바뀐 교회만 찍는다.
+// **원장이 없으면 여기서 실패하게 둔다** — 빈 원장으로 대신하면 전 교회가 오늘 날짜로 조용히 덮인다.
+// 두 파일을 바로 이어서 쓴다. --strict의 exit 1은 그 뒤에 나므로 한쪽만 갱신되는 일이 없다
+const ledger = JSON.parse(readFileSync(UPDATED_DATES, "utf8")) as {
+  note: string;
+  dates: Record<string, string>;
+};
+const previous = existsSync(OUTPUT)
+  ? (JSON.parse(readFileSync(OUTPUT, "utf8")) as Church[])
+  : null;
+const updatedDates = stampUpdatedDates(previous, churches, ledger.dates, todayInSeoul());
+for (const church of churches) church.updatedAt = updatedDates[church.id];
+const movedDates = churches.filter((c) => c.updatedAt !== ledger.dates[c.id]).length;
+
 writeFileSync(OUTPUT, JSON.stringify(churches, null, 2) + "\n", "utf8");
+writeFileSync(
+  UPDATED_DATES,
+  JSON.stringify({ note: ledger.note, dates: updatedDates }, null, 2) + "\n",
+  "utf8",
+);
 
 // 판정표의 count·churches는 데이터에서 세는 값이라 여기서 맞춘다(손으로 두면 낡는다 — 2026-11-02).
 // 판정·hint·perChurch는 건드리지 않고, 바뀐 행이 있을 때만 파일을 쓴다
@@ -228,6 +250,7 @@ console.log(
 );
 console.log(`좌표 반영: ${withCoords}건 / ${churches.length}건`);
 console.log(`알려진 한계 안내: ${noticed}건 / ${notices.size}건 등록 (${NOTICES})`);
+console.log(`최종 수정 날짜 갱신: ${movedDates}건 (${UPDATED_DATES})`);
 console.log(
   `교단 정규화: 묶음 ${grouped}건 · 표기 교체 ${renamedDenoms}건 · 미등록 ${unmappedDenoms.length}건  (${DENOMINATIONS})` +
     (synced.changed.length ? `\n판정표 교회 목록 갱신: ${synced.changed.join(", ")}` : ""),

@@ -143,6 +143,7 @@ data/             앱이 직접 읽는 유일한 데이터 소스
 | `denominations.json` | 교단 표기 판정표. **앱 번들에 안 들어간다** — 스크립트만 읽는다. 각 행의 `count`·`churches`는 **`import:source`가 데이터에서 다시 세어 쓴다**(2026-11-02) — 손으로 고치지 않는다 |
 | `denomination-content.json` | **화면에 그대로 나가는 공개용 원고** — 계열 리드·총회 정식 표기·신앙고백. 위 판정표와 다른 파일이고 **이쪽은 앱이 직접 읽는다.** 판정표를 대신 읽지 않는다(`hint`의 작업 메모와 교회명 배열이 번들에 실린다) |
 | `address-fixes.json` | 주소 수동 교정 표. 사람이 손대는 입력을 스크립트가 흡수한다 |
+| `updated-dates.json` | 교회별 `최종 수정` 날짜 원장(2026-11-05). **`import:source`가 사실 필드 변경을 감지해 갱신하고** `Church.updatedAt`으로 굽는다 — 손으로 고치지 않고 `churches.json`과 함께 커밋한다. 파일이 없으면 `import:source`가 실패한다(전 교회가 오늘 날짜로 덮이지 않게). ⚠️ **값이 바뀐 날이지 확인한 날이 아니다** — 화면 라벨을 `최종 확인`으로 쓰지 않는다 |
 | `notices.json` | 교회별 '알려진 한계' 안내 → `Church.notice`가 된다 |
 | `excluded.json` | 삭제 요청받은 교회. **없으면 다음 크롤링에서 되살아난다** |
 | `dead-links.json` · `geocode.json` · `reports/` | 스크립트 중간 산출물·점검 리포트 |
@@ -499,7 +500,7 @@ alert-dialog(8.1KB) → dialog(79KB) → floating-ui-react(446KB)
 
 - **홈은 `title`을 일부러 비운다** — 넣으면 template이 걸려 `홈 · 개혁주의 교회 디렉토리`가 된다.
 - **소유확인 토큰은 환경변수로 감싸지 않는다** — 공개 값이다. 빈 값이면 태그를 만들지 않는다.
-- **sitemap에 `lastModified`·`priority`·`changeFrequency`를 넣지 않는다** — 넣을 만한 값이 없거나 무시되는 값이다.
+- **sitemap에 `priority`·`changeFrequency`를 넣지 않는다** — 구글이 무시하는 값이다. **`lastModified`도 아직 넣지 않는다** — 교회 상세에는 `Church.updatedAt`이 생겼지만(2026-11-05) 안정적으로 도는 것을 본 뒤 별도 작업으로 넣는다. 파일 mtime·빌드 시각은 거짓 신호라 쓰지 않는다.
 - **`src/app/robots.ts`는 프로덕션에서만 열린다.** 그 외는 전면 차단 — 위 경고 참고.
 - **없는 교회 id는 `notFound()`** → `src/app/not-found.tsx`. 상세의 호출과 짝이다.
 

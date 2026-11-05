@@ -206,7 +206,8 @@ for (const row of rows) {
 
 // 교회별 `최종 수정` 날짜. 덮어쓰기 직전의 churches.json과 비교해 사실이 바뀐 교회만 찍는다.
 // **원장이 없으면 여기서 실패하게 둔다** — 빈 원장으로 대신하면 전 교회가 오늘 날짜로 조용히 덮인다.
-// 두 파일을 바로 이어서 쓴다. --strict의 exit 1은 그 뒤에 나므로 한쪽만 갱신되는 일이 없다
+// **원장을 먼저 쓴다.** 그 뒤 churches.json 쓰기가 실패해도 다음 실행이 변경을 다시 찾는다.
+// 순서가 반대면 새 값만 저장되고 변경 흔적이 사라져 옛 날짜가 그대로 굳는다
 const ledger = JSON.parse(readFileSync(UPDATED_DATES, "utf8")) as {
   note: string;
   dates: Record<string, string>;
@@ -218,12 +219,12 @@ const updatedDates = stampUpdatedDates(previous, churches, ledger.dates, todayIn
 for (const church of churches) church.updatedAt = updatedDates[church.id];
 const movedDates = churches.filter((c) => c.updatedAt !== ledger.dates[c.id]).length;
 
-writeFileSync(OUTPUT, JSON.stringify(churches, null, 2) + "\n", "utf8");
 writeFileSync(
   UPDATED_DATES,
   JSON.stringify({ note: ledger.note, dates: updatedDates }, null, 2) + "\n",
   "utf8",
 );
+writeFileSync(OUTPUT, JSON.stringify(churches, null, 2) + "\n", "utf8");
 
 // 판정표의 count·churches는 데이터에서 세는 값이라 여기서 맞춘다(손으로 두면 낡는다 — 2026-11-02).
 // 판정·hint·perChurch는 건드리지 않고, 바뀐 행이 있을 때만 파일을 쓴다

@@ -54,6 +54,7 @@ const excluded = new Set<string>(
 type Geo = {
   id: string;
   status: string;
+  reason?: string;
   original: { address: string };
   // coord는 geocode:coords가 채운다. 주소와 같은 조회에서 나온 값이라 낡음 판정도 같이 받는다
   matched?: { roadAddr: string; coord?: { lat: number; lng: number } };
@@ -135,6 +136,16 @@ for (const row of rows) {
         `geocode 결과가 낡음 → ${row.name}: 재조회 필요 (npm run normalize:addresses)`,
       );
     }
+  }
+  // **조회 실패가 조용히 지나가지 않게 한다 (2026-11-09).** 승인키가 만료됐을 때 조회는
+  // 오류를 기록만 하고 exit 0으로 끝나, 좌표 없는 교회가 경고 없이 구워졌다.
+  // 다중 후보·검색 실패는 사람이 볼 일이라 경고하지 않는다 — 여기서 잡는 것은 재조회로 풀리는 실패뿐이다
+  if (geo?.status === "apiError") {
+    warnings.push(
+      `주소 조회 실패(API 오류) → ${row.name}: ${geo.reason ?? "사유 없음"} — 승인키 확인 후 npm run normalize:addresses -- --only=${row.name}`,
+    );
+  } else if (geo?.status === "ok" && geo.original.address === row.rawAddress && !coord) {
+    warnings.push(`좌표 없음 → ${row.name}: npm run geocode:coords 필요 (좌표 승인키 확인)`);
   }
 
   const church: Church = {

@@ -1,6 +1,6 @@
 {
   "note": "도로명주소 검색 API 조회 결과. import-source가 status가 'ok'인 건만 address를 roadAddr로 교체한다. 후보가 여럿이어도 원본과 글자까지 일치하는 것이 유일하면 ok로 확정한다(totalCount>1이면서 ok인 건이 그것이다). 그런 후보가 없거나 둘 이상이면 1순위가 맞다는 보장이 없어 multiple로 두고 원본을 유지한다. 좌표 단계는 coordParams를 그대로 쓴다. coordParams가 이전 실행과 같으면 좌표를 그대로 이어받으므로 주소를 다시 조회해도 좌표 API를 다시 부르지 않는다 — 일부러 다시 받으려면 --refresh-coords를 준다.",
-  "checkedAt": "2026-11-05",
+  "checkedAt": "2026-11-09",
   "entries": [
     {
       "id": "언약교회-하남시",
@@ -3848,7 +3848,71 @@
       "status": "ok",
       "reason": "정상",
       "keywordUsed": "인천 검단구 단봉로 97-7"
+    },
+    {
+      "id": "진주아름다운개혁교회-진주시",
+      "name": "진주아름다운개혁교회",
+      "original": {
+        "address": "경남 진주시 호탄길34번길 5 2층",
+        "region": "경남",
+        "subRegion": "진주시"
+      },
+      "totalCount": 2,
+      "matched": {
+        "roadAddr": "경상남도 진주시 호탄길34번길 5 (호탄동)",
+        "jibunAddr": "경상남도 진주시 호탄동 644-6",
+        "zipNo": "52819",
+        "siNm": "경상남도",
+        "sggNm": "진주시",
+        "coordParams": {
+          "admCd": "4817013200",
+          "rnMgtSn": "481704797674",
+          "udrtYn": "0",
+          "buldMnnm": "5",
+          "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 35.16474,
+          "lng": 128.116643,
+          "entX": 1056157.0573849333,
+          "entY": 1685671.4045003
+        }
+      },
+      "status": "ok",
+      "reason": "후보 2건 중 원본 주소와 정확히 일치하는 1건"
+    },
+    {
+      "id": "언약개혁교회-의정부시",
+      "name": "언약개혁교회",
+      "original": {
+        "address": "경기 의정부시 충의로57번길 31 동남상가 3층",
+        "region": "경기",
+        "subRegion": "의정부시"
+      },
+      "totalCount": 1,
+      "matched": {
+        "roadAddr": "경기도 의정부시 충의로57번길 31 (용현동)",
+        "jibunAddr": "경기도 의정부시 용현동 33-6",
+        "zipNo": "11789",
+        "siNm": "경기도",
+        "sggNm": "의정부시",
+        "coordParams": {
+          "admCd": "4115010500",
+          "rnMgtSn": "411504343357",
+          "udrtYn": "0",
+          "buldMnnm": "31",
+          "buldSlno": "0"
+        },
+        "coord": {
+          "lat": 37.736226,
+          "lng": 127.085671,
+          "entX": 963493.0514696334,
+          "entY": 1970815.226486567
+        }
+      },
+      "status": "ok",
+      "reason": "정상"
     }
   ],
-  "coordsCheckedAt": "2026-11-05T13:56:41.392Z"
+  "coordsCheckedAt": "2026-11-08T15:52:55.871Z"
 }

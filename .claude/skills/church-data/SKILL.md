@@ -93,11 +93,15 @@ git diff data/churches.json data/updated-dates.json  # 의도한 교회만 바�
 
 `data/updated-dates.json`은 `import:source`가 갱신하는 `최종 수정` 날짜 원장이다. **손으로 고치지 않고, `churches.json`과 함께 커밋한다.**
 
-`--strict`가 잡는 경고는 셋이다. 정리하지 않고 넘어가지 않는다.
+`--strict`가 잡는 경고는 아래와 같다. 정리하지 않고 넘어가지 않는다.
 
 - `excluded.json`/`notices.json`의 id가 매칭되지 않음 → 오타이거나 id가 바뀌었다
 - 교단 표기 미등록 → 판정표에 행을 추가한다
 - geocode 결과가 낡음 → `normalize:addresses`를 다시 돌린다
+- 주소 조회 실패(API 오류) → 대개 승인키 만료다. `.env.local`의 키를 갱신한 뒤 `normalize:addresses -- --only=<교회명>`부터 다시 돌린다
+- 좌표 없음 → 주소는 찾았는데 좌표가 없다. 좌표 키를 확인하고 `geocode:coords`를 돌린다
+
+**`--only=`에는 교회 id가 아니라 교회명을 넣는다.** 이름에 포함되는지로 고르므로 id를 넣으면 대상이 0건이 되고, 아무것도 조회하지 않은 채 끝난다.
 
 ### 5. 커밋
 

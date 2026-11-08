@@ -1823,5 +1823,37 @@
     "phone": "0507-1306-1462",
     "homepage": "https://blog.naver.com/barunchurch",
     "updatedAt": "2026-11-05"
+  },
+  {
+    "id": "진주아름다운개혁교회-진주시",
+    "name": "진주아름다운개혁교회",
+    "region": "경남",
+    "address": "경상남도 진주시 호탄길34번길 5 (호탄동)",
+    "pastor": "박동흔",
+    "source": "자체 수집",
+    "lat": 35.16474,
+    "lng": 128.116643,
+    "subRegion": "진주시",
+    "denomination": "합동",
+    "denominationGroup": "합동 계열",
+    "phone": "0507-1482-5279",
+    "homepage": "https://blog.naver.com/lovejesus97",
+    "updatedAt": "2026-11-09"
+  },
+  {
+    "id": "언약개혁교회-의정부시",
+    "name": "언약개혁교회",
+    "region": "경기",
+    "address": "경기도 의정부시 충의로57번길 31 (용현동)",
+    "pastor": "오차영",
+    "source": "자체 수집",
+    "lat": 37.736226,
+    "lng": 127.085671,
+    "subRegion": "의정부시",
+    "denomination": "개혁",
+    "denominationGroup": "기타",
+    "phone": "010-7712-5402",
+    "homepage": "https://www.covenant2022.com/",
+    "updatedAt": "2026-11-09"
   }
 ]

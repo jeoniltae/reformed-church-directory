@@ -379,6 +379,30 @@
       "homepage": "https://blog.naver.com/barunchurch",
       "addedAt": "2026-11-05",
       "sourceNote": "제보 (GitHub Issues) #43  2026-11-04  [교회 등록 요청] 교회 미지정 · 판정 요청서 2026-11-05-제신노회"
+    },
+    {
+      "region": "경남",
+      "subRegion": "진주시",
+      "name": "진주아름다운개혁교회",
+      "pastor": "박동흔",
+      "denomination": "합동",
+      "phone": "0507-1482-5279",
+      "address": "경남 진주시 호탄길34번길 5 2층",
+      "homepage": "https://blog.naver.com/lovejesus97",
+      "addedAt": "2026-11-09",
+      "sourceNote": "제보 (GitHub Issues) #46  2026-11-07  [교회 등록 요청] 교회 미지정"
+    },
+    {
+      "region": "경기",
+      "subRegion": "의정부시",
+      "name": "언약개혁교회",
+      "pastor": "오차영",
+      "denomination": "개혁",
+      "phone": "010-7712-5402",
+      "address": "경기 의정부시 충의로57번길 31 동남상가 3층",
+      "homepage": "https://www.covenant2022.com/",
+      "addedAt": "2026-11-09",
+      "sourceNote": "제보 (GitHub Issues): #46  2026-11-07  [교회 등록 요청] 교회 미지정"
     }
   ]
 }

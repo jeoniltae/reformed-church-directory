@@ -60,7 +60,7 @@ export async function submitReport(
       );
       return {
         status: "error",
-        messages: ["접수하지 못했습니다. 잠시 후 다시 시도해 주세요."],
+        messages: ["보내지 못했습니다. 잠시 후 다시 보내 주세요."],
       };
     }
 
@@ -68,16 +68,16 @@ export async function submitReport(
     return {
       status: "ok",
       // 성공 화면의 제목이 된다. **"확인 후 반영"은 화면 쪽 본문이 이어받았으므로
-      // 여기는 접수 사실만 말한다** — 한 문장에 둘을 담으면 제목이 길어져
-      // 두 줄 이상으로 흐른다.
-      messages: ["제보가 접수되었습니다"],
+      // 여기는 짧은 인사만 둔다** — 한 문장에 둘을 담으면 제목이 길어져
+      // 두 줄 이상으로 흐른다. 접수 사실은 아래 `접수 번호` 줄이 말한다.
+      messages: ["보내주셔서 감사합니다"],
       issueNumber: created.number,
     };
   } catch (error) {
     console.error("제보 접수 실패:", error);
     return {
       status: "error",
-      messages: ["접수하지 못했습니다. 잠시 후 다시 시도해 주세요."],
+      messages: ["보내지 못했습니다. 잠시 후 다시 보내 주세요."],
     };
   }
 }

@@ -91,7 +91,7 @@ export function validateReport(input: ReportInput): string[] {
   }
 
   if (countGraphemes(clean(input.source)) > SOURCE_MAX) {
-    errors.push(`확인하신 곳은 ${SOURCE_MAX}자까지 쓸 수 있습니다.`);
+    errors.push(`출처는 ${SOURCE_MAX}자까지 적을 수 있습니다.`);
   }
 
   return errors;

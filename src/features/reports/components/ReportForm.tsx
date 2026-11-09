@@ -1,7 +1,7 @@
 "use client";
 // 제보 폼 — Server Action으로 GitHub Issues에 등록한다
 
-import { Check } from "lucide-react";
+import { Check, Info } from "lucide-react";
 import { useActionState, useState, useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -106,8 +106,8 @@ export function ReportForm() {
           연락처를 안 받는 것은 이 폼의 설계이므로 그 대가도 함께 말하는 것이 맞다.
         */}
         <p className="mt-2 text-t4 text-muted-foreground">
-          보내주신 내용을 확인한 뒤 디렉토리에 반영합니다. 되물을 연락처를 받지
-          않으므로 추가 확인이 필요하면 반영이 늦어질 수 있습니다.
+          내용을 확인한 뒤 반영하겠습니다. 다만 연락처를 받지 않아서 따로 확인할
+          것이 있으면 반영까지 시간이 좀 걸릴 수 있습니다.
         </p>
 
         {/*
@@ -172,11 +172,26 @@ export function ReportForm() {
 
           placeholder에 넣지 않은 이유 — **첫 글자를 치는 순간 사라진다.** 정작
           적는 동안 보이지 않으면 안내로 쓸모가 없다.
+
+          **강조는 왼쪽 네이비 선 + 카드 바탕이다** (2026-11-09). 쓰지 않은 것과 이유:
+          - `bg-muted` — 바로 위 공개 고지가 이미 회색 덩어리라 연달아 오면 묻힌다
+          - `bg-primary` 채움 — 이 화면의 brand-solid는 `보내기` 버튼 하나다
+          - `destructive` — 경고가 아니라 안내다. 붉은색은 오류로 읽힌다
         */}
-        <p className="text-t2 text-muted-foreground">
-          교회 등록 요청이면 <span className="text-foreground">교회명·주소·교단·담임목사</span>를 함께
-          적어 주세요. 되물을 방법이 없어 빠진 항목은 채우지 못합니다.
-        </p>
+        <div className="flex gap-2 rounded-r-lg border-l-2 border-primary bg-card px-3 py-2.5">
+          <Info
+            aria-hidden
+            className="mt-0.5 size-4 shrink-0 text-primary"
+          />
+          <p className="text-t4 text-muted-foreground">
+            교회 등록을 요청하실 때는{" "}
+            <span className="font-semibold text-foreground">
+              교회명, 주소, 교단, 담임목사
+            </span>
+            를 꼭 같이 적어 주세요. 따로 여쭤볼 방법이 없어서 빠진 항목이 있으면
+            등록하기 어렵습니다.
+          </p>
+        </div>
         {/*
           **`field-sizing-fixed`가 핵심이다.** shadcn `Textarea`에 `field-sizing-content`가
           붙어 있어 내용에 따라 상자가 계속 늘어난다 — 그 상태로는 `rows`가 아무
@@ -211,7 +226,7 @@ export function ReportForm() {
           htmlFor="report-source"
           className="text-t4 font-semibold text-foreground"
         >
-          확인하신 곳 <span className="font-normal text-muted-foreground">(선택)</span>
+          어디서 확인하셨나요? <span className="font-normal text-muted-foreground">(선택)</span>
         </label>
         <Input
           id="report-source"
